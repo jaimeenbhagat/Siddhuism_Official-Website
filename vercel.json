@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/social-sync",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/youtube/fetch",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/instagram/refresh-token",
+      "schedule": "0 0 */30 * *"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<svg width="800" height="800" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="100" y1="80" x2="700" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F2A58" />
+      <stop offset="1" stop-color="#090B1A" />
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(290 280) rotate(31) scale(320)">
+      <stop stop-color="#2DD4BF" stop-opacity="0.9" />
+      <stop offset="1" stop-color="#2DD4BF" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(520 510) rotate(-18) scale(300)">
+      <stop stop-color="#F59E0B" stop-opacity="0.85" />
+      <stop offset="1" stop-color="#F59E0B" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect x="20" y="20" width="760" height="760" rx="380" fill="url(#bg)" />
+  <circle cx="360" cy="335" r="180" fill="url(#glowA)" />
+  <circle cx="520" cy="500" r="170" fill="url(#glowB)" />
+  <circle cx="400" cy="300" r="120" fill="#DDE4FF" fill-opacity="0.92" />
+  <path d="M190 610C230 510 315 445 400 445C485 445 570 510 610 610" stroke="#DDE4FF" stroke-opacity="0.92" stroke-width="62" stroke-linecap="round" />
+</svg>
