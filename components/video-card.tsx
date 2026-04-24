@@ -49,8 +49,7 @@ export default function VideoCard({ item }: VideoCardProps) {
       return "";
     }
 
-    // mute=1 is REQUIRED for autoplay to work on modern browsers
-    return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=1&rel=0&playsinline=1&loop=1&playlist=${youtubeId}`;
+    return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=0&controls=1&rel=0&playsinline=1&loop=1&playlist=${youtubeId}`;
   }, [isMobile, youtubeId]);
 
   const thumbnail = useMemo(() => {
@@ -110,7 +109,7 @@ export default function VideoCard({ item }: VideoCardProps) {
                 poster={item.thumbnail}
                 className={`absolute inset-0 h-full w-full object-cover ${!isMobile ? "pointer-events-none" : ""}`}
                 autoPlay
-                muted
+                muted={false}
                 loop
                 playsInline
                 controls={isMobile}

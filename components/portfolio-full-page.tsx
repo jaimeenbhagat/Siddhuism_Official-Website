@@ -33,9 +33,9 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
     >
       <Link
         href={`/portfolio/${projectSlug}`}
-        className="block w-full overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/80 text-left shadow-[0_12px_45px_rgba(2,6,23,0.45)] transition-colors duration-300 hover:border-slate-600"
+        className="block w-full overflow-hidden rounded-2xl border border-slate-700/70  text-left shadow-[0_12px_45px_rgba(2,6,23,0.45)] transition-colors duration-300 hover:border-slate-600"
       >
-        <div className="relative aspect-video overflow-hidden bg-slate-900">
+        <div className="relative aspect-video overflow-hidden ">
           {firstVideo && (
             <Image
               src={thumbnailUrl}
@@ -102,7 +102,7 @@ export default function PortfolioFullPage() {
     <>
       <ScrollProgress />
       <Navbar />
-      <main className="relative min-h-screen bg-slate-950 overflow-hidden">
+      <main className="relative min-h-screen  overflow-hidden">
         {/* Ambient Background */}
         <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(30,58,138,0.12),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" />
 

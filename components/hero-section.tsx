@@ -4,7 +4,7 @@ import { TAGLINES } from "@/lib/content";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { YouTubeSnapshot, InstagramSnapshot } from "@/lib/social-types";
-import { FiYoutube, FiInstagram, FiVideo, FiEye, FiTrendingUp, FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize } from "react-icons/fi";
+import { FiYoutube, FiInstagram, FiVideo, FiEye, FiTrendingUp, FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize, FiChevronDown } from "react-icons/fi";
 
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 
@@ -198,7 +198,7 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
 
 
   return (
-    <section id="top" className="relative overflow-hidden px-6 pt-14 md:pt-16">
+    <section id="top" className="relative overflow-hidden px-6 pt-6 md:pt-3">
       <div className="hero-gradient absolute inset-0 -z-20" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_30%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_30%)]" />
 
@@ -308,9 +308,10 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
 
       <a
         href="#about"
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.25em] text-slate-300"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full border border-slate-700/70 bg-slate-950/55 p-2 text-slate-200 backdrop-blur-md transition hover:border-blue-300/60 hover:text-blue-200"
+        aria-label="Scroll down"
       >
-        Scroll
+        <FiChevronDown className="animate-bounce" size={20} />
       </a>
     </section>
   );

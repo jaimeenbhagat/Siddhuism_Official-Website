@@ -21,7 +21,7 @@ export default function AboutSection() {
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="Creator Bio"
-          title="The face behind siddhuism_official"
+          title="The face behind Siddhuism Official"
           description="Social Media Influencer | Travel & Hospitality | Lifestyle"
         />
 

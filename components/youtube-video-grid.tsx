@@ -89,7 +89,7 @@ function InstagramReelCard({
             src={media.mediaUrl}
             className="absolute inset-0 h-full w-full object-cover"
             autoPlay
-            muted
+            muted={false}
             loop
             playsInline
             controls
@@ -172,7 +172,7 @@ function YouTubeCard({
         
         {isActive && (
           <iframe
-            className="absolute inset-0 h-full w-full"
+            className={`absolute inset-0 h-full w-full ${!isMobile ? "pointer-events-none" : ""}`}
             src={embedUrl}
             allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
