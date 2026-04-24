@@ -7,13 +7,18 @@ import ScrollProgress from "@/components/ui/scroll-progress";
 import PageFadeIn from "@/components/ui/page-fade-in";
 import VideoCard from "@/components/video-card";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
-import type { PortfolioCategory, PortfolioVideo } from "@/lib/portfolio-db";
+import type { PortfolioVideo } from "@/lib/portfolio-db";
+import { getPortfolioProjectBySlug } from "@/lib/portfolio-structure";
 
 export const runtime = "nodejs";
 export const revalidate = 300;
 const DEFAULT_THUMBNAIL = "/profile-orb.svg";
 
-const HOSTELLER_FALLBACK: PortfolioVideo[] = [
+type ProjectPageVideo = Pick<PortfolioVideo, "id" | "title" | "project_slug" | "project_title" | "video_url" | "thumbnail" | "is_featured" | "created_at"> & {
+  categoryLabel: string;
+};
+
+const HOSTELLER_FALLBACK: ProjectPageVideo[] = [
   {
     id: "hosteller-video-1",
     title: "Hosteller Video 1",
@@ -21,7 +26,7 @@ const HOSTELLER_FALLBACK: PortfolioVideo[] = [
     project_title: "The Hosteller",
     video_url: "https://www.youtube.com/watch?v=GlucobCFSes",
     thumbnail: "https://img.youtube.com/vi/GlucobCFSes/hqdefault.jpg",
-    category: "travel",
+    categoryLabel: "Travel & Hospitality",
     is_featured: true,
     created_at: new Date().toISOString(),
   },
@@ -32,7 +37,7 @@ const HOSTELLER_FALLBACK: PortfolioVideo[] = [
     project_title: "The Hosteller",
     video_url: "https://www.youtube.com/watch?v=iCgcMb1AcqA",
     thumbnail: "https://img.youtube.com/vi/iCgcMb1AcqA/hqdefault.jpg",
-    category: "travel",
+    categoryLabel: "Travel & Hospitality",
     is_featured: false,
     created_at: new Date().toISOString(),
   },
@@ -43,13 +48,13 @@ const HOSTELLER_FALLBACK: PortfolioVideo[] = [
     project_title: "The Hosteller",
     video_url: "https://www.youtube.com/watch?v=j1M9hCaklxc",
     thumbnail: "https://img.youtube.com/vi/j1M9hCaklxc/hqdefault.jpg",
-    category: "travel",
+    categoryLabel: "Travel & Hospitality",
     is_featured: false,
     created_at: new Date().toISOString(),
   },
 ];
 
-function categoryLabel(category: PortfolioCategory) {
+function categoryLabel(category: string) {
   if (category === "travel") {
     return "Travel & Hospitality";
   }
@@ -58,7 +63,11 @@ function categoryLabel(category: PortfolioCategory) {
     return "E-Commerce";
   }
 
-  return "Events";
+  if (category === "events") {
+    return "Events";
+  }
+
+  return category;
 }
 
 type Props = {
@@ -68,6 +77,7 @@ type Props = {
 export default async function PortfolioProjectPage({ params }: Props) {
   const { slug } = await params;
   const supabase = getSupabaseAdminClient();
+  const staticProject = getPortfolioProjectBySlug(slug);
 
   const { data, error } = await supabase
     .from("portfolio_videos")
@@ -77,19 +87,41 @@ export default async function PortfolioProjectPage({ params }: Props) {
     .order("created_at", { ascending: false })
     .limit(60);
 
-  const dbVideos = (error ? [] : ((data || []) as PortfolioVideo[])).map((row) => ({
+  const dbVideos: ProjectPageVideo[] = (error ? [] : ((data || []) as PortfolioVideo[])).map((row) => ({
     ...row,
     thumbnail: row.thumbnail || DEFAULT_THUMBNAIL,
+    categoryLabel: categoryLabel(row.category),
   }));
 
-  const videos = dbVideos.length ? dbVideos : slug === "the-hosteller" ? HOSTELLER_FALLBACK : [];
+  const staticVideos: ProjectPageVideo[] = staticProject
+    ? staticProject.videos.map((video, index) => ({
+        id: `${staticProject.slug}-${video.id}-${index}`,
+        title: `${staticProject.displayName} Video ${index + 1}`,
+        project_slug: staticProject.slug,
+        project_title: staticProject.displayName,
+        video_url: video.url,
+        thumbnail: `https://img.youtube.com/vi/${video.id}/${video.type === "short" ? "hqdefault" : "maxresdefault"}.jpg`,
+        categoryLabel: staticProject.categoryTitle,
+        is_featured: index === 0,
+        created_at: new Date().toISOString(),
+      }))
+    : [];
+
+  const videos = dbVideos.length
+    ? dbVideos
+    : staticVideos.length
+      ? staticVideos
+      : slug === "the-hosteller"
+        ? HOSTELLER_FALLBACK
+        : [];
 
   if (!videos.length) {
     notFound();
   }
 
   const projectTitle = videos[0].project_title;
-  const category = videos[0].category;
+  const projectCategory = videos[0].categoryLabel;
+  const projectDescription = staticProject?.description;
 
   return (
     <>
@@ -109,9 +141,11 @@ export default async function PortfolioProjectPage({ params }: Props) {
 
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-blue-300">{categoryLabel(category)}</p>
+              <p className="text-xs uppercase tracking-[0.22em] text-blue-300">{projectCategory}</p>
               <h1 className="mt-2 text-3xl font-semibold text-slate-100 md:text-5xl">{projectTitle}</h1>
-              <p className="mt-3 text-sm text-slate-400 md:text-base">Full project work with all published videos for this brand.</p>
+              <p className="mt-3 text-sm text-slate-400 md:text-base">
+                {projectDescription || "Full project work with all published videos for this brand."}
+              </p>
             </div>
 
             <Link
@@ -124,7 +158,7 @@ export default async function PortfolioProjectPage({ params }: Props) {
 
           <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {videos.map((item) => (
-              <VideoCard key={item.id} item={item} />
+              <VideoCard key={item.id} item={{ ...item, category: item.categoryLabel }} />
             ))}
           </section>
           </div>

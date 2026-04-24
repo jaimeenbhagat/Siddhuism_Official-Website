@@ -3,20 +3,21 @@
 import { SOCIAL_LINKS } from "@/lib/content";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { FiInstagram, FiMail, FiYoutube, FiLinkedin, FiFacebook } from "react-icons/fi";
+import { FaInstagram, FaYoutube, FaLinkedin, FaFacebook, FaThreads, FaEnvelope } from "react-icons/fa6";
 import SectionHeading from "@/components/ui/section-heading";
 
 const socialIconByLabel = {
-  YouTube: FiYoutube,
-  Instagram: FiInstagram,
-  LinkedIn: FiLinkedin,
-  Facebook: FiFacebook,
-  Mail: FiMail,
+  YouTube: FaYoutube,
+  Instagram: FaInstagram,
+  Threads: FaThreads,
+  LinkedIn: FaLinkedin,
+  Facebook: FaFacebook,
+  Mail: FaEnvelope,
 } as const;
 
 export default function AboutSection() {
   return (
-    <section id="about" className="px-6 py-24 md:py-30">
+    <section id="about" className="px-6 py-12 md:py-16">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="Creator Bio"
@@ -29,7 +30,7 @@ export default function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5 }}
-          className="grid gap-10 overflow-hidden rounded-[2rem] border border-slate-700/60 bg-gradient-to-br from-slate-950/80 via-blue-950/25 to-violet-950/25 p-6 shadow-[0_20px_60px_rgba(2,6,23,0.5)] backdrop-blur-2xl md:grid-cols-[280px_1fr] md:p-10"
+          className="grid gap-6 md:gap-8 overflow-hidden rounded-[2rem] border border-slate-700/60 bg-gradient-to-br from-slate-950/80 via-blue-950/25 to-violet-950/25 p-6 shadow-[0_20px_60px_rgba(2,6,23,0.5)] backdrop-blur-2xl md:grid-cols-[280px_1fr] md:p-10"
         >
           <div className="relative mx-auto h-56 w-56 rounded-full p-2 shadow-[0_0_60px_rgba(34,211,238,0.35)]">
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-300/45 via-amber-400/25 to-amber-500/30 blur-2xl" />

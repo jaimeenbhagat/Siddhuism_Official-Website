@@ -21,6 +21,15 @@ export type PortfolioSection = {
   categories: PortfolioCategory[];
 };
 
+export type PortfolioProject = {
+  slug: string;
+  name: string;
+  displayName: string;
+  description?: string;
+  categoryTitle: string;
+  videos: VideoLink[];
+};
+
 function parseVideo(url: string): VideoLink {
   const cleanUrl = url.split('&')[0]; // Remove playlist parameters
   if (cleanUrl.includes("/shorts/")) {
@@ -34,6 +43,19 @@ function parseVideo(url: string): VideoLink {
     return { url: cleanUrl, type: "video", id };
   }
   return { url: cleanUrl, type: "video", id: "unknown" };
+}
+
+export function getBrandDisplayName(brandName: string) {
+  return brandName.split("|")[0].trim();
+}
+
+export function getBrandSlug(brandName: string) {
+  return getBrandDisplayName(brandName)
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 }
 
 export const PORTFOLIO_DATA: PortfolioSection[] = [
@@ -264,3 +286,22 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
 ];
 
 export const HERO_REEL = parseVideo("https://www.youtube.com/watch?v=2Un0Nrx1bHI");
+
+export function getAllPortfolioProjects(): PortfolioProject[] {
+  return PORTFOLIO_DATA.flatMap((section) =>
+    section.categories.flatMap((category) =>
+      category.brands.map((brand) => ({
+        slug: getBrandSlug(brand.name),
+        name: brand.name,
+        displayName: getBrandDisplayName(brand.name),
+        description: brand.description,
+        categoryTitle: category.title,
+        videos: brand.videos,
+      })),
+    ),
+  );
+}
+
+export function getPortfolioProjectBySlug(slug: string): PortfolioProject | undefined {
+  return getAllPortfolioProjects().find((project) => project.slug === slug);
+}

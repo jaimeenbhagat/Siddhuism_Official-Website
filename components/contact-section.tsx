@@ -29,11 +29,13 @@ export default function ContactSection() {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
+    const form = event.currentTarget;
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const payload = {
       name: String(formData.get("name") || ""),
       email: String(formData.get("email") || ""),
+      phone: String(formData.get("phone") || ""),
       message: String(formData.get("message") || ""),
     };
 
@@ -44,21 +46,24 @@ export default function ContactSection() {
         body: JSON.stringify(payload),
       });
 
+      const data = (await response.json().catch(() => null)) as { error?: string } | null;
+
       if (!response.ok) {
-        throw new Error("Request failed");
+        throw new Error(data?.error || "Request failed");
       }
 
-      event.currentTarget.reset();
+      form.reset();
       setToast({ type: "success", message: "Message sent successfully." });
-    } catch {
-      setToast({ type: "error", message: "Could not send message. Try again." });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Could not send message. Try again.";
+      setToast({ type: "error", message });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section id="contact" className="px-6 py-24 md:py-30">
+    <section id="contact" className="px-6 py-12 md:py-16">
       <div className="mx-auto max-w-4xl">
         <SectionHeading
           eyebrow="Contact"
@@ -96,6 +101,17 @@ export default function ContactSection() {
                 placeholder="you@example.com"
               />
             </label>
+
+            <label className="text-sm text-slate-300 md:col-span-2">
+              Phone Number
+              <input
+                type="tel"
+                name="phone"
+                required
+                className="mt-2 w-full rounded-xl border border-slate-700/80 bg-slate-900/85 px-4 py-3 text-slate-100 outline-none focus:border-blue-300/60"
+                placeholder="+91 98765 43210"
+              />
+            </label>
           </div>
 
           <label className="mt-5 block text-sm text-slate-300">
@@ -112,7 +128,7 @@ export default function ContactSection() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-6 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 px-6 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-70"
+            className="mt-6 rounded-full bg-linear-to-r from-blue-500 to-violet-500 px-6 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading ? "Sending..." : "Send Enquiry"}
           </button>

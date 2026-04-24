@@ -47,7 +47,7 @@ function ShortsCard({ videoUrl }: { videoUrl: string }) {
 
 export default function YouTubeShortsPreview() {
   return (
-    <section id="portfolio-preview" className="px-6 py-20 md:py-26">
+    <section id="portfolio-preview" className="px-6 py-12 md:py-16">
       <div className="mx-auto max-w-7xl">
         <SectionHeading
           eyebrow="Portfolio"

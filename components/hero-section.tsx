@@ -4,12 +4,19 @@ import { TAGLINES } from "@/lib/content";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { YouTubeSnapshot, InstagramSnapshot } from "@/lib/social-types";
-import { FiYoutube, FiInstagram, FiVideo, FiEye, FiTrendingUp } from "react-icons/fi";
+import { FiYoutube, FiInstagram, FiVideo, FiEye, FiTrendingUp, FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize } from "react-icons/fi";
+
+import { AnimatedCounter } from "@/components/ui/animated-counter";
 
 type HeroSectionProps = {
   onWatchClick: () => void;
   onContactClick: () => void;
 };
+
+type LiveStats = {
+  youtube: { subscribers: number | null; views: number | null; videos: number | null };
+  instagram: { followers: number | null; media: number | null };
+} | null;
 
 function useTyping(words: string[], speed = 70, pause = 1600) {
   const [wordIndex, setWordIndex] = useState(0);
@@ -48,7 +55,7 @@ function useTyping(words: string[], speed = 70, pause = 1600) {
   return currentWord.slice(0, charIndex);
 }
 
-function StatCard({ label, value, icon, isText = false }: { label: string; value: string; icon?: React.ReactNode; isText?: boolean }) {
+function StatCard({ label, value, icon, isText = false, isLive = false, numericValue = null }: { label: string; value?: React.ReactNode; icon?: React.ReactNode; isText?: boolean; isLive?: boolean; numericValue?: number | null }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -59,8 +66,15 @@ function StatCard({ label, value, icon, isText = false }: { label: string; value
     >
       <div className="flex-shrink-0">{icon}</div>
       <div>
-        <p className={`font-semibold text-slate-100 ${isText ? 'text-xs leading-tight' : 'text-lg md:text-xl tracking-tight'}`}>
-          {value}
+        <p className={`font-semibold text-slate-100 flex items-center ${isText ? 'text-xs leading-tight' : 'text-lg md:text-xl tracking-tight'}`}>
+          {isLive ? (
+            <>
+              <AnimatedCounter value={numericValue ?? null} />
+              {numericValue !== null && <span className="text-blue-400 ml-0.5">+</span>}
+            </>
+          ) : (
+            value
+          )}
         </p>
         <p className="mt-0.5 text-[9px] uppercase tracking-wider font-medium text-slate-400">{label}</p>
       </div>
@@ -68,29 +82,26 @@ function StatCard({ label, value, icon, isText = false }: { label: string; value
   );
 }
 
-function HeroStats({ youtubeStats, instagramStats }: { youtubeStats: YouTubeSnapshot | null; instagramStats: InstagramSnapshot | null }) {
+function HeroStats({ stats }: { stats: LiveStats }) {
   const primaryStats = useMemo(
     () => [
       {
-        value: youtubeStats
-          ? new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(youtubeStats.viewCount)
-          : "500K+",
+        numericValue: stats?.youtube?.views ?? null,
         label: "Total Views",
         icon: <FiEye className="text-blue-400" size={20} />,
+        isLive: true,
       },
       {
-        value: instagramStats
-          ? new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(instagramStats.followersCount)
-          : "1.4K+",
+        numericValue: stats?.instagram?.followers ?? null,
         label: "Instagram",
         icon: <FiInstagram className="text-pink-500" size={20} />,
+        isLive: true,
       },
       {
-        value: youtubeStats
-          ? new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(youtubeStats.subscriberCount)
-          : "700+",
+        numericValue: stats?.youtube?.subscribers ?? null,
         label: "YouTube",
         icon: <FiYoutube className="text-red-500" size={20} />,
+        isLive: true,
       },
       {
         value: "Travel & Lifestyle",
@@ -99,10 +110,10 @@ function HeroStats({ youtubeStats, instagramStats }: { youtubeStats: YouTubeSnap
         isText: true,
       },
     ],
-    [youtubeStats, instagramStats],
+    [stats],
   );
 
-  const totalContent = (youtubeStats?.videoCount ?? 150) + (instagramStats?.mediaCount ?? 150);
+  const totalContent = ((stats?.youtube?.videos ?? 0) + (stats?.instagram?.media ?? 0)) || 150;
 
   return (
     <div className="mt-10">
@@ -114,7 +125,7 @@ function HeroStats({ youtubeStats, instagramStats }: { youtubeStats: YouTubeSnap
       <div className="mt-6 flex flex-wrap items-center gap-6 border-t border-slate-800/60 pt-4 text-xs text-slate-300">
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
-          <span>{totalContent}+ Pieces of Content</span>
+          <span><AnimatedCounter value={totalContent} />+ Pieces of Content</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-pink-500"></span>
@@ -129,8 +140,8 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
   const typingText = useTyping(TAGLINES);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [youtubeStats, setYoutubeStats] = useState<YouTubeSnapshot | null>(null);
-  const [instagramStats, setInstagramStats] = useState<InstagramSnapshot | null>(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const [stats, setStats] = useState<LiveStats>(null);
 
   const heroVideoUrl =
     "https://res.cloudinary.com/dkjyjzl8u/video/upload/v1776956034/Mantra_Surfing_club_Collab_Cinematic_-_Compressed_ffaody.mov";
@@ -138,18 +149,10 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const [ytRes, igRes] = await Promise.all([
-          fetch("/api/youtube", { cache: "no-store" }),
-          fetch("/api/instagram", { cache: "no-store" }),
-        ]);
-
-        if (ytRes.ok) {
-          const ytPayload = (await ytRes.json()) as YouTubeSnapshot;
-          setYoutubeStats(ytPayload);
-        }
-        if (igRes.ok) {
-          const igPayload = (await igRes.json()) as InstagramSnapshot;
-          setInstagramStats(igPayload);
+        const res = await fetch("/api/stats", { cache: "no-store" });
+        if (res.ok) {
+          const payload = await res.json();
+          setStats(payload);
         }
       } catch {
         // Keep fallback values when fetch fails.
@@ -175,6 +178,23 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
     setIsPlaying(false);
   };
 
+  const toggleMute = () => {
+    const node = videoRef.current;
+    if (!node) return;
+    node.muted = !node.muted;
+    setIsMuted(node.muted);
+  };
+
+  const toggleFullScreen = () => {
+    const node = videoRef.current;
+    if (!node) return;
+    if (node.requestFullscreen) {
+      void node.requestFullscreen();
+    } else if ((node as any).webkitRequestFullscreen) {
+      void (node as any).webkitRequestFullscreen();
+    }
+  };
+
 
 
   return (
@@ -182,21 +202,21 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
       <div className="hero-gradient absolute inset-0 -z-20" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_30%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_30%)]" />
 
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl items-center py-16 md:py-24">
+      <div className="mx-auto flex min-h-screen w-full max-w-7xl items-center py-12 md:py-16">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65 }}
-          className="grid w-full gap-12 lg:grid-cols-2 lg:items-center"
+          className="grid w-full gap-6 md:gap-8 lg:grid-cols-2 lg:items-center"
         >
           <div className="w-full">
-            <p className="mb-4 inline-flex rounded-full border border-blue-300/35 bg-slate-950/55 px-4 py-1 text-xs uppercase tracking-[0.28em] text-blue-200 backdrop-blur-xl">
+            <p className="mb-4 inline-flex rounded-full border border-gray-700/60 bg-gray-900/50 px-4 py-1 text-sm font-medium uppercase tracking-[0.2em] text-gray-500 backdrop-blur-xl">
               Creator Portfolio
             </p>
-            <h1 className="text-balance text-5xl font-semibold tracking-tight text-slate-100 text-glow md:text-7xl">
+            <h1 className="text-balance text-3xl font-bold tracking-tight text-slate-100 md:text-5xl">
               siddhuism_official
             </h1>
-            <p className="mt-6 text-balance text-lg leading-8 text-slate-300 md:text-2xl md:leading-9">
+            <p className="mt-4 text-pretty text-lg font-medium leading-8 text-gray-400 md:text-xl md:leading-9">
               {typingText}
               <span className="ml-1 animate-pulse text-blue-300">|</span>
             </p>
@@ -222,7 +242,7 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
               </button>
             </div>
 
-            <HeroStats youtubeStats={youtubeStats} instagramStats={instagramStats} />
+            <HeroStats stats={stats} />
           </div>
 
           <motion.div
@@ -233,27 +253,54 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
           >
             <div className="absolute inset-2 rounded-2xl bg-gradient-to-br from-blue-500/30 via-transparent to-violet-500/25 blur-3xl" />
 
-            <div className="relative w-full h-[400px] md:h-[500px] lg:h-[550px] overflow-hidden rounded-2xl border border-slate-700/50 shadow-[0_0_40px_rgba(99,102,241,0.2)] bg-black">
+            <div className="mb-6 flex items-center justify-center gap-3 relative z-10">
+              <div className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
+              <h3 className="text-slate-100 font-bold tracking-[0.2em] uppercase text-base md:text-xl text-glow">Highlight Reel</h3>
+            </div>
+
+            <div className="relative w-full aspect-video overflow-hidden rounded-2xl border border-slate-700/50 shadow-[0_0_40px_rgba(99,102,241,0.2)] bg-black group">
               <video
                 ref={videoRef}
                 src={heroVideoUrl}
                 className="w-full h-full object-cover"
                 autoPlay
-                muted
+                muted={isMuted}
                 loop
                 playsInline
                 preload="metadata"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-              <button
-                type="button"
-                onClick={togglePlayback}
-                className="absolute bottom-4 right-4 rounded-full border border-slate-300/40 bg-black/55 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-100 backdrop-blur-md transition hover:border-blue-300/70 hover:text-blue-200"
-              >
-                {isPlaying ? "Pause" : "Play"}
-              </button>
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <button
+                  type="button"
+                  onClick={togglePlayback}
+                  className="rounded-full bg-black/60 p-2.5 text-white backdrop-blur-md transition hover:bg-black/80 hover:text-blue-300 hover:scale-110"
+                  aria-label={isPlaying ? "Pause" : "Play"}
+                >
+                  {isPlaying ? <FiPause size={18} /> : <FiPlay size={18} className="ml-0.5" />}
+                </button>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={toggleMute}
+                    className="rounded-full bg-black/60 p-2.5 text-white backdrop-blur-md transition hover:bg-black/80 hover:text-blue-300 hover:scale-110"
+                    aria-label={isMuted ? "Unmute" : "Mute"}
+                  >
+                    {isMuted ? <FiVolumeX size={18} /> : <FiVolume2 size={18} />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={toggleFullScreen}
+                    className="rounded-full bg-black/60 p-2.5 text-white backdrop-blur-md transition hover:bg-black/80 hover:text-blue-300 hover:scale-110"
+                    aria-label="Full Screen"
+                  >
+                    <FiMaximize size={18} />
+                  </button>
+                </div>
+              </div>
             </div>
           </motion.div>
         </motion.div>

@@ -4,16 +4,16 @@ import { useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 
 const logos = [
-  "/clientlogo/Galwan Tour Adventure.jpg",
-  "/clientlogo/Hosteller.jpg",
-  "/clientlogo/Mantra surfing club.png",
-  "/clientlogo/Neeta Gala.jpg",
-  "/clientlogo/Orange cookware.jpg",
-  "/clientlogo/Pickelhaus.jpg",
-  "/clientlogo/Synergy Banquets.jpg",
-  "/clientlogo/flipkart play.jpg",
-  "/clientlogo/forest club.jpg",
-  "/clientlogo/mirinproductions.jpg",
+  "/clientlogos/Galwan Tour Adventure.jpg",
+  "/clientlogos/the-hosteller-.webp",
+  "/clientlogos/Mantra surfing club.png",
+  "/clientlogos/rvoice.png",
+  "/clientlogos/orange.png",
+  "/clientlogos/pickelhaus.png",
+  "/clientlogos/Synergy Banquets.jpg",
+  "/clientlogos/flipkart play.jpg",
+  "/clientlogos/forest club.jpg",
+  "/clientlogos/mirinproductions.jpg",
 ];
 
 const marqueeLogos = [...logos, ...logos];
@@ -71,7 +71,7 @@ export default function ClientLogoCarousel() {
   );
 
   return (
-    <section className="px-6 py-18 md:py-24">
+    <section className="px-6 py-12 md:py-16">
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 18 }}

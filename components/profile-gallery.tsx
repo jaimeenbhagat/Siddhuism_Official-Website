@@ -17,10 +17,10 @@ export default function ProfileGallery() {
   const [active, setActive] = useState<string | null>(null);
 
   return (
-    <section id="moments" className="px-6 py-20 md:py-26">
+    <section id="profile" className="px-6 py-12 md:py-16">
       <div className="mx-auto max-w-7xl">
         <SectionHeading
-          eyebrow="Profile / Moments"
+          eyebrow="Profile"
           title="Personal frames from the creator journey"
           description="A curated gallery of moments that adds personality and story depth to the portfolio."
         />

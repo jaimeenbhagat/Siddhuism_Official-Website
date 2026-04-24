@@ -23,10 +23,11 @@ export type Testimonial = {
 };
 
 export const NAV_LINKS = [
-  { label: "Creator Bio", href: "#about" },
-  { label: "Trending", href: "#youtube-hub" },
-  { label: "Moments", href: "#moments" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "#about" },
+  { label: "Live Social", href: "#youtube-hub" },
   { label: "Portfolio", href: "/portfolio" },
+  { label: "Profile", href: "#profile" },
   { label: "Contact", href: "#contact" },
 ] as const;
 
@@ -45,6 +46,7 @@ export const CATEGORIES: Category[] = [
 export const SOCIAL_LINKS = [
   { label: "YouTube", href: "https://www.youtube.com/@siddhuism_official" },
   { label: "Instagram", href: "https://www.instagram.com/siddhuism_official/" },
+  { label: "Threads", href: "https://www.threads.com/@siddhuism_official" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/siddhuismofficial/" },
   { label: "Facebook", href: "https://www.facebook.com/siddharth.sonetta.1/" },
   { label: "Mail", href: "mailto:siddhuismofficial@gmail.com" },

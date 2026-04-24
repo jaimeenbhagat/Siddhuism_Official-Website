@@ -130,7 +130,7 @@ export default function YouTubeVideoGrid() {
   useEffect(() => {
     Promise.all([
       fetch("/api/instagram").then(res => res.json()).catch(() => null),
-      fetch("/api/youtube").then(res => res.json()).catch(() => ({ shorts: [], longs: [] }))
+      fetch("/api/youtube/videos").then(res => res.json()).catch(() => ({ shorts: [], longs: [] }))
     ]).then(([ig, yt]) => {
       setIgStats(ig);
       setYtShortsRaw(yt?.shorts || []);
@@ -163,7 +163,7 @@ export default function YouTubeVideoGrid() {
   }, [igStats, ytShortsRaw, ytLongsRaw]);
 
   if (loading) return (
-    <section id="youtube-hub" className="px-6 py-20 md:py-24">
+    <section id="youtube-hub" className="px-6 py-12 md:py-16">
       <div className="mx-auto max-w-7xl">
         <SectionHeading eyebrow="Trending Content" title="Content That Performs" />
         <div className="h-64 flex items-center justify-center">
@@ -176,19 +176,19 @@ export default function YouTubeVideoGrid() {
   const hasNoData = reels.length === 0 && ytShorts.length === 0 && ytLongs.length === 0;
 
   return (
-    <section id="youtube-hub" className="px-6 py-20 md:py-24">
+    <section id="youtube-hub" className="px-6 py-12 md:py-16">
       <div className="mx-auto max-w-7xl">
         <SectionHeading
           eyebrow="Trending Content"
           title="Content That Performs"
         />
 
-        <div className="space-y-16">
+        <div className="space-y-6 md:space-y-8">
           {reels.length > 0 && (
             <div>
-              <div className="mb-6 flex items-center gap-2">
-                <FiInstagram className="text-pink-500" size={24} />
-                <h3 className="text-2xl font-semibold text-slate-100">Trending Reels</h3>
+              <div className="mb-6 flex items-center gap-2 border-b border-slate-800 pb-2">
+                <FiInstagram className="text-gray-400" size={24} />
+                <h3 className="text-lg md:text-xl font-medium text-gray-400">Trending Reels</h3>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {reels.map((media) => (
@@ -206,9 +206,9 @@ export default function YouTubeVideoGrid() {
 
           {ytShorts.length > 0 && (
             <div>
-              <div className="mb-6 flex items-center gap-2">
-                <FiYoutube className="text-red-500" size={24} />
-                <h3 className="text-2xl font-semibold text-slate-100">Trending Shorts</h3>
+              <div className="mb-6 flex items-center gap-2 border-b border-slate-800 pb-2">
+                <FiYoutube className="text-gray-400" size={24} />
+                <h3 className="text-lg md:text-xl font-medium text-gray-400">Trending Shorts</h3>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {ytShorts.map((video) => (
@@ -227,9 +227,9 @@ export default function YouTubeVideoGrid() {
 
           {ytLongs.length > 0 && (
             <div>
-              <div className="mb-6 flex items-center gap-2">
-                <FiYoutube className="text-red-500" size={24} />
-                <h3 className="text-2xl font-semibold text-slate-100">Top Videos</h3>
+              <div className="mb-6 flex items-center gap-2 border-b border-slate-800 pb-2">
+                <FiYoutube className="text-gray-400" size={24} />
+                <h3 className="text-lg md:text-xl font-medium text-gray-400">Top Videos</h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {ytLongs.map((video) => (
