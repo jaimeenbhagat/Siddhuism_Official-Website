@@ -1,16 +1,17 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS } from "@/lib/content";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiMenu, FiX } from "react-icons/fi";
-import { useState } from "react";
 import Image from "next/image";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
   const resolveHref = (href: string) => {
     if (href.startsWith("#") && pathname !== "/") {
@@ -20,66 +21,87 @@ export default function Navbar() {
     return href;
   };
 
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      if (!open) {
+        return;
+      }
+
+      const target = event.target;
+      if (panelRef.current && target instanceof Node && !panelRef.current.contains(target)) {
+        setOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
   return (
-    <header className="fixed inset-x-0 top-3 z-40 mx-auto w-[min(1100px,94vw)]">
-      <nav className="rounded-full border border-slate-700/60 bg-slate-950/70 px-5 py-3 backdrop-blur-xl">
-        <div className="flex items-center justify-between gap-4">
-          <Link href={pathname === "/" ? "#top" : "/"} className="flex items-center">
-            <Image
-              src="/logo-transparent.png"
-              alt="siddhuism_official logo"
-              width={160}
-              height={72}
-              className="h-8 w-auto object-contain"
-              priority
-            />
-          </Link>
+    <header className="fixed inset-x-0 top-0 z-40 px-6 py-4 md:px-10">
+      <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <Link href={pathname === "/" ? "#top" : "/"} className="flex items-center">
+          <Image
+            src="/Untitled_design-removebg-preview.png"
+            alt="siddhuism_official logo"
+            width={300}
+            height={300}
+            className="h-12 w-12 object-contain md:h-32 md:w-32"
+            priority
+          />
+        </Link>
 
-          <div className="hidden items-center gap-6 md:flex">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={resolveHref(link.href)}
-                className="text-sm text-slate-300 transition hover:text-blue-300"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+        <button
+          type="button"
+          className="inline-flex items-center justify-center rounded-full border border-white/10 bg-black/20 p-3 text-slate-50 shadow-[0_12px_30px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:border-white/20 hover:bg-black/30"
+          aria-label={open ? "Close navigation" : "Open navigation"}
+          aria-expanded={open}
+          aria-controls="site-navigation-menu"
+          onClick={() => setOpen((value) => !value)}
+        >
+          {open ? <FiX size={20} /> : <FiMenu size={20} />}
+        </button>
+      </div>
 
-          <button
-            className="inline-flex text-slate-100 md:hidden"
-            aria-label="Toggle navigation"
-            onClick={() => setOpen((value) => !value)}
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            ref={panelRef}
+            id="site-navigation-menu"
+            initial={{ opacity: 0, x: 18, y: -6 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, x: 18, y: -6 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="fixed right-6 top-20 z-50 w-[min(320px,calc(100vw-3rem))] rounded-2xl border border-white/10 bg-slate-950/85 p-6 shadow-[0_24px_80px_rgba(2,6,23,0.55)] backdrop-blur-xl md:right-10"
           >
-            {open ? <FiX size={22} /> : <FiMenu size={22} />}
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {open ? (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden md:hidden"
-            >
-              <div className="flex flex-col gap-3 pt-4">
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={resolveHref(link.href)}
-                    className="text-sm text-slate-300"
-                    onClick={() => setOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </nav>
+            <div className="space-y-1">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={resolveHref(link.href)}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-xl px-3 py-3 text-lg font-medium text-slate-100 transition hover:bg-white/5 hover:text-blue-300"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }

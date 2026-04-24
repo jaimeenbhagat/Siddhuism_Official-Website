@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { refreshInstagramToken } from "@/lib/refresh-instagram-token";
-import { getSupabaseClient } from "@/lib/supabaseClient";
+import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const supabase = getSupabaseClient();
+    const supabase = getSupabaseAdminClient();
     
     // 1. Get the current token from Supabase first
     let currentToken: string | null = null;
@@ -42,12 +42,10 @@ export async function GET(request: Request) {
     const newToken = await refreshInstagramToken(currentToken);
 
     // 4. Store the new token in Supabase
-    const { error: upsertError } = await supabase
-      .from("app_config")
-      .upsert(
-        { key: "instagram_token", value: newToken, updated_at: new Date().toISOString() },
-        { onConflict: "key" }
-      );
+    const { error: upsertError } = await supabase.from("app_config").upsert(
+      { key: "instagram_token", value: newToken, updated_at: new Date().toISOString() },
+      { onConflict: "key" },
+    );
 
     if (upsertError) {
       throw new Error(`Failed to save new token to Supabase: ${upsertError.message}`);

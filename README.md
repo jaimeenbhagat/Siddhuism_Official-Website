@@ -85,9 +85,13 @@ Add these environment variables before deployment:
 - `YOUTUBE_CHANNEL_ID`
 - `INSTAGRAM_ACCESS_TOKEN`
 - `INSTAGRAM_USER_ID`
+- `FB_APP_ID`
+- `FB_APP_SECRET`
 - `CRON_SECRET`
 
 The `/api/cron/social-sync` route is scheduled in `vercel.json` to refresh both snapshots every 15 minutes.
+
+The Instagram long-lived access token is refreshed automatically by `/api/instagram/refresh-token` and stored in the `app_config` table under the `instagram_token` key. The live Instagram fetch path reads that stored token first and falls back to `INSTAGRAM_ACCESS_TOKEN` only if Supabase is unavailable.
 
 ## Supabase YouTube Ingestion
 

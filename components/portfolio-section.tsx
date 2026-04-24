@@ -27,6 +27,7 @@ export default function PortfolioSection() {
   const [items, setItems] = useState<PortfolioVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -56,6 +57,10 @@ export default function PortfolioSection() {
     [activeTab, items],
   );
 
+  useEffect(() => {
+    setActiveVideoId(null);
+  }, [activeTab]);
+
   return (
     <section id="portfolio" className="px-6 py-12 md:py-16">
       <div className="mx-auto max-w-7xl">
@@ -74,7 +79,14 @@ export default function PortfolioSection() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((item) => (
-              <VideoCard key={item.id} item={item} />
+              <VideoCard
+                key={item.id}
+                item={item}
+                isActive={activeVideoId === item.id}
+                onActivate={() => setActiveVideoId(item.id)}
+                onDeactivate={() => setActiveVideoId(null)}
+                onToggle={() => setActiveVideoId((prev) => (prev === item.id ? null : item.id))}
+              />
             ))}
           </div>
         )}

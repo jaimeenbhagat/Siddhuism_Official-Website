@@ -5,27 +5,71 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { FiInstagram, FiYoutube, FiEye, FiHeart, FiMessageCircle, FiPlayCircle } from "react-icons/fi";
 import SectionHeading from "@/components/ui/section-heading";
-import type { InstagramSnapshot, YouTubeSnapshot, InstagramMedia, YouTubeVideo } from "@/lib/social-types";
+import type { InstagramSnapshot, InstagramMedia, YouTubeVideo } from "@/lib/social-types";
 import { preconnect } from "react-dom";
+
+type ApiYouTubeRow = {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  video_url: string;
+  published_at: string;
+  views: number;
+  likes: number;
+  comments: number;
+};
+
+type ApiYouTubeResponse = {
+  shorts?: ApiYouTubeRow[];
+  longs?: ApiYouTubeRow[];
+};
 
 function compact(num: number) {
   return new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(num);
 }
 
-function InstagramReelCard({ media, isActive, onActivate, onDeactivate }: { media: InstagramMedia, isActive: boolean, onActivate: () => void, onDeactivate: () => void }) {
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 768);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return isMobile;
+}
+
+function InstagramReelCard({
+  media,
+  isActive,
+  isMobile,
+  onActivate,
+  onDeactivate,
+  onToggle,
+}: {
+  media: InstagramMedia;
+  isActive: boolean;
+  isMobile: boolean;
+  onActivate: () => void;
+  onDeactivate: () => void;
+  onToggle: () => void;
+}) {
   const isVideo = media.mediaType === 'VIDEO';
 
   return (
-    <motion.a
-      href={media.permalink}
-      target="_blank"
-      rel="noreferrer"
-      onMouseEnter={onActivate}
-      onMouseLeave={onDeactivate}
+    <motion.article
+      onMouseEnter={isMobile ? undefined : onActivate}
+      onMouseLeave={isMobile ? undefined : onDeactivate}
+      onClick={isMobile ? onToggle : undefined}
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="group relative aspect-[9/16] overflow-hidden rounded-xl border border-slate-700/60 bg-slate-900/80 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:scale-[1.02] transition-all duration-300 block"
+      className="group relative aspect-9/16 overflow-hidden rounded-xl border border-slate-700/60 bg-slate-900/80 shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(236,72,153,0.3)]"
+      role={isMobile ? "button" : undefined}
+      aria-label={isMobile ? `Play ${media.caption?.slice(0, 40) || "Instagram reel"}` : undefined}
     >
       <div className="absolute inset-0 bg-slate-900">
         <Image
@@ -34,16 +78,17 @@ function InstagramReelCard({ media, isActive, onActivate, onDeactivate }: { medi
           fill
           className={`object-cover transition duration-700 ${isActive ? "opacity-0" : "opacity-100 group-hover:scale-105"}`}
         />
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`} />
+        <div className={`absolute inset-0 bg-linear-to-t from-black/85 via-black/15 to-transparent transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`} />
         
         {isActive && isVideo && (
           <video 
             src={media.mediaUrl} 
             className="absolute inset-0 h-full w-full object-cover"
             autoPlay
-            muted={false}
+            muted={!isMobile}
             loop
             playsInline
+            controls={isMobile}
           />
         )}
 
@@ -64,23 +109,53 @@ function InstagramReelCard({ media, isActive, onActivate, onDeactivate }: { medi
             </span>
           </div>
         </div>
+
+        {isActive && (
+          <a
+            href={media.permalink}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(event) => event.stopPropagation()}
+            className="absolute right-3 bottom-3 z-20 rounded-full border border-slate-200/40 bg-black/60 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-md transition hover:border-pink-300/70 hover:text-pink-100"
+          >
+            Open on Instagram
+          </a>
+        )}
       </div>
-    </motion.a>
+    </motion.article>
   );
 }
 
-function YouTubeCard({ video, isShort, isActive, onActivate, onDeactivate }: { video: YouTubeVideo; isShort?: boolean; isActive: boolean, onActivate: () => void, onDeactivate: () => void }) {
+function YouTubeCard({
+  video,
+  isShort,
+  isActive,
+  isMobile,
+  onActivate,
+  onDeactivate,
+  onToggle,
+}: {
+  video: YouTubeVideo;
+  isShort?: boolean;
+  isActive: boolean;
+  isMobile: boolean;
+  onActivate: () => void;
+  onDeactivate: () => void;
+  onToggle: () => void;
+}) {
+  const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=${isMobile ? 0 : 1}&controls=${isMobile ? 1 : 0}&modestbranding=1&rel=0&playsinline=1`;
+
   return (
-    <motion.a
-      href={video.videoUrl}
-      target="_blank"
-      rel="noreferrer"
-      onMouseEnter={onActivate}
-      onMouseLeave={onDeactivate}
+    <motion.article
+      onMouseEnter={isMobile ? undefined : onActivate}
+      onMouseLeave={isMobile ? undefined : onDeactivate}
+      onClick={isMobile ? onToggle : undefined}
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className={`group relative overflow-hidden rounded-xl border border-slate-700/60 bg-slate-900/80 shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:scale-[1.02] transition-all duration-300 block ${isShort ? 'aspect-[9/16]' : 'aspect-video'}`}
+      className={`group relative overflow-hidden rounded-xl border border-slate-700/60 bg-slate-900/80 shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(239,68,68,0.3)] ${isShort ? 'aspect-9/16' : 'aspect-video'}`}
+      role={isMobile ? "button" : undefined}
+      aria-label={isMobile ? `Play ${video.title}` : undefined}
     >
       <div className="absolute inset-0 bg-slate-900">
         <Image
@@ -89,12 +164,12 @@ function YouTubeCard({ video, isShort, isActive, onActivate, onDeactivate }: { v
           fill
           className={`object-cover transition duration-700 ${isActive ? "opacity-0" : "opacity-100 group-hover:scale-105"}`}
         />
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`} />
+        <div className={`absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`} />
         
         {isActive && (
           <iframe
             className="absolute inset-0 h-full w-full pointer-events-none"
-            src={`https://www.youtube.com/embed/${video.id}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1`}
+            src={embedUrl}
             allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
           />
@@ -112,17 +187,30 @@ function YouTubeCard({ video, isShort, isActive, onActivate, onDeactivate }: { v
             </span>
           </div>
         </div>
+
+        {isActive && (
+          <a
+            href={video.videoUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(event) => event.stopPropagation()}
+            className="absolute right-3 bottom-3 z-20 rounded-full border border-slate-200/40 bg-black/60 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-md transition hover:border-red-300/70 hover:text-red-100"
+          >
+            Open on YouTube
+          </a>
+        )}
       </div>
-    </motion.a>
+    </motion.article>
   );
 }
 
 export default function YouTubeVideoGrid() {
   preconnect("https://www.youtube.com");
+  const isMobile = useIsMobile();
   
   const [igStats, setIgStats] = useState<InstagramSnapshot | null>(null);
-  const [ytShortsRaw, setYtShortsRaw] = useState<any[]>([]);
-  const [ytLongsRaw, setYtLongsRaw] = useState<any[]>([]);
+  const [ytShortsRaw, setYtShortsRaw] = useState<ApiYouTubeRow[]>([]);
+  const [ytLongsRaw, setYtLongsRaw] = useState<ApiYouTubeRow[]>([]);
   const [loading, setLoading] = useState(true);
   
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
@@ -130,21 +218,28 @@ export default function YouTubeVideoGrid() {
   useEffect(() => {
     Promise.all([
       fetch("/api/instagram").then(res => res.json()).catch(() => null),
-      fetch("/api/youtube/videos").then(res => res.json()).catch(() => ({ shorts: [], longs: [] }))
+      fetch("/api/youtube/videos").then(res => res.json()).catch((): ApiYouTubeResponse => ({ shorts: [], longs: [] }))
     ]).then(([ig, yt]) => {
       setIgStats(ig);
-      setYtShortsRaw(yt?.shorts || []);
-      setYtLongsRaw(yt?.longs || []);
+      const response = yt as ApiYouTubeResponse;
+      setYtShortsRaw(response?.shorts || []);
+      setYtLongsRaw(response?.longs || []);
       setLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setActiveVideoId(null);
+    }
+  }, [isMobile]);
 
   const { reels, ytShorts, ytLongs } = useMemo(() => {
     const r = (igStats?.media?.filter(m => m.mediaType === "VIDEO") || [])
       .sort((a, b) => (b.likeCount + b.commentsCount) - (a.likeCount + a.commentsCount))
       .slice(0, 10);
       
-    const mapYt = (row: any): YouTubeVideo => ({
+    const mapYt = (row: ApiYouTubeRow): YouTubeVideo => ({
       id: row.id,
       title: row.title,
       description: row.description,
@@ -195,9 +290,11 @@ export default function YouTubeVideoGrid() {
                   <InstagramReelCard 
                     key={media.id} 
                     media={media} 
+                    isMobile={isMobile}
                     isActive={activeVideoId === media.id}
                     onActivate={() => setActiveVideoId(media.id)}
                     onDeactivate={() => setActiveVideoId(null)}
+                    onToggle={() => setActiveVideoId((prev) => (prev === media.id ? null : media.id))}
                   />
                 ))}
               </div>
@@ -216,9 +313,11 @@ export default function YouTubeVideoGrid() {
                     key={video.id} 
                     video={video} 
                     isShort={true} 
+                    isMobile={isMobile}
                     isActive={activeVideoId === video.id}
                     onActivate={() => setActiveVideoId(video.id)}
                     onDeactivate={() => setActiveVideoId(null)}
+                    onToggle={() => setActiveVideoId((prev) => (prev === video.id ? null : video.id))}
                   />
                 ))}
               </div>
@@ -237,9 +336,11 @@ export default function YouTubeVideoGrid() {
                     key={video.id} 
                     video={video} 
                     isShort={false} 
+                    isMobile={isMobile}
                     isActive={activeVideoId === video.id}
                     onActivate={() => setActiveVideoId(video.id)}
                     onDeactivate={() => setActiveVideoId(null)}
+                    onToggle={() => setActiveVideoId((prev) => (prev === video.id ? null : video.id))}
                   />
                 ))}
               </div>

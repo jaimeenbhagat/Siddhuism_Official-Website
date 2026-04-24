@@ -1,13 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { PortfolioVideo } from "@/lib/portfolio-db";
-import { useState } from "react";
+import { FiPlayCircle } from "react-icons/fi";
 
 type VideoCardProps = {
   item: Pick<PortfolioVideo, "id" | "title" | "video_url" | "thumbnail"> & { category: string };
+  isActive: boolean;
+  onActivate: () => void;
+  onDeactivate: () => void;
+  onToggle: () => void;
 };
 
 function getYouTubeId(url: string) {
@@ -25,8 +29,21 @@ function getYouTubeId(url: string) {
   return shorts ? shorts[1] : null;
 }
 
-export default function VideoCard({ item }: VideoCardProps) {
-  const [hovered, setHovered] = useState(false);
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 768);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return isMobile;
+}
+
+export default function VideoCard({ item, isActive, onActivate, onDeactivate, onToggle }: VideoCardProps) {
+  const isMobile = useIsMobile();
   const youtubeId = useMemo(() => getYouTubeId(item.video_url), [item.video_url]);
   const isYouTube = item.video_url.includes("youtube.com") || item.video_url.includes("youtu.be");
 
@@ -35,8 +52,8 @@ export default function VideoCard({ item }: VideoCardProps) {
       return "";
     }
 
-    return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&rel=0&playsinline=1&loop=1&playlist=${youtubeId}`;
-  }, [youtubeId]);
+    return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=${isMobile ? 0 : 1}&controls=${isMobile ? 1 : 0}&rel=0&playsinline=1&loop=1&playlist=${youtubeId}`;
+  }, [isMobile, youtubeId]);
 
   const thumbnail = useMemo(() => {
     if (youtubeId) {
@@ -53,8 +70,11 @@ export default function VideoCard({ item }: VideoCardProps) {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.28 }}
       className="group overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/80 shadow-[0_12px_45px_rgba(2,6,23,0.45)]"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={isMobile ? undefined : onActivate}
+      onMouseLeave={isMobile ? undefined : onDeactivate}
+      onClick={isMobile ? onToggle : undefined}
+      role={isMobile ? "button" : undefined}
+      aria-label={isMobile ? `Play ${item.title}` : undefined}
     >
       <div className="relative aspect-video overflow-hidden">
         {isYouTube && youtubeId ? (
@@ -64,39 +84,61 @@ export default function VideoCard({ item }: VideoCardProps) {
               alt={item.title}
               fill
               sizes="(max-width: 1024px) 100vw, 33vw"
-              className={`object-cover transition duration-700 ${hovered ? "opacity-0" : "opacity-100 group-hover:scale-105"}`}
+              className={`object-cover transition duration-700 ${isActive ? "opacity-0" : "opacity-100 group-hover:scale-105"}`}
             />
-            {hovered ? (
+            {isActive ? (
               <iframe
                 src={embedSrc}
                 title={item.title}
                 loading="lazy"
                 allow="autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen
-                className="absolute inset-0 h-full w-full pointer-events-none"
+                className={`absolute inset-0 h-full w-full ${isMobile ? "pointer-events-auto" : "pointer-events-none"}`}
               />
             ) : null}
           </>
         ) : (
-          <video
-            src={item.video_url}
-            poster={item.thumbnail}
-            className="h-full w-full object-cover"
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
+          <>
+            <Image
+              src={thumbnail}
+              alt={item.title}
+              fill
+              sizes="(max-width: 1024px) 100vw, 33vw"
+              className={`object-cover transition duration-700 ${isActive ? "opacity-0" : "opacity-100 group-hover:scale-105"}`}
+            />
+            {isActive ? (
+              <video
+                src={item.video_url}
+                poster={item.thumbnail}
+                className="absolute inset-0 h-full w-full object-cover"
+                autoPlay
+                muted={!isMobile}
+                loop
+                playsInline
+                controls={isMobile}
+                preload="metadata"
+              />
+            ) : null}
+          </>
         )}
 
         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/65 via-black/10 to-transparent" />
+        {!isActive ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="rounded-full bg-black/45 p-3 backdrop-blur-md">
+              <FiPlayCircle className="text-white/90" size={32} />
+            </div>
+          </div>
+        ) : null}
+
         <a
           href={item.video_url}
           target="_blank"
           rel="noreferrer"
+          onClick={(event) => event.stopPropagation()}
           className="absolute right-3 bottom-3 rounded-full border border-slate-300/30 bg-black/55 px-3 py-1.5 text-xs text-white backdrop-blur-md transition hover:border-blue-300/60 hover:text-blue-100"
         >
-          Watch
+          {isYouTube ? "Open on YouTube" : "Open on Platform"}
         </a>
       </div>
 

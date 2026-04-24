@@ -31,7 +31,9 @@ export const metadata: Metadata = {
       "Modern creator portfolio with smooth motion, category filters, and viewport autoplay videos.",
   },
   icons: {
-    icon: "/logo.png",
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
   },
 };
 

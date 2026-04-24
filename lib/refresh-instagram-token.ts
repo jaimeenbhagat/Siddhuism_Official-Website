@@ -1,9 +1,9 @@
 export async function refreshInstagramToken(currentToken: string): Promise<string> {
-  const appId = process.env.META_APP_ID;
-  const appSecret = process.env.META_APP_SECRET;
+  const appId = process.env.FB_APP_ID;
+  const appSecret = process.env.FB_APP_SECRET;
 
   if (!appId || !appSecret) {
-    throw new Error("META_APP_ID or META_APP_SECRET is not configured in the environment variables.");
+    throw new Error("FB_APP_ID or FB_APP_SECRET is not configured in the environment variables.");
   }
 
   const url = `https://graph.facebook.com/v18.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${appId}&client_secret=${appSecret}&fb_exchange_token=${currentToken}`;
