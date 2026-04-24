@@ -8,10 +8,10 @@ import { FiPlayCircle } from "react-icons/fi";
 
 type VideoCardProps = {
   item: Pick<PortfolioVideo, "id" | "title" | "video_url" | "thumbnail"> & { category: string };
-  isActive: boolean;
-  onActivate: () => void;
-  onDeactivate: () => void;
-  onToggle: () => void;
+  isActive?: boolean;
+  onActivate?: () => void;
+  onDeactivate?: () => void;
+  onToggle?: () => void;
 };
 
 function getYouTubeId(url: string) {
@@ -42,7 +42,13 @@ function useIsMobile() {
   return isMobile;
 }
 
-export default function VideoCard({ item, isActive, onActivate, onDeactivate, onToggle }: VideoCardProps) {
+export default function VideoCard({
+  item,
+  isActive = false,
+  onActivate,
+  onDeactivate,
+  onToggle,
+}: VideoCardProps) {
   const isMobile = useIsMobile();
   const youtubeId = useMemo(() => getYouTubeId(item.video_url), [item.video_url]);
   const isYouTube = item.video_url.includes("youtube.com") || item.video_url.includes("youtu.be");
