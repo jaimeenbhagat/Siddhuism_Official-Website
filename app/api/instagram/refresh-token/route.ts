@@ -10,42 +10,38 @@ export async function GET(request: Request) {
   const secret = new URL(request.url).searchParams.get("secret");
   const expectedSecret = process.env.CRON_SECRET;
 
-  if (cronHeader !== "1" && (!expectedSecret || secret !== expectedSecret)) {
+  if (!expectedSecret) {
+    return NextResponse.json({ error: "CRON_SECRET is not configured." }, { status: 500 });
+  }
+
+  if (secret !== expectedSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (cronHeader !== "1") {
+    console.warn("Instagram token refresh invoked without x-vercel-cron header.");
   }
 
   try {
     const supabase = getSupabaseAdminClient();
-    
-    // 1. Get the current token from Supabase first
-    let currentToken: string | null = null;
+
     const { data, error } = await supabase
-      .from("app_config")
-      .select("value")
-      .eq("key", "instagram_token")
+      .from("instagram_tokens")
+      .select("access_token")
+      .eq("id", 1)
       .single();
 
-    if (!error && data?.value) {
-      currentToken = data.value;
+    if (error || !data?.access_token) {
+      throw new Error("No existing Instagram token found in instagram_tokens table.");
     }
 
-    // 2. Fallback to process.env if not found in DB
-    if (!currentToken) {
-      currentToken = process.env.INSTAGRAM_ACCESS_TOKEN || null;
-    }
+    const newToken = await refreshInstagramToken(data.access_token);
 
-    if (!currentToken) {
-      throw new Error("No existing Instagram token found in database or environment variables.");
-    }
-
-    // 3. Refresh the token
-    const newToken = await refreshInstagramToken(currentToken);
-
-    // 4. Store the new token in Supabase
-    const { error: upsertError } = await supabase.from("app_config").upsert(
-      { key: "instagram_token", value: newToken, updated_at: new Date().toISOString() },
-      { onConflict: "key" },
-    );
+    const { error: upsertError } = await supabase.from("instagram_tokens").upsert({
+      id: 1,
+      access_token: newToken,
+      updated_at: new Date().toISOString(),
+    });
 
     if (upsertError) {
       throw new Error(`Failed to save new token to Supabase: ${upsertError.message}`);

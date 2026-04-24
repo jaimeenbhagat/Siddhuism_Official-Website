@@ -9,7 +9,7 @@
       "schedule": "30 3 * * *"
     },
     {
-      "path": "/api/instagram/refresh-token",
+      "path": "/api/instagram/refresh-token?secret=dd3476dbed1e25e52d6b2e8a42eef4cc35884a1c715957577a191040492643d7",
       "schedule": "0 0 */30 * *"
     }
   ]

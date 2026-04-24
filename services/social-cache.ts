@@ -13,7 +13,10 @@ function ttlDate(minutes = DEFAULT_TTL_MINUTES) {
   return new Date(Date.now() + minutes * 60 * 1000);
 }
 
-export async function readCachedSnapshot<T>(platform: CachedSnapshot<T>["platform"]) {
+export async function readCachedSnapshot<T>(
+  platform: CachedSnapshot<T>["platform"],
+  includeExpired = false,
+) {
   const supabase = getSupabaseClient();
   const { data, error } = await supabase
     .from("app_config")
@@ -28,7 +31,7 @@ export async function readCachedSnapshot<T>(platform: CachedSnapshot<T>["platfor
   try {
     const record = JSON.parse(data.value) as CachedSnapshot<T>;
     const expiresAt = new Date(record.expiresAt);
-    if (Number.isNaN(expiresAt.getTime()) || expiresAt.getTime() < Date.now()) {
+    if (!includeExpired && (Number.isNaN(expiresAt.getTime()) || expiresAt.getTime() < Date.now())) {
       return null;
     }
     return record;
@@ -37,12 +40,16 @@ export async function readCachedSnapshot<T>(platform: CachedSnapshot<T>["platfor
   }
 }
 
-export async function writeCachedSnapshot<T>(platform: CachedSnapshot<T>["platform"], data: T) {
+export async function writeCachedSnapshot<T>(
+  platform: CachedSnapshot<T>["platform"],
+  data: T,
+  ttlMinutes = DEFAULT_TTL_MINUTES,
+) {
   const snapshot: CachedSnapshot<T> = {
     platform,
     data,
     fetchedAt: new Date().toISOString(),
-    expiresAt: ttlDate().toISOString(),
+    expiresAt: ttlDate(ttlMinutes).toISOString(),
   };
 
   const supabase = getSupabaseClient();

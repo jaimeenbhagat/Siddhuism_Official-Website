@@ -25,6 +25,10 @@ type ApiYouTubeResponse = {
   longs?: ApiYouTubeRow[];
 };
 
+type ApiInstagramResponse = InstagramSnapshot & {
+  message?: string;
+};
+
 function compact(num: number) {
   return new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(num);
 }
@@ -63,7 +67,7 @@ function InstagramReelCard({
     <motion.article
       onMouseEnter={isMobile ? undefined : onActivate}
       onMouseLeave={isMobile ? undefined : onDeactivate}
-      onClick={isMobile ? onToggle : undefined}
+      onClick={isMobile ? onToggle : () => window.open(media.permalink, "_blank")}
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -81,14 +85,14 @@ function InstagramReelCard({
         <div className={`absolute inset-0 bg-linear-to-t from-black/85 via-black/15 to-transparent transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`} />
         
         {isActive && isVideo && (
-          <video 
-            src={media.mediaUrl} 
+          <video
+            src={media.mediaUrl}
             className="absolute inset-0 h-full w-full object-cover"
             autoPlay
-            muted={!isMobile}
+            muted
             loop
             playsInline
-            controls={isMobile}
+            controls
           />
         )}
 
@@ -143,13 +147,13 @@ function YouTubeCard({
   onDeactivate: () => void;
   onToggle: () => void;
 }) {
-  const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=${isMobile ? 0 : 1}&controls=${isMobile ? 1 : 0}&modestbranding=1&rel=0&playsinline=1`;
+  const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&playsinline=1`;
 
   return (
     <motion.article
       onMouseEnter={isMobile ? undefined : onActivate}
       onMouseLeave={isMobile ? undefined : onDeactivate}
-      onClick={isMobile ? onToggle : undefined}
+      onClick={isMobile ? onToggle : () => window.open(video.videoUrl, "_blank")}
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -168,7 +172,7 @@ function YouTubeCard({
         
         {isActive && (
           <iframe
-            className="absolute inset-0 h-full w-full pointer-events-none"
+            className="absolute inset-0 h-full w-full"
             src={embedUrl}
             allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
@@ -209,6 +213,7 @@ export default function YouTubeVideoGrid() {
   const isMobile = useIsMobile();
   
   const [igStats, setIgStats] = useState<InstagramSnapshot | null>(null);
+  const [igMessage, setIgMessage] = useState<string | null>(null);
   const [ytShortsRaw, setYtShortsRaw] = useState<ApiYouTubeRow[]>([]);
   const [ytLongsRaw, setYtLongsRaw] = useState<ApiYouTubeRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -217,10 +222,11 @@ export default function YouTubeVideoGrid() {
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/instagram").then(res => res.json()).catch(() => null),
+      fetch("/api/instagram").then(res => res.json() as Promise<ApiInstagramResponse>).catch(() => null),
       fetch("/api/youtube/videos").then(res => res.json()).catch((): ApiYouTubeResponse => ({ shorts: [], longs: [] }))
     ]).then(([ig, yt]) => {
       setIgStats(ig);
+      setIgMessage(ig?.message || null);
       const response = yt as ApiYouTubeResponse;
       setYtShortsRaw(response?.shorts || []);
       setYtLongsRaw(response?.longs || []);
@@ -349,7 +355,7 @@ export default function YouTubeVideoGrid() {
           
           {hasNoData && (
              <p className="rounded-2xl border border-slate-700/70 bg-slate-900/60 px-6 py-10 text-center text-lg text-slate-300">
-               New content dropping soon
+               {igMessage || "Content loading..."}
              </p>
           )}
         </div>

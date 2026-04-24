@@ -10,6 +10,7 @@ import Image from "next/image";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -22,6 +23,10 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 16);
+    };
+
     const handlePointerDown = (event: MouseEvent | TouchEvent) => {
       if (!open) {
         return;
@@ -42,24 +47,31 @@ export default function Navbar() {
     document.addEventListener("mousedown", handlePointerDown);
     document.addEventListener("touchstart", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
 
     return () => {
       document.removeEventListener("mousedown", handlePointerDown);
       document.removeEventListener("touchstart", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 px-6 py-4 md:px-10">
+    <header
+      className={`fixed inset-x-0 top-0 z-40 px-6 py-4 md:px-2 transition-colors duration-300 ${
+        isScrolled ? "bg-black/25 backdrop-blur-md" : "bg-transparent"
+      }`}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <Link href={pathname === "/" ? "#top" : "/"} className="flex items-center">
           <Image
-            src="/Untitled_design-removebg-preview.png"
+            src="/Updated_bestlogo.png"
             alt="siddhuism_official logo"
             width={300}
             height={300}
-            className="h-12 w-12 object-contain md:h-32 md:w-32"
+            className="h-20 w-auto object-contain md:h-20"
             priority
           />
         </Link>

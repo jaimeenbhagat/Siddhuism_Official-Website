@@ -1,12 +1,5 @@
 export async function refreshInstagramToken(currentToken: string): Promise<string> {
-  const appId = process.env.FB_APP_ID;
-  const appSecret = process.env.FB_APP_SECRET;
-
-  if (!appId || !appSecret) {
-    throw new Error("FB_APP_ID or FB_APP_SECRET is not configured in the environment variables.");
-  }
-
-  const url = `https://graph.facebook.com/v18.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${appId}&client_secret=${appSecret}&fb_exchange_token=${currentToken}`;
+  const url = `https://graph.facebook.com/v18.0/refresh_access_token?grant_type=ig_refresh_token&access_token=${currentToken}`;
 
   try {
     const response = await fetch(url, { method: "GET" });
@@ -17,6 +10,10 @@ export async function refreshInstagramToken(currentToken: string): Promise<strin
     }
 
     const data = await response.json();
+    if (!data?.access_token) {
+      throw new Error("Instagram refresh response did not include an access token.");
+    }
+
     return data.access_token;
   } catch (error) {
     console.error("Instagram token refresh failed:", error instanceof Error ? error.message : "Unknown error");

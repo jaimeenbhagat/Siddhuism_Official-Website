@@ -52,7 +52,7 @@ function ShortsCard({
   onDeactivate: () => void;
   onToggle: () => void;
 }) {
-  const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=${isMobile ? 0 : 1}&controls=${isMobile ? 1 : 0}&modestbranding=1&rel=0&playsinline=1`;
+  const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&playsinline=1`;
 
   return (
     <motion.article
@@ -78,7 +78,7 @@ function ShortsCard({
 
         {isActive ? (
           <iframe
-            className={`absolute inset-0 h-full w-full ${isMobile ? "pointer-events-auto" : "pointer-events-none"}`}
+            className="absolute inset-0 h-full w-full"
             src={embedUrl}
             allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen

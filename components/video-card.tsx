@@ -8,10 +8,6 @@ import { FiPlayCircle } from "react-icons/fi";
 
 type VideoCardProps = {
   item: Pick<PortfolioVideo, "id" | "title" | "video_url" | "thumbnail"> & { category: string };
-  isActive?: boolean;
-  onActivate?: () => void;
-  onDeactivate?: () => void;
-  onToggle?: () => void;
 };
 
 function getYouTubeId(url: string) {
@@ -42,13 +38,8 @@ function useIsMobile() {
   return isMobile;
 }
 
-export default function VideoCard({
-  item,
-  isActive = false,
-  onActivate,
-  onDeactivate,
-  onToggle,
-}: VideoCardProps) {
+export default function VideoCard({ item }: VideoCardProps) {
+  const [isActive, setIsActive] = useState(false);
   const isMobile = useIsMobile();
   const youtubeId = useMemo(() => getYouTubeId(item.video_url), [item.video_url]);
   const isYouTube = item.video_url.includes("youtube.com") || item.video_url.includes("youtu.be");
@@ -58,7 +49,8 @@ export default function VideoCard({
       return "";
     }
 
-    return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=${isMobile ? 0 : 1}&controls=${isMobile ? 1 : 0}&rel=0&playsinline=1&loop=1&playlist=${youtubeId}`;
+    // mute=1 is REQUIRED for autoplay to work on modern browsers
+    return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=1&rel=0&playsinline=1&loop=1&playlist=${youtubeId}`;
   }, [isMobile, youtubeId]);
 
   const thumbnail = useMemo(() => {
@@ -76,11 +68,11 @@ export default function VideoCard({
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.28 }}
       className="group overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/80 shadow-[0_12px_45px_rgba(2,6,23,0.45)]"
-      onMouseEnter={isMobile ? undefined : onActivate}
-      onMouseLeave={isMobile ? undefined : onDeactivate}
-      onClick={isMobile ? onToggle : undefined}
-      role={isMobile ? "button" : undefined}
-      aria-label={isMobile ? `Play ${item.title}` : undefined}
+      onMouseEnter={isMobile ? undefined : () => setIsActive(true)}
+      onMouseLeave={isMobile ? undefined : () => setIsActive(false)}
+      onClick={isMobile ? () => setIsActive(!isActive) : () => window.open(item.video_url, "_blank")}
+      role={isMobile ? "button" : "link"}
+      aria-label={isMobile ? `Play ${item.title}` : `Watch ${item.title} on YouTube`}
     >
       <div className="relative aspect-video overflow-hidden">
         {isYouTube && youtubeId ? (
@@ -99,7 +91,7 @@ export default function VideoCard({
                 loading="lazy"
                 allow="autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen
-                className={`absolute inset-0 h-full w-full ${isMobile ? "pointer-events-auto" : "pointer-events-none"}`}
+                className={`absolute inset-0 h-full w-full ${!isMobile ? "pointer-events-none" : ""}`}
               />
             ) : null}
           </>
@@ -116,9 +108,9 @@ export default function VideoCard({
               <video
                 src={item.video_url}
                 poster={item.thumbnail}
-                className="absolute inset-0 h-full w-full object-cover"
+                className={`absolute inset-0 h-full w-full object-cover ${!isMobile ? "pointer-events-none" : ""}`}
                 autoPlay
-                muted={!isMobile}
+                muted
                 loop
                 playsInline
                 controls={isMobile}
@@ -136,6 +128,19 @@ export default function VideoCard({
             </div>
           </div>
         ) : null}
+
+        {isMobile && isActive && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsActive(false);
+            }}
+            className="absolute top-3 right-3 z-10 rounded-full bg-black/60 p-2 text-white hover:bg-black/80"
+            aria-label="Close video"
+          >
+            ✕
+          </button>
+        )}
 
         <a
           href={item.video_url}

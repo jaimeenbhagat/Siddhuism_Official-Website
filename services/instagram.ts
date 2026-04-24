@@ -1,7 +1,7 @@
 import { fetchJsonWithRetry } from "@/services/api-utils";
 import { readCachedSnapshot, writeCachedSnapshot } from "@/services/social-cache";
 import type { InstagramMedia, InstagramSnapshot } from "@/lib/social-types";
-import { getSupabaseClient } from "@/lib/supabaseClient";
+import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 type InstagramResponse = {
   media_count?: number;
@@ -21,22 +21,18 @@ type InstagramResponse = {
 
 async function requireConfig() {
   const userId = process.env.INSTAGRAM_USER_ID;
-  let accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
+  let accessToken: string | null = null;
 
-  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    try {
-      const supabase = getSupabaseClient();
-      const { data, error } = await supabase
-        .from("app_config")
-        .select("value")
-        .eq("key", "instagram_token")
-        .single();
-        
-      if (!error && data?.value) {
-        accessToken = data.value;
-      }
-    } catch (err) {
-      console.warn("Failed to fetch instagram_token from Supabase, falling back to env:", err);
+  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const supabase = getSupabaseAdminClient();
+    const { data, error } = await supabase
+      .from("instagram_tokens")
+      .select("access_token")
+      .eq("id", 1)
+      .single();
+
+    if (!error && data?.access_token) {
+      accessToken = data.access_token;
     }
   }
 
@@ -107,7 +103,7 @@ export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
     source: "live",
   };
 
-  await writeCachedSnapshot("instagram", snapshot);
+  await writeCachedSnapshot("instagram", snapshot, 10);
   return snapshot;
 }
 
@@ -117,5 +113,14 @@ export async function getInstagramSnapshot() {
     return { ...cached.data, fetchedAt: cached.fetchedAt, source: "cache" as const };
   }
 
-  return refreshInstagramSnapshot();
+  try {
+    return await refreshInstagramSnapshot();
+  } catch (error) {
+    const staleCached = await readCachedSnapshot<InstagramSnapshot>("instagram", true);
+    if (staleCached) {
+      return { ...staleCached.data, fetchedAt: staleCached.fetchedAt, source: "cache" as const };
+    }
+
+    throw error;
+  }
 }

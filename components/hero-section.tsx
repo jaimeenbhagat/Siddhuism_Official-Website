@@ -129,7 +129,7 @@ function HeroStats({ stats }: { stats: LiveStats }) {
         </div>
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-pink-500"></span>
-          <span>YouTube • Instagram</span>
+          <span>YouTube | Instagram</span>
         </div>
       </div>
     </div>

@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
-import { getSupabaseClient } from "@/lib/supabaseClient";
+import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 export const runtime = "nodejs";
 
 export async function GET() {
-  const supabase = getSupabaseClient();
-  await supabase.from("app_config").delete().eq("key", "instagram_token");
-  return NextResponse.json({ success: true, message: "Deleted old token from app_config" });
+  const supabase = getSupabaseAdminClient();
+  const { error } = await supabase.from("instagram_tokens").update({ access_token: "" }).eq("id", 1);
+
+  if (error) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true, message: "Cleared token in instagram_tokens." });
 }
