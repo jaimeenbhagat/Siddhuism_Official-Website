@@ -17,8 +17,8 @@ const socialIconByLabel = {
 
 export default function AboutSection() {
   return (
-    <section id="about" className="px-6 py-12 md:py-16">
-      <div className="mx-auto max-w-6xl">
+    <section id="about" className="px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-10">
+      <div className="mx-auto w-full max-w-[1400px] 2xl:max-w-[1600px]">
         <SectionHeading
           eyebrow="Creator Bio"
           title="The face behind Siddhuism Official"
@@ -30,9 +30,9 @@ export default function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5 }}
-          className="grid gap-6 md:gap-8 overflow-hidden rounded-[2rem] border border-slate-700/60 bg-gradient-to-br from-slate-950/80 via-blue-950/25 to-violet-950/25 p-6 shadow-[0_20px_60px_rgba(2,6,23,0.5)] backdrop-blur-2xl md:grid-cols-[280px_1fr] md:p-10"
+          className="grid gap-6 overflow-hidden rounded-[2rem] border border-slate-700/60 bg-gradient-to-br from-slate-950/80 via-blue-950/25 to-violet-950/25 p-5 shadow-[0_20px_60px_rgba(2,6,23,0.5)] backdrop-blur-2xl sm:p-6 md:gap-8 md:grid-cols-[minmax(240px,280px)_minmax(0,1fr)] md:p-8 lg:p-10"
         >
-          <div className="relative mx-auto h-56 w-56 rounded-full p-2 shadow-[0_0_60px_rgba(34,211,238,0.35)]">
+          <div className="relative mx-auto aspect-square w-full max-w-[14rem] rounded-full p-2 shadow-[0_0_60px_rgba(34,211,238,0.35)] sm:max-w-[15rem] md:max-w-[16rem]">
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-300/45 via-amber-400/25 to-amber-500/30 blur-2xl" />
             <div className="relative h-full w-full overflow-hidden rounded-full border border-blue-300/30">
               <Image
@@ -51,7 +51,7 @@ export default function AboutSection() {
               I create short-form and long-form content that blends cinematic polish with platform-native storytelling. From travel experiences to lifestyle edits and hospitality-focused narratives, every frame is designed to drive watch time and memorable brand impact.
             </p>
 
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {[
                 { label: "Content pillars", value: "Travel / Lifestyle / Reels" },
                 { label: "Editing style", value: "Sharp, luminous, premium" },

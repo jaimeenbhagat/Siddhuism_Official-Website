@@ -2,6 +2,7 @@ import { fetchJsonWithRetry } from "@/services/api-utils";
 import { readCachedSnapshot, writeCachedSnapshot } from "@/services/social-cache";
 import type { InstagramMedia, InstagramSnapshot } from "@/lib/social-types";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
+import { getInstagramMediaRows, mapInstagramRowToMedia, upsertInstagramMediaRows, type InstagramMediaRow } from "@/lib/instagram-db";
 
 type InstagramResponse = {
   media_count?: number;
@@ -57,16 +58,38 @@ function mapMedia(item: InstagramResponse["data"][number]): InstagramMedia {
   };
 }
 
-async function fetchInsights(mediaId: string, accessToken: string): Promise<number | null> {
+function buildSnapshotFromMedia(media: InstagramMedia[], base?: Partial<InstagramSnapshot>): InstagramSnapshot {
+  return {
+    username: base?.username || "siddhuism_official",
+    mediaCount: base?.mediaCount || media.length,
+    followersCount: base?.followersCount || 0,
+    profilePictureUrl: base?.profilePictureUrl || "",
+    media,
+    fetchedAt: base?.fetchedAt || new Date().toISOString(),
+    source: base?.source || "cache",
+  };
+}
+
+async function fetchInsightMetric(mediaId: string, accessToken: string, metric: string): Promise<number | null> {
   try {
-    const url = `https://graph.facebook.com/v18.0/${mediaId}/insights?metric=views&access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/v18.0/${mediaId}/insights?metric=${metric}&access_token=${accessToken}`;
     const res = await fetchJsonWithRetry<{ data?: Array<{ name: string; values: Array<{ value: number }> }> }>(url);
-    const viewsData = res.data?.find(d => d.name === "views");
-    return viewsData?.values?.[0]?.value ?? null;
+    const metricData = res.data?.find((entry) => entry.name === metric);
+    return metricData?.values?.[0]?.value ?? null;
   } catch (error) {
-    console.warn(`Failed to fetch views for media ${mediaId}`, error);
     return null;
   }
+}
+
+async function fetchMediaViews(mediaId: string, accessToken: string): Promise<number | null> {
+  for (const metric of ["plays", "video_views", "views"]) {
+    const value = await fetchInsightMetric(mediaId, accessToken, metric);
+    if (value !== null) {
+      return value;
+    }
+  }
+
+  return null;
 }
 
 export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
@@ -84,7 +107,7 @@ export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
     mediaResponse.data.map(async (item) => {
       const media = mapMedia(item);
       if (media.mediaType === "VIDEO") {
-        const views = await fetchInsights(media.id, accessToken);
+        const views = await fetchMediaViews(media.id, accessToken);
         if (views !== null) {
           media.viewCount = views;
         }
@@ -92,6 +115,22 @@ export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
       return media;
     })
   );
+
+  const mediaRows: InstagramMediaRow[] = mediaWithInsights.map((media) => ({
+    id: media.id,
+    caption: media.caption || null,
+    media_type: media.mediaType,
+    media_url: media.mediaUrl,
+    thumbnail_url: media.thumbnailUrl || null,
+    permalink: media.permalink,
+    like_count: media.likeCount,
+    comments_count: media.commentsCount,
+    view_count: media.viewCount || 0,
+    timestamp: media.timestamp,
+    fetched_at: new Date().toISOString(),
+  }));
+
+  await upsertInstagramMediaRows(mediaRows);
 
   const snapshot: InstagramSnapshot = {
     username: profileResponse.username || "siddhuism_official",
@@ -108,9 +147,27 @@ export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
 }
 
 export async function getInstagramSnapshot() {
-  const cached = await readCachedSnapshot<InstagramSnapshot>("instagram");
-  if (cached) {
-    return { ...cached.data, fetchedAt: cached.fetchedAt, source: "cache" as const };
+  try {
+    const cached = await readCachedSnapshot<InstagramSnapshot>("instagram");
+    const rows = await getInstagramMediaRows(15);
+
+    if (rows.length) {
+      const media = rows.map(mapInstagramRowToMedia);
+      return buildSnapshotFromMedia(media, cached?.data ? {
+        username: cached.data.username,
+        mediaCount: cached.data.mediaCount,
+        followersCount: cached.data.followersCount,
+        profilePictureUrl: cached.data.profilePictureUrl,
+        fetchedAt: rows[0]?.fetched_at || cached.data.fetchedAt,
+        source: cached.data.source,
+      } : undefined);
+    }
+
+    if (cached) {
+      return { ...cached.data, fetchedAt: cached.fetchedAt, source: "cache" as const };
+    }
+  } catch {
+    // Fall through to live refresh below.
   }
 
   try {

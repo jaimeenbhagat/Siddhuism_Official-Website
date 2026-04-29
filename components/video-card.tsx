@@ -43,6 +43,7 @@ export default function VideoCard({ item }: VideoCardProps) {
   const isMobile = useIsMobile();
   const youtubeId = useMemo(() => getYouTubeId(item.video_url), [item.video_url]);
   const isYouTube = item.video_url.includes("youtube.com") || item.video_url.includes("youtu.be");
+  const openTarget = item.video_url;
 
   const embedSrc = useMemo(() => {
     if (!youtubeId) {
@@ -50,7 +51,7 @@ export default function VideoCard({ item }: VideoCardProps) {
     }
 
     return `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=0&controls=1&rel=0&playsinline=1&loop=1&playlist=${youtubeId}`;
-  }, [isMobile, youtubeId]);
+  }, [youtubeId]);
 
   const thumbnail = useMemo(() => {
     if (youtubeId) {
@@ -69,7 +70,19 @@ export default function VideoCard({ item }: VideoCardProps) {
       className="group overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/80 shadow-[0_12px_45px_rgba(2,6,23,0.45)]"
       onMouseEnter={isMobile ? undefined : () => setIsActive(true)}
       onMouseLeave={isMobile ? undefined : () => setIsActive(false)}
-      onClick={isMobile ? () => setIsActive(!isActive) : () => window.open(item.video_url, "_blank")}
+      onClick={() => {
+        if (isMobile) {
+          if (isActive) {
+            window.location.href = openTarget;
+            return;
+          }
+
+          setIsActive(true);
+          return;
+        }
+
+        window.location.href = openTarget;
+      }}
       role={isMobile ? "button" : "link"}
       aria-label={isMobile ? `Play ${item.title}` : `Watch ${item.title} on YouTube`}
     >
@@ -90,7 +103,7 @@ export default function VideoCard({ item }: VideoCardProps) {
                 loading="lazy"
                 allow="autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen
-                className={`absolute inset-0 h-full w-full ${!isMobile ? "pointer-events-none" : ""}`}
+                className="absolute inset-0 h-full w-full pointer-events-none"
               />
             ) : null}
           </>
@@ -107,12 +120,12 @@ export default function VideoCard({ item }: VideoCardProps) {
               <video
                 src={item.video_url}
                 poster={item.thumbnail}
-                className={`absolute inset-0 h-full w-full object-cover ${!isMobile ? "pointer-events-none" : ""}`}
+                className="absolute inset-0 h-full w-full object-cover pointer-events-none"
                 autoPlay
                 muted={false}
                 loop
                 playsInline
-                controls={isMobile}
+                controls={false}
                 preload="metadata"
               />
             ) : null}
@@ -141,15 +154,11 @@ export default function VideoCard({ item }: VideoCardProps) {
           </button>
         )}
 
-        <a
-          href={item.video_url}
-          target="_blank"
-          rel="noreferrer"
-          onClick={(event) => event.stopPropagation()}
-          className="absolute right-3 bottom-3 rounded-full border border-slate-300/30 bg-black/55 px-3 py-1.5 text-xs text-white backdrop-blur-md transition hover:border-blue-300/60 hover:text-blue-100"
+        <div
+          className="pointer-events-none absolute right-3 bottom-3 rounded-full border border-slate-300/30 bg-black/55 px-3 py-1.5 text-xs text-white backdrop-blur-md transition hover:border-blue-300/60 hover:text-blue-100"
         >
           {isYouTube ? "Open on YouTube" : "Open on Platform"}
-        </a>
+        </div>
       </div>
 
       <div className="p-4">

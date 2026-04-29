@@ -77,8 +77,8 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           {
             name: "The Forest Club Resort | Luxury Resorts & Nature Retreats",
             videos: [
-              "https://www.youtube.com/shorts/x7ytfWGR0bg",
-              "https://www.youtube.com/shorts/ksufbsiDWV8"
+              "https://www.youtube.com/shorts/Pzrgbny81Ho",
+              "https://www.youtube.com/shorts/ygm0R8J4oIY"
             ].map(parseVideo)
           }
         ]
@@ -112,9 +112,51 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           {
             name: "Flipkart | Fashion & E-commerce Lifestyle",
             videos: [
-              "https://www.youtube.com/shorts/VYMEosyk488",
+              "https://www.youtube.com/shorts/4TwTfhRFHK4",
+              "https://www.youtube.com/shorts/BNOjko5yq8I",
+              "https://www.youtube.com/shorts/hf1cfFd2Tyk",
+              "https://www.youtube.com/shorts/MUyzDpwK99c",
+              "https://www.youtube.com/shorts/LNC04KEAiXo",
+              "https://www.youtube.com/shorts/SGoFaqMnua4",
+              "https://www.youtube.com/shorts/DzAYr2XI8NI",
+              "https://www.youtube.com/shorts/0KBvSCr0oYg",
+              "https://www.youtube.com/shorts/rB6-vBKr7mM",
+              "https://www.youtube.com/shorts/bCxnZsMBqTE",
+              "https://www.youtube.com/shorts/sn6VX3dV1Yo",
+              "https://www.youtube.com/shorts/dxyg31h2C9Q",
+              "https://www.youtube.com/shorts/F9VHDUhKalQ",
+              "https://www.youtube.com/shorts/nL5_RMpESmo",
+              "https://www.youtube.com/shorts/5iZ-xmgfF04",
+              "https://www.youtube.com/shorts/OBz3HKX05G4",
+              "https://www.youtube.com/shorts/fP5eMRwVOuM",
+              "https://www.youtube.com/shorts/XUh-XBPpKsU",
+              "https://www.youtube.com/shorts/IIMEAmnrcbM",
+              "https://www.youtube.com/shorts/6akAlEgLqbk",
+              "https://www.youtube.com/shorts/y3Rl0-y9a4I",
+              "https://www.youtube.com/shorts/tuFHqrH1gEA",
+              "https://www.youtube.com/shorts/F0ds4DXDpko",
+              "https://www.youtube.com/shorts/wpzWHJtPKfk",
+              "https://www.youtube.com/shorts/n-vHr-fmn4U",
+              "https://www.youtube.com/shorts/6FgugaaNKn8",
+              "https://www.youtube.com/shorts/4H_JGYreTso",
               "https://www.youtube.com/shorts/8vPKC2fqlw0",
-              "https://www.youtube.com/shorts/4H_JGYreTso"
+              "https://www.youtube.com/shorts/VYMEosyk488",
+              "https://www.youtube.com/shorts/WvC8_iyptgo",
+              "https://www.youtube.com/shorts/eLWFuu4vpNI",
+              "https://www.youtube.com/shorts/UfurLGh78a0",
+              "https://www.youtube.com/shorts/UlIcikIpE48",
+              "https://www.youtube.com/shorts/a4sv1bdxpHk",
+              "https://www.youtube.com/shorts/ipD14IzH_dg",
+              "https://www.youtube.com/shorts/qvHP6e-E70U",
+              "https://www.youtube.com/shorts/8rhb8688F-s",
+              "https://www.youtube.com/shorts/vqYgLIoz3iY",
+              "https://www.youtube.com/shorts/AiWSAsGHHeg",
+              "https://www.youtube.com/shorts/-7jfYLenHKw",
+              "https://www.youtube.com/shorts/vSkpFCDi5ag",
+              "https://www.youtube.com/shorts/PZESk7ms8F4",
+              "https://www.youtube.com/shorts/Hm-PC3k-Yq4",
+              "https://www.youtube.com/shorts/scjVV9IhLaw",
+              "https://www.youtube.com/shorts/SLHyMqSeRvM"
             ].map(parseVideo)
           },
           {
@@ -139,7 +181,9 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           {
             name: "Rvoice Events | Live Events & Public Relations",
             description: "Pending Edits",
-            videos: []
+            videos: [
+              "https://www.youtube.com/watch?v=64wPib17LQo"
+            ].map(parseVideo)
           }
         ]
       }

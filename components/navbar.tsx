@@ -33,20 +33,20 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-40 px-6 py-4 md:px-2 transition-colors duration-300 ${
+      className={`fixed inset-x-0 top-0 z-40 px-4 py-3 sm:px-6 md:px-8 transition-colors duration-300 ${
         isScrolled ? "bg-black/25 backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-3 2xl:max-w-[1600px]">
         <nav
           aria-label="Primary"
-          className="flex flex-wrap items-center gap-2 rounded-full border border-white/10 bg-slate-950/70 px-3 py-2 shadow-[0_12px_30px_rgba(0,0,0,0.18)] backdrop-blur-md"
+          className="flex min-w-0 flex-wrap items-center justify-center gap-1 rounded-full border border-white/10 bg-slate-950/70 px-2 py-2 shadow-[0_12px_30px_rgba(0,0,0,0.18)] backdrop-blur-md sm:gap-2 sm:px-3"
         >
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={resolveHref(link.href)}
-              className="rounded-full px-4 py-2 text-sm font-medium text-slate-100 transition hover:bg-white/10 hover:text-blue-300"
+              className="rounded-full px-3 py-2 text-xs font-medium text-slate-100 transition hover:bg-white/10 hover:text-blue-300 sm:px-4 sm:text-sm"
             >
               {link.label}
             </Link>
@@ -59,7 +59,7 @@ export default function Navbar() {
             alt="siddhuism_official logo"
             width={300}
             height={300}
-            className="h-20 w-auto object-contain md:h-20"
+            className="h-14 w-auto object-contain sm:h-16 md:h-20"
             priority
           />
         </Link>

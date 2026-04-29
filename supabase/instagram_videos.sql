@@ -7,6 +7,7 @@ create table if not exists public.instagram_media (
   permalink text not null,
   like_count integer not null default 0,
   comments_count integer not null default 0,
+  view_count integer not null default 0,
   timestamp timestamptz not null,
   fetched_at timestamptz not null default now(),
   created_at timestamptz not null default now()
@@ -14,6 +15,9 @@ create table if not exists public.instagram_media (
 
 alter table public.instagram_media
   add column if not exists thumbnail_url text;
+
+alter table public.instagram_media
+  add column if not exists view_count integer not null default 0;
 
 create index if not exists instagram_media_timestamp_idx
   on public.instagram_media (timestamp desc);

@@ -128,9 +128,9 @@ export default async function PortfolioProjectPage({ params }: Props) {
       <ScrollProgress />
       <Navbar />
 
-      <main className="relative overflow-hidden px-6 pt-24 pb-20 md:pt-28 md:pb-26">
+      <main className="relative overflow-hidden px-4 pt-24 pb-20 sm:px-6 md:px-8 md:pt-28 md:pb-24 lg:px-10">
         <PageFadeIn>
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto w-full max-w-350 2xl:max-w-400">
           <nav className="mb-5 text-sm text-slate-400">
             <Link href="/portfolio" className="hover:text-blue-300">
               Portfolio
@@ -142,7 +142,7 @@ export default async function PortfolioProjectPage({ params }: Props) {
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.22em] text-blue-300">{projectCategory}</p>
-              <h1 className="mt-2 text-3xl font-semibold text-slate-100 md:text-5xl">{projectTitle}</h1>
+              <h1 className="mt-2 text-2xl font-semibold text-slate-100 sm:text-3xl md:text-4xl lg:text-5xl">{projectTitle}</h1>
               <p className="mt-3 text-sm text-slate-400 md:text-base">
                 {projectDescription || "Full project work with all published videos for this brand."}
               </p>
@@ -156,7 +156,7 @@ export default async function PortfolioProjectPage({ params }: Props) {
             </Link>
           </div>
 
-          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {videos.map((item) => (
               <VideoCard key={item.id} item={{ ...item, category: item.categoryLabel }} />
             ))}

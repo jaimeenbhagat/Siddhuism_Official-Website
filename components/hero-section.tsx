@@ -62,9 +62,9 @@ function StatCard({ label, value, icon, isText = false, isLive = false, numericV
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="flex flex-1 items-center gap-3 rounded-xl border border-slate-700/50 bg-slate-900/50 p-3 shadow-md backdrop-blur-md min-w-[140px]"
+      className="flex min-w-35 flex-1 items-center gap-3 rounded-xl border border-slate-700/50 bg-slate-900/50 p-3 shadow-md backdrop-blur-md"
     >
-      <div className="flex-shrink-0">{icon}</div>
+      <div className="shrink-0">{icon}</div>
       <div>
         <p className={`font-semibold text-slate-100 flex items-center ${isText ? 'text-xs leading-tight' : 'text-lg md:text-xl tracking-tight'}`}>
           {isLive ? (
@@ -190,38 +190,41 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
     if (!node) return;
     if (node.requestFullscreen) {
       void node.requestFullscreen();
-    } else if ((node as any).webkitRequestFullscreen) {
-      void (node as any).webkitRequestFullscreen();
+    } else {
+      const webkitNode = node as HTMLVideoElement & { webkitRequestFullscreen?: () => void };
+      if (webkitNode.webkitRequestFullscreen) {
+        void webkitNode.webkitRequestFullscreen();
+      }
     }
   };
 
 
 
   return (
-    <section id="top" className="relative overflow-hidden px-6 pt-6 md:pt-3">
+    <section id="top" className="relative overflow-hidden px-4 pt-6 sm:px-6 md:px-8 md:pt-3 lg:px-10">
       <div className="hero-gradient absolute inset-0 -z-20" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_30%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_30%)]" />
 
-      <div className="mx-auto flex min-h-screen w-full max-w-7xl items-center py-12 md:py-16">
+      <div className="mx-auto flex min-h-screen w-full max-w-350 items-center py-12 sm:py-14 md:py-16 lg:max-w-400">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65 }}
-          className="grid w-full gap-6 md:gap-8 lg:grid-cols-2 lg:items-center"
+          className="grid w-full gap-6 md:gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center"
         >
           <div className="w-full">
             <p className="mb-4 inline-flex rounded-full border border-gray-700/60 bg-gray-900/50 px-4 py-1 text-sm font-medium uppercase tracking-[0.2em] text-gray-500 backdrop-blur-xl">
               Creator Portfolio
             </p>
-            <h1 className="text-balance text-3xl font-bold tracking-tight text-slate-100 md:text-5xl">
+            <h1 className="text-balance text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
               siddhuism_official
             </h1>
-            <p className="mt-4 text-pretty text-lg font-medium leading-8 text-gray-400 md:text-xl md:leading-9">
+            <p className="mt-4 max-w-2xl text-pretty text-sm font-medium leading-7 text-gray-400 sm:text-base md:text-lg md:leading-8 lg:text-xl lg:leading-9">
               {typingText}
               <span className="ml-1 animate-pulse text-blue-300">|</span>
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-slate-400">
+            <div className="mt-8 flex flex-wrap items-center gap-3 text-xs text-slate-400 sm:text-sm">
               <span className="rounded-full border border-slate-700/80 bg-slate-900/70 px-4 py-2 backdrop-blur-lg">Travel first</span>
               <span className="rounded-full border border-slate-700/80 bg-slate-900/70 px-4 py-2 backdrop-blur-lg">Premium reels</span>
               <span className="rounded-full border border-slate-700/80 bg-slate-900/70 px-4 py-2 backdrop-blur-lg">Lifestyle edits</span>
@@ -230,13 +233,13 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
             <div className="mt-10 flex flex-wrap gap-4">
               <button
                 onClick={onWatchClick}
-                className="rounded-full bg-gradient-to-r from-blue-500 via-violet-500 to-fuchsia-500 px-6 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(99,102,241,0.35)] transition hover:scale-[1.02]"
+                className="rounded-full bg-linear-to-r from-blue-500 via-violet-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(99,102,241,0.35)] transition hover:scale-[1.02] sm:px-6"
               >
                 Watch Content
               </button>
               <button
                 onClick={onContactClick}
-                className="rounded-full border border-slate-700/80 bg-slate-950/55 px-6 py-3 text-sm font-semibold text-slate-100 backdrop-blur-xl transition hover:border-blue-300/55 hover:bg-slate-900/90"
+                className="rounded-full border border-slate-700/80 bg-slate-950/55 px-5 py-3 text-sm font-semibold text-slate-100 backdrop-blur-xl transition hover:border-blue-300/55 hover:bg-slate-900/90 sm:px-6"
               >
                 Contact
               </button>
@@ -251,14 +254,14 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
             transition={{ duration: 0.75, delay: 0.12 }}
             className="relative w-full"
           >
-            <div className="absolute inset-2 rounded-2xl bg-gradient-to-br from-blue-500/30 via-transparent to-violet-500/25 blur-3xl" />
+            <div className="absolute inset-2 rounded-2xl bg-linear-to-br from-blue-500/30 via-transparent to-violet-500/25 blur-3xl" />
 
             <div className="mb-6 flex items-center justify-center gap-3 relative z-10">
               <div className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
-              <h3 className="text-slate-100 font-bold tracking-[0.2em] uppercase text-base md:text-xl text-glow">Highlight Reel</h3>
+              <h3 className="text-base font-bold uppercase tracking-[0.2em] text-slate-100 text-glow md:text-xl">Highlight Reel</h3>
             </div>
 
-            <div className="relative w-full aspect-video overflow-hidden rounded-2xl border border-slate-700/50 shadow-[0_0_40px_rgba(99,102,241,0.2)] bg-black group">
+            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-slate-700/50 bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] group">
               <video
                 ref={videoRef}
                 src={heroVideoUrl}
@@ -270,7 +273,7 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
                 preload="metadata"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <button

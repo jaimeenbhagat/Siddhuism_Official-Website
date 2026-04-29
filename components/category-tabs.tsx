@@ -10,7 +10,7 @@ type CategoryTabsProps = {
 
 export default function CategoryTabs({ active, onChange }: CategoryTabsProps) {
   return (
-    <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
       {PORTFOLIO_TABS.map((tab, index) => {
         const selected = active === tab.key;
         return (

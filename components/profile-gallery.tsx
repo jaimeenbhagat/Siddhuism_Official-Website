@@ -17,15 +17,15 @@ export default function ProfileGallery() {
   const [active, setActive] = useState<string | null>(null);
 
   return (
-    <section id="profile" className="px-6 py-12 md:py-16">
-      <div className="mx-auto max-w-7xl">
+    <section id="profile" className="px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-10">
+      <div className="mx-auto w-full max-w-[1400px] 2xl:max-w-[1600px]">
         <SectionHeading
           eyebrow="Profile"
           title="Personal frames from the creator journey"
           description="A curated gallery of moments that adds personality and story depth to the portfolio."
         />
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {MOMENTS.map((src, index) => (
             <motion.button
               key={src}
@@ -56,7 +56,7 @@ export default function ProfileGallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-5"
+            className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-4 sm:p-5"
             onClick={() => setActive(null)}
           >
             <motion.img

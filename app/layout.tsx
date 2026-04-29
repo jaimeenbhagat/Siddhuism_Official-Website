@@ -44,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${poppins.variable} ${spaceGrotesk.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#06070f] text-slate-100" suppressHydrationWarning>{children}</body>
+      <body className="min-h-full flex flex-col overflow-x-hidden bg-[#06070f] text-slate-100" suppressHydrationWarning>{children}</body>
     </html>
   );
 }

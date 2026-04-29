@@ -57,7 +57,7 @@ export default function ClientLogoCarousel() {
   const logoCards = useMemo(
     () =>
       marqueeLogos.map((logo, index) => (
-        <div key={`${logo}-${index}`} className="flex h-[100px] w-[150px] items-center justify-center md:h-[140px] md:w-[220px]">
+        <div key={`${logo}-${index}`} className="flex h-21 w-31 items-center justify-center sm:h-24 sm:w-36 md:h-30 md:w-45 lg:h-35 lg:w-55">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={encodeURI(logo)}
@@ -71,8 +71,8 @@ export default function ClientLogoCarousel() {
   );
 
   return (
-    <section className="px-6 py-12 md:py-16">
-      <div className="mx-auto max-w-7xl">
+    <section className="px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-10">
+      <div className="mx-auto w-full max-w-350 2xl:max-w-400">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -91,10 +91,10 @@ export default function ClientLogoCarousel() {
           onMouseLeave={resumeAnimation}
           onTouchStart={handleTouchStart}
         >
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-32 bg-gradient-to-r from-black to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-32 bg-gradient-to-l from-black to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-linear-to-r from-black to-transparent sm:w-28 md:w-32" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-linear-to-l from-black to-transparent sm:w-28 md:w-32" />
 
-          <div ref={trackRef} className="logo-track animate-scroll flex w-max items-center gap-6 px-4 md:gap-8 md:px-6">
+          <div ref={trackRef} className="logo-track animate-scroll flex w-max items-center gap-4 px-2 sm:gap-6 sm:px-4 md:gap-8 md:px-6">
             {logoCards}
           </div>
         </div>

@@ -63,8 +63,8 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="px-6 py-12 md:py-16">
-      <div className="mx-auto max-w-4xl">
+    <section id="contact" className="px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-10">
+      <div className="mx-auto w-full max-w-5xl 2xl:max-w-6xl">
         <SectionHeading
           eyebrow="Contact"
           title="Ready for collaborations and creative campaigns"
@@ -77,9 +77,9 @@ export default function ContactSection() {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.4 }}
           onSubmit={onSubmit}
-          className="rounded-3xl border border-slate-700/70 bg-slate-950/70 p-6 backdrop-blur-xl md:p-10"
+          className="rounded-3xl border border-slate-700/70 bg-slate-950/70 p-5 backdrop-blur-xl sm:p-6 md:p-8 lg:p-10"
         >
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 md:gap-5">
             <label className="text-sm text-slate-300">
               Name
               <input

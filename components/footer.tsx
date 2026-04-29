@@ -12,8 +12,8 @@ const socialIconByLabel = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-700/70 px-6 py-8">
-      <div className="mx-auto flex max-w-6xl flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-400">
+    <footer className="border-t border-slate-700/70 px-4 py-8 sm:px-6 md:px-8 lg:px-10">
+      <div className="mx-auto flex w-full max-w-350 flex-col items-center justify-between gap-4 text-sm text-slate-400 md:flex-row 2xl:max-w-400">
         <p>© {new Date().getFullYear()} siddhuism_official</p>
         
         <div className="flex items-center gap-4">

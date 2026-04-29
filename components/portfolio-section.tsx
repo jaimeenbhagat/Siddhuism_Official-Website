@@ -8,7 +8,7 @@ import type { PortfolioTabKey, PortfolioVideo } from "@/lib/portfolio-db";
 
 function SkeletonCards() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
       {Array.from({ length: 6 }).map((_, index) => (
         <div key={index} className="overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-900/65">
           <div className="aspect-video animate-pulse bg-slate-800" />
@@ -57,8 +57,8 @@ export default function PortfolioSection() {
   );
 
   return (
-    <section id="portfolio" className="px-6 py-12 md:py-16">
-      <div className="mx-auto max-w-7xl">
+    <section id="portfolio" className="px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-10">
+      <div className="mx-auto w-full max-w-[1400px] 2xl:max-w-[1600px]">
         <SectionHeading
           eyebrow="Portfolio"
           title="Brand work, projects, and external content"
@@ -72,7 +72,7 @@ export default function PortfolioSection() {
         {loading ? (
           <SkeletonCards />
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {filtered.map((item) => (
               <VideoCard
                 key={item.id}

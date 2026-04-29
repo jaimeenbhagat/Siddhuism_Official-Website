@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { FiInstagram, FiYoutube, FiEye, FiHeart, FiMessageCircle, FiPlayCircle } from "react-icons/fi";
@@ -61,13 +61,59 @@ function InstagramReelCard({
   onDeactivate: () => void;
   onToggle: () => void;
 }) {
+  const cardRef = useRef<HTMLElement | null>(null);
+  const [showThumbnailFallback, setShowThumbnailFallback] = useState(false);
   const isVideo = media.mediaType === 'VIDEO';
+  const openTarget = media.permalink;
+  const videoSrc = `/api/instagram/media/${media.id}`;
+
+  useEffect(() => {
+    if (!isActive) {
+      return;
+    }
+
+    setShowThumbnailFallback(false);
+    console.log("Instagram Video URL:", videoSrc);
+    console.log("isActive:", isActive);
+  }, [isActive, videoSrc]);
+
+  useEffect(() => {
+    const node = cardRef.current;
+
+    if (!node || isMobile) {
+      return;
+    }
+
+    const handleMouseEnter = () => onActivate();
+    const handleMouseLeave = () => onDeactivate();
+
+    node.addEventListener("mouseenter", handleMouseEnter);
+    node.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      node.removeEventListener("mouseenter", handleMouseEnter);
+      node.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [isMobile, onActivate, onDeactivate]);
+
+  const handleCardClick = () => {
+    if (isMobile) {
+      if (isActive) {
+        window.location.href = openTarget;
+        return;
+      }
+
+      onToggle();
+      return;
+    }
+
+    window.location.href = openTarget;
+  };
 
   return (
     <motion.article
-      onMouseEnter={isMobile ? undefined : onActivate}
-      onMouseLeave={isMobile ? undefined : onDeactivate}
-      onClick={isMobile ? onToggle : () => window.open(media.permalink, "_blank")}
+      ref={cardRef}
+      onClick={handleCardClick}
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -75,26 +121,33 @@ function InstagramReelCard({
       role={isMobile ? "button" : undefined}
       aria-label={isMobile ? `Play ${media.caption?.slice(0, 40) || "Instagram reel"}` : undefined}
     >
-      <div className="absolute inset-0 bg-slate-900">
-        <Image
-          src={media.thumbnailUrl || media.mediaUrl}
-          alt={media.caption?.slice(0, 50) || "Instagram Reel"}
-          fill
-          className={`object-cover transition duration-700 ${isActive ? "opacity-0" : "opacity-100 group-hover:scale-105"}`}
-        />
-        <div className={`absolute inset-0 bg-linear-to-t from-black/85 via-black/15 to-transparent transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`} />
-        
-        {isActive && isVideo && (
+      <div className="relative h-full w-full overflow-hidden rounded-xl bg-slate-900">
+        {isActive && isVideo && !showThumbnailFallback ? (
           <video
-            src={media.mediaUrl}
-            className="absolute inset-0 h-full w-full object-cover"
-            autoPlay
-            muted={false}
-            loop
+            key={media.mediaUrl}
+            src={videoSrc}
+            className="absolute inset-0 z-10 h-full w-full object-cover transition-opacity duration-300"
+            muted
             playsInline
-            controls
+            autoPlay={isActive}
+            loop
+            preload="metadata"
+            onError={() => setShowThumbnailFallback(true)}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        ) : null}
+
+        {!isActive || showThumbnailFallback ? (
+          <Image
+            src={media.thumbnailUrl || media.mediaUrl}
+            alt={media.caption?.slice(0, 50) || "Instagram Reel"}
+            fill
+            className="absolute inset-0 z-10 object-cover transition-opacity duration-300 group-hover:scale-105"
           />
-        )}
+        ) : null}
+
+        <div className={`absolute inset-0 z-20 bg-linear-to-t from-black/85 via-black/15 to-transparent transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`} />
 
         <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/40 p-3 backdrop-blur-md transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
           <FiPlayCircle className="text-white/90" size={32} />
@@ -147,13 +200,66 @@ function YouTubeCard({
   onDeactivate: () => void;
   onToggle: () => void;
 }) {
-  const embedUrl = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&playsinline=1`;
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [origin, setOrigin] = useState("");
+  const openTarget = video.videoUrl;
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
+  const embedUrl = useMemo(() => {
+    const params = new URLSearchParams({
+      autoplay: "1",
+      mute: "0",
+      controls: "1",
+      modestbranding: "1",
+      rel: "0",
+      playsinline: "1",
+      enablejsapi: "1",
+    });
+
+    if (origin) {
+      params.set("origin", origin);
+    }
+
+    return `https://www.youtube.com/embed/${video.id}?${params.toString()}`;
+  }, [origin, video.id]);
+
+  useEffect(() => {
+    const frame = iframeRef.current;
+
+    if (!frame) {
+      return;
+    }
+
+    const command = isActive ? "playVideo" : "pauseVideo";
+    const timer = window.setTimeout(() => {
+      frame.contentWindow?.postMessage(JSON.stringify({ event: "command", func: command, args: "" }), "*");
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [isActive]);
+
+  const handleCardClick = () => {
+    if (isMobile) {
+      if (isActive) {
+        window.location.href = openTarget;
+        return;
+      }
+
+      onToggle();
+      return;
+    }
+
+    window.location.href = openTarget;
+  };
 
   return (
     <motion.article
-      onMouseEnter={isMobile ? undefined : onActivate}
-      onMouseLeave={isMobile ? undefined : onDeactivate}
-      onClick={isMobile ? onToggle : () => window.open(video.videoUrl, "_blank")}
+      onPointerEnter={isMobile ? undefined : onActivate}
+      onPointerLeave={isMobile ? undefined : onDeactivate}
+      onClick={handleCardClick}
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -172,7 +278,8 @@ function YouTubeCard({
         
         {isActive && (
           <iframe
-            className={`absolute inset-0 h-full w-full ${!isMobile ? "pointer-events-none" : ""}`}
+            ref={iframeRef}
+            className="absolute inset-0 h-full w-full pointer-events-none"
             src={embedUrl}
             allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
@@ -234,12 +341,6 @@ export default function YouTubeVideoGrid() {
     });
   }, []);
 
-  useEffect(() => {
-    if (!isMobile) {
-      setActiveVideoId(null);
-    }
-  }, [isMobile]);
-
   const { reels, ytShorts, ytLongs } = useMemo(() => {
     const r = (igStats?.media?.filter(m => m.mediaType === "VIDEO") || [])
       .sort((a, b) => (b.likeCount + b.commentsCount) - (a.likeCount + a.commentsCount))
@@ -264,10 +365,10 @@ export default function YouTubeVideoGrid() {
   }, [igStats, ytShortsRaw, ytLongsRaw]);
 
   if (loading) return (
-    <section id="youtube-hub" className="px-6 py-12 md:py-16">
-      <div className="mx-auto max-w-7xl">
+    <section id="youtube-hub" className="px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-10">
+      <div className="mx-auto w-full max-w-350 2xl:max-w-400">
         <SectionHeading eyebrow="Trending Content" title="Content That Performs" />
-        <div className="h-64 flex items-center justify-center">
+        <div className="flex h-64 items-center justify-center">
           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-slate-500"></div>
         </div>
       </div>
@@ -277,8 +378,8 @@ export default function YouTubeVideoGrid() {
   const hasNoData = reels.length === 0 && ytShorts.length === 0 && ytLongs.length === 0;
 
   return (
-    <section id="youtube-hub" className="px-6 py-12 md:py-16">
-      <div className="mx-auto max-w-7xl">
+    <section id="youtube-hub" className="px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-10">
+      <div className="mx-auto w-full max-w-350 2xl:max-w-400">
         <SectionHeading
           eyebrow="Trending Content"
           title="Content That Performs"
@@ -291,7 +392,7 @@ export default function YouTubeVideoGrid() {
                 <FiInstagram className="text-gray-400" size={24} />
                 <h3 className="text-lg md:text-xl font-medium text-gray-400">Trending Reels</h3>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                 {reels.map((media) => (
                   <InstagramReelCard 
                     key={media.id} 
@@ -313,7 +414,7 @@ export default function YouTubeVideoGrid() {
                 <FiYoutube className="text-gray-400" size={24} />
                 <h3 className="text-lg md:text-xl font-medium text-gray-400">Trending Shorts</h3>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                 {ytShorts.map((video) => (
                   <YouTubeCard 
                     key={video.id} 
@@ -336,7 +437,7 @@ export default function YouTubeVideoGrid() {
                 <FiYoutube className="text-gray-400" size={24} />
                 <h3 className="text-lg md:text-xl font-medium text-gray-400">Top Videos</h3>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {ytLongs.map((video) => (
                   <YouTubeCard 
                     key={video.id} 
