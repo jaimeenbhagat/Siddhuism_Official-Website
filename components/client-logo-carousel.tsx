@@ -57,7 +57,7 @@ export default function ClientLogoCarousel() {
   const logoCards = useMemo(
     () =>
       marqueeLogos.map((logo, index) => (
-        <div key={`${logo}-${index}`} className="flex h-21 w-31 items-center justify-center sm:h-24 sm:w-36 md:h-30 md:w-45 lg:h-35 lg:w-55">
+        <div key={`${logo}-${index}`} className="flex h-21 w-31 items-center justify-center rounded-lg border border-white/10 bg-slate-950/50 p-4 sm:h-24 sm:w-36 md:h-30 md:w-45 lg:h-35 lg:w-55">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={encodeURI(logo)}
