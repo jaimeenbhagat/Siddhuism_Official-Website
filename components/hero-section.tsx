@@ -252,7 +252,7 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
                 <h3 className="text-base font-bold uppercase tracking-[0.18em] mb-2 text-slate-100 text-glow md:text-lg lg:text-md">Signature Cut</h3>
               </div>
 
-              <div className="relative aspect-9/16 w-full max-w-md overflow-hidden rounded-2xl  bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] sm:max-w-116 md:max-w-120 lg:max-w-87 ml-17 group">
+              <div className="relative aspect-9/16 w-full max-w-md overflow-hidden rounded-2xl  bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] sm:max-w-116 md:max-w-120 lg:max-w-87 mt-0 lg:ml-17 group">
                 <video
                   ref={videoRef}
                   src={heroVideoUrl}
