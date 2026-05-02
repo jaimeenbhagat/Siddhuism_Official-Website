@@ -7,6 +7,7 @@ import SectionHeading from "@/components/ui/section-heading";
 
 const MOMENTS = [
   "/profile/1.jpg",
+  "/profile/14.jpg",
   "/profile/2.jpg",
   "/profile/3.jpg",
   "/profile/4.jpg",
@@ -19,7 +20,6 @@ const MOMENTS = [
   "/profile/11.jpg",
   "/profile/12.jpg",
   "/profile/13.jpg",
-  "/profile/14.jpg",
   "/profile/15.jpg",
   "/profile/16.jpg",
 ];
