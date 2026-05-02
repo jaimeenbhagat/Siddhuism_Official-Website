@@ -26,11 +26,11 @@ function StatCard({ label, value, icon, isText = false, isLive = false, numericV
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="flex min-w-35 flex-1 items-center gap-3 rounded-xl border border-slate-700/50 bg-slate-900/50 p-3 shadow-md backdrop-blur-md"
+      className="flex min-w-35 flex-1 items-center gap-3 rounded-xl border border-slate-700/50 bg-slate-900/50 p-3 shadow-md backdrop-blur-md lg:min-w-24 lg:gap-2 lg:p-2"
     >
       <div className="shrink-0">{icon}</div>
       <div>
-        <p className={`font-semibold text-slate-100 flex items-center ${isText ? 'text-xs leading-tight' : 'text-lg md:text-xl tracking-tight'}`}>
+        <p className={`font-semibold text-slate-100 flex items-center ${isText ? 'text-xs leading-tight' : 'text-lg md:text-xl lg:text-sm tracking-tight'}`}>
           {isLive ? (
             <>
               <AnimatedCounter value={numericValue ?? null} />
@@ -40,7 +40,7 @@ function StatCard({ label, value, icon, isText = false, isLive = false, numericV
             value
           )}
         </p>
-        <p className="mt-0.5 text-[9px] uppercase tracking-wider font-medium text-slate-400">{label}</p>
+        <p className="mt-0.5 text-[8px] lg:text-[7px] uppercase tracking-wider font-medium text-slate-400">{label}</p>
       </div>
     </motion.div>
   );
@@ -80,13 +80,13 @@ function HeroStats({ stats }: { stats: LiveStats }) {
   const totalContent = ((stats?.youtube?.videos ?? 0) + (stats?.instagram?.media ?? 0)) || 150;
 
   return (
-    <div className="mt-10">
-      <div className="flex flex-wrap items-stretch gap-3">
+    <div className="mt-10 lg:mt-4">
+      <div className="flex flex-wrap items-stretch gap-3 lg:gap-2">
         {primaryStats.map((stat) => (
           <StatCard key={stat.label} {...stat} />
         ))}
       </div>
-      <div className="mt-6 flex flex-wrap items-center gap-6 border-t border-slate-800/60 pt-4 text-xs text-slate-300">
+      <div className="mt-6 lg:mt-3 flex flex-wrap items-center gap-6 lg:gap-3 border-t border-slate-800/60 pt-4 lg:pt-2 text-xs text-slate-300">
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
           <span><AnimatedCounter value={totalContent} />+ Pieces of Content</span>
@@ -175,28 +175,26 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
       <div className="hero-gradient absolute inset-0 -z-20" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_30%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_30%)]" />
 
-      <div className="mx-auto flex w-full items-start py-5 sm:py-6 md:py-7 lg:min-h-svh">
+      <div className="mx-auto flex w-full items-start py-3 sm:py-4 md:py-5 lg:min-h-svh lg:items-center">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65 }}
-          className="flex w-full flex-col items-start gap-4 md:gap-5 lg:grid lg:grid-cols-[1.2fr_1.8fr] xl:grid-cols-[1.2fr_1.6fr] lg:gap-4 lg:items-start"
+          className="flex w-full flex-col items-start gap-4 md:gap-5 lg:grid lg:grid-cols-[1.2fr_1.8fr] xl:grid-cols-[1.2fr_1.6fr] lg:gap-4 lg:items-center"
         >
-          <div className="order-2 w-full pl-1 pt-6 sm:pl-2 lg:order-2 lg:pl-4 lg:pr-2 xl:pl-6 lg:mt-10">
-            <div className="rounded-2xl border border-slate-600/40 bg-slate-900/55 p-8 md:p-10 lg:p-12 shadow-[0_10px_60px_rgba(2,6,23,0.6)] backdrop-blur-2xl">
-              <div className="mt-3 max-w-full text-pretty text-sm text-slate-300 sm:text-sm md:text-sm lg:text-sm">
+          <div className="order-2 w-full pl-1 pt-6 sm:pl-2 lg:order-2 lg:pl-4 lg:pr-2 xl:pl-6 lg:mt-0">
+            <div className="rounded-2xl border border-slate-600/40 bg-slate-900/55 p-8 md:p-10 lg:p-6 shadow-[0_10px_60px_rgba(2,6,23,0.6)] backdrop-blur-2xl">
+              <div className="mt-0 max-w-full text-pretty text-sm text-slate-300 sm:text-sm md:text-sm lg:text-sm">
                 <div className="mx-auto text-center max-w-2xl">
-                  <p className=" inline-flex items-center justify-center  px-4 text-sm font-medium uppercase tracking-[0.18em] text-slate-300 backdrop-blur-xl">
-                    CREATOR BIO
-                  </p>
-                  <h2 className="text-2xl mt-1 sm:text-3xl md:text-4xl font-extrabold text-slate-100 leading-tight md:whitespace-nowrap inline-block relative">
+                  <h2 className="text-xl mt-0 sm:text-2xl md:text-3xl font-extrabold text-slate-100 leading-tight md:whitespace-nowrap inline-block relative">
+                    <span className="block text-xs font-medium uppercase tracking-[0.18em] text-slate-300 mb-1 lg:mb-0.5 lg:text-xs">CREATOR BIO</span>
                     <span className="absolute inset-0 -z-10 mx-auto block w-full max-w-3xl rounded-sm" />
                     <span className="relative px-3">The face behind Siddhuism Official</span>
                   </h2>
-                  <p className="mt-1 text-sm md:text-base text-slate-300 md:whitespace-nowrap">Social Media Influencer | Travel &amp; Hospitality | Lifestyle</p>
+                  <p className="mt-1 text-sm md:text-base lg:text-sm text-slate-300 md:whitespace-nowrap">Social Media Influencer | Travel &amp; Hospitality | Lifestyle</p>
                 </div>
 
-                <div className="mt-6 space-y-3 text-left md:text-justify text-white text-sm leading-6">
+                <div className="mt-4 space-y-2  text-justify text-white text-xs lg:text-sm leading-5 lg:leading-5">
                   <p>Hi, I’m Siddharth Sonetta.</p>
                   <p>Most of my life right now is a mix of long rides, last-minute plans, and reaching places slightly later than I said I would. Somewhere along the way, I started documenting it, and that turned into SIDDHUISM Official.</p>
                   <p>What I make sits between travel, moto, and lifestyle. Not in a curated way, more in a “this is how it actually felt to be there” way: the good parts, the slow parts, the random in-between moments that usually get cut out.</p>
@@ -208,16 +206,17 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
               </div>
 
               <HeroStats stats={stats} />
-              <div className="mt-6 flex flex-wrap gap-4">
+
+              <div className="mt-3 lg:mt-2 flex flex-wrap gap-3">
                 <button
                   onClick={onWatchClick}
-                  className="rounded-full bg-linear-to-r from-blue-500 via-violet-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(99,102,241,0.35)] transition hover:scale-[1.02] sm:px-6"
+                  className="rounded-full bg-linear-to-r from-blue-500 via-violet-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(99,102,241,0.35)] transition hover:scale-[1.02] sm:px-6 lg:px-4 lg:py-2 lg:text-xs"
                 >
                   Watch Content
                 </button>
                 <button
                   onClick={onContactClick}
-                  className="rounded-full border border-slate-700/80 bg-slate-950/55 px-5 py-3 text-sm font-semibold text-slate-100 backdrop-blur-xl transition hover:border-blue-300/55 hover:bg-slate-900/90 sm:px-6"
+                  className="rounded-full border border-slate-700/80 bg-slate-950/55 px-5 py-3 text-sm font-semibold text-slate-100 backdrop-blur-xl transition hover:border-blue-300/55 hover:bg-slate-900/90 sm:px-6 lg:px-4 lg:py-2 lg:text-xs"
                 >
                   Contact
                 </button>
@@ -229,16 +228,16 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
             initial={{ opacity: 0, scale: 0.96, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.12 }}
-            className="relative order-1 w-full lg:order-1 flex flex-col items-center pt-6 lg:justify-self-start lg:pt-6"
+            className="relative order-1 w-full lg:order-1 flex flex-col items-center pt-6 lg:pt-0 lg:justify-self-start"
           >
             <div className="absolute inset-1 rounded-2xl bg-linear-to-br from-blue-500/30 via-transparent to-violet-500/25 blur-3xl" />
 
-            <div className="relative z-10 my-3 flex items-center justify-center gap-3">
-              <div className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
-              <h3 className="text-base font-bold uppercase tracking-[0.18em] text-slate-100 text-glow md:text-lg">Signature Cut</h3>
+              <div className="relative z-10 mb-2 lg:mb-1 flex items-center justify-center gap-2 lg:gap-2">
+              <div className="h-2 w-2 lg:h-2 lg:w-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
+              <h3 className="text-base font-bold uppercase tracking-[0.18em] text-slate-100 text-glow md:text-lg lg:text-sm">Signature Cut</h3>
             </div>
 
-            <div className="relative aspect-9/16 w-full max-w-md overflow-hidden rounded-2xl  bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] sm:max-w-116 md:max-w-120 lg:max-w-md group">
+            <div className="relative aspect-9/16 w-full max-w-md overflow-hidden rounded-2xl  bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] sm:max-w-116 md:max-w-120 lg:max-w-87 group">
               <video
                 ref={videoRef}
                 src={heroVideoUrl}
