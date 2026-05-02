@@ -207,7 +207,7 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
 
               <HeroStats stats={stats} />
 
-              <div className="mt-3 lg:mt-2 flex flex-wrap gap-3">
+              <div className="mt-3 lg:mt-4 flex flex-wrap gap-3">
                 <button
                   onClick={onWatchClick}
                   className="rounded-full bg-linear-to-r from-blue-500 via-violet-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(99,102,241,0.35)] transition hover:scale-[1.02] sm:px-6 lg:px-4 lg:py-2 lg:text-xs"
@@ -233,8 +233,8 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
             <div className="absolute inset-1 rounded-2xl bg-linear-to-br from-blue-500/30 via-transparent to-violet-500/25 blur-3xl" />
 
               <div className="relative z-10 mb-2 lg:mb-1 flex items-center justify-center gap-2 lg:gap-2">
-              <div className="h-2 w-2 lg:h-2 lg:w-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
-              <h3 className="text-base font-bold uppercase tracking-[0.18em] text-slate-100 text-glow md:text-lg lg:text-sm">Signature Cut</h3>
+              <div className="h-2 w-2 lg:h-3 lg:w-3 rounded-full mb-2 bg-red-500 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
+              <h3 className="text-base font-bold uppercase tracking-[0.18em] mb-2 text-slate-100 text-glow md:text-lg lg:text-md">Signature Cut</h3>
             </div>
 
             <div className="relative aspect-9/16 w-full max-w-md overflow-hidden rounded-2xl  bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] sm:max-w-116 md:max-w-120 lg:max-w-87 group">
