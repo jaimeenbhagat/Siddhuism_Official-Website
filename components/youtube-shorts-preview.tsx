@@ -8,21 +8,14 @@ import { FiPlayCircle } from "react-icons/fi";
 import SectionHeading from "@/components/ui/section-heading";
 import type { YouTubeVideo } from "@/lib/social-types";
 
-type ApiYouTubeRow = {
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  video_url: string;
-  published_at: string;
-  views: number;
-  likes: number;
-  comments: number;
-};
-
-type ApiYouTubeResponse = {
-  shorts?: ApiYouTubeRow[];
-};
+// Hardcoded portfolio shorts video IDs
+const PORTFOLIO_VIDEO_IDS = [
+  "A2IEH9nPtaw",
+  "yG5XWKnLtlQ",
+  "HYBgRXHpqzM",
+  "BDnw_ukiilo",
+  "ygm0R8J4oIY",
+];
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
@@ -161,33 +154,21 @@ function ShortsCard({
 
 export default function YouTubeShortsPreview() {
   const isMobile = useIsMobile();
-  const [shortsRaw, setShortsRaw] = useState<ApiYouTubeRow[]>([]);
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetch("/api/youtube/videos")
-      .then((response) => response.json())
-      .then((response: ApiYouTubeResponse) => {
-        setShortsRaw(response?.shorts || []);
-      })
-      .catch(() => {
-        setShortsRaw([]);
-      });
-  }, []);
-
   const shorts = useMemo(() => {
-    return shortsRaw.slice(0, 5).map((row): YouTubeVideo => ({
-      id: row.id,
-      title: row.title,
-      description: row.description,
-      thumbnailUrl: row.thumbnail,
-      videoUrl: row.video_url,
-      publishedAt: row.published_at,
-      views: row.views,
-      likes: row.likes,
-      comments: row.comments,
+    return PORTFOLIO_VIDEO_IDS.map((id): YouTubeVideo => ({
+      id,
+      title: "Portfolio Video",
+      description: "",
+      thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+      videoUrl: `https://www.youtube.com/watch?v=${id}`,
+      publishedAt: new Date().toISOString(),
+      views: 0,
+      likes: 0,
+      comments: 0,
     }));
-  }, [shortsRaw]);
+  }, []);
 
   if (shorts.length === 0) {
     return null;

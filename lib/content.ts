@@ -24,7 +24,6 @@ export type Testimonial = {
 
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "About", href: "#about" },
   { label: "Live Social", href: "#youtube-hub" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "Profile", href: "#profile" },

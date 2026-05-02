@@ -62,20 +62,14 @@ function InstagramReelCard({
   onToggle: () => void;
 }) {
   const cardRef = useRef<HTMLElement | null>(null);
-  const [showThumbnailFallback, setShowThumbnailFallback] = useState(false);
   const isVideo = media.mediaType === 'VIDEO';
   const openTarget = media.permalink;
-  const videoSrc = `/api/instagram/media/${media.id}`;
 
   useEffect(() => {
-    if (!isActive) {
-      return;
+    if (isVideo) {
+      console.log("VIDEO URL:", media.mediaUrl);
     }
-
-    setShowThumbnailFallback(false);
-    console.log("Instagram Video URL:", videoSrc);
-    console.log("isActive:", isActive);
-  }, [isActive, videoSrc]);
+  }, [isVideo, media.mediaUrl]);
 
   useEffect(() => {
     const node = cardRef.current;
@@ -122,32 +116,29 @@ function InstagramReelCard({
       aria-label={isMobile ? `Play ${media.caption?.slice(0, 40) || "Instagram reel"}` : undefined}
     >
       <div className="relative h-full w-full overflow-hidden rounded-xl bg-slate-900">
-        {isActive && isVideo && !showThumbnailFallback ? (
+        {media.mediaType === "VIDEO" ? (
           <video
-            key={media.mediaUrl}
-            src={videoSrc}
+            src={media.mediaUrl}
             className="absolute inset-0 z-10 h-full w-full object-cover transition-opacity duration-300"
-            muted
             playsInline
-            autoPlay={isActive}
-            loop
             preload="metadata"
-            onError={() => setShowThumbnailFallback(true)}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-        ) : null}
-
-        {!isActive || showThumbnailFallback ? (
+            poster={media.thumbnailUrl}
+            onMouseEnter={(e) => e.currentTarget.play()}
+            onMouseLeave={(e) => {
+              e.currentTarget.pause();
+              e.currentTarget.currentTime = 0;
+            }}
+          />
+        ) : (
           <Image
             src={media.thumbnailUrl || media.mediaUrl}
             alt={media.caption?.slice(0, 50) || "Instagram Reel"}
             fill
             className="absolute inset-0 z-10 object-cover transition-opacity duration-300 group-hover:scale-105"
           />
-        ) : null}
+        )}
 
-        <div className={`absolute inset-0 z-20 bg-linear-to-t from-black/85 via-black/15 to-transparent transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`} />
+        <div className={`absolute inset-0 z-20 bg-linear-to-t from-black/85 via-black/15 to-transparent transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100 pointer-events-none"}`} />
 
         <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/40 p-3 backdrop-blur-md transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
           <FiPlayCircle className="text-white/90" size={32} />
@@ -156,7 +147,7 @@ function InstagramReelCard({
         <div className={`absolute bottom-3 left-3 right-3 flex flex-col gap-2 transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
           <div className="flex flex-wrap gap-2 text-[10px] text-pink-100 font-medium">
             <span className="flex items-center gap-1 rounded-full bg-pink-500/20 px-2 py-1 backdrop-blur-md border border-pink-500/30">
-              <FiEye /> {media.viewCount ? compact(media.viewCount) : compact((media.likeCount + media.commentsCount) * 15)}
+              <FiEye /> {media.viewCount && media.viewCount > 0 ? compact(media.viewCount) : compact(Math.max(15400, (media.likeCount + media.commentsCount) * 45))}
             </span>
             <span className="flex items-center gap-1 rounded-full bg-slate-800/60 px-2 py-1 backdrop-blur-md border border-slate-600/30">
               <FiHeart /> {compact(media.likeCount)}
@@ -373,7 +364,42 @@ export default function YouTubeVideoGrid() {
       rebuilt.splice(3, 0, garbaShort);
       ys = rebuilt.slice(0, 5);
     }
-    const yl = ytLongsRaw.map(mapYt);
+
+    const allLongs = ytLongsRaw.map(mapYt);
+    
+    // For Top Videos: keep 1st, set 2nd to specific ID, set 3rd to vengurla
+    const mgVideo = allLongs.find((video) => video.title.toLowerCase().includes("mg zs ev")) || (allLongs.length > 0 ? allLongs[0] : null);
+    const secondVideoId = "2Un0Nrx1bHI";
+    const vengurlaVideo = allLongs.find((video) =>
+      video.title.toLowerCase().includes("vengurla")
+    );
+
+    let yl: YouTubeVideo[] = [];
+    if (mgVideo) yl.push(mgVideo);
+    
+    const specificSecondFallback: YouTubeVideo = {
+      id: "2Un0Nrx1bHI",
+      title: "Dil Dhadakne Do in Mulki 🏄 | Surfing, Friendship & Road Trip Vibes | Cinematic Travel @SurfingIndia",
+      description: "",
+      thumbnailUrl: "https://img.youtube.com/vi/2Un0Nrx1bHI/maxresdefault.jpg",
+      videoUrl: "https://www.youtube.com/watch?v=2Un0Nrx1bHI",
+      publishedAt: new Date().toISOString(),
+      views: 12500,
+      likes: 850,
+      comments: 45
+    };
+
+    const specificSecond = allLongs.find((video) => video.id === secondVideoId) || specificSecondFallback;
+    
+    if (specificSecond && (!mgVideo || mgVideo.id !== specificSecond.id)) {
+      yl.push(specificSecond);
+    }
+    
+    if (vengurlaVideo && !yl.find((v) => v.id === vengurlaVideo.id)) {
+      yl.push(vengurlaVideo);
+    }
+
+    yl = yl.slice(0, 3);
 
     return { reels: r, ytShorts: ys, ytLongs: yl };
   }, [igStats, ytShortsRaw, ytLongsRaw]);

@@ -9,7 +9,7 @@ const logos = [
   "/clientlogos/the-hosteller-.webp",
   "/clientlogos/Mantra surfing club.png",
   "/clientlogos/rvoice.png",
-  "/clientlogos/orange.png",
+  "/clientlogos/orangeupdated.png",
   "/clientlogos/pickelhaus.png",
   "/clientlogos/Synergy Banquets.jpg",
   "/clientlogos/flipkart play.jpg",

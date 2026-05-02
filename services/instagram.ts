@@ -23,9 +23,13 @@ type InstagramResponse = {
 
 async function requireConfig() {
   const userId = process.env.INSTAGRAM_USER_ID;
-  let accessToken: string | null = null;
+  let accessToken: string | null = process.env.INSTAGRAM_ACCESS_TOKEN || null;
 
-  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.log("Checking Instagram config...");
+  console.log("INSTAGRAM_USER_ID loaded:", !!userId);
+  console.log("INSTAGRAM_ACCESS_TOKEN loaded from env:", !!process.env.INSTAGRAM_ACCESS_TOKEN);
+
+  if (!accessToken && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     const supabase = getSupabaseAdminClient();
     const { data, error } = await supabase
       .from("instagram_tokens")
@@ -35,11 +39,13 @@ async function requireConfig() {
 
     if (!error && data?.access_token) {
       accessToken = data.access_token;
+      console.log("INSTAGRAM_ACCESS_TOKEN loaded from Supabase");
     }
   }
 
   if (!accessToken || !userId) {
-    throw new Error("Instagram credentials are not configured.");
+    console.error("Instagram config error: Missing credentials");
+    throw new Error("Missing INSTAGRAM_ACCESS_TOKEN or INSTAGRAM_USER_ID");
   }
 
   // Validate token using Graph API debug_token. If invalid attempt refresh and persist.

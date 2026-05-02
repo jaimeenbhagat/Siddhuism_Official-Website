@@ -50,19 +50,19 @@ function HeroStats({ stats }: { stats: LiveStats }) {
   const primaryStats = useMemo(
     () => [
       {
-        numericValue: stats?.youtube?.views ?? null,
+        numericValue: stats?.youtube?.views ?? 4200000,
         label: "Total Views",
         icon: <FiEye className="text-blue-400" size={20} />,
         isLive: true,
       },
       {
-        numericValue: stats?.instagram?.followers ?? null,
+        numericValue: stats?.instagram?.followers ?? 105000,
         label: "Instagram",
         icon: <FiInstagram className="text-pink-500" size={20} />,
         isLive: true,
       },
       {
-        numericValue: stats?.youtube?.subscribers ?? null,
+        numericValue: stats?.youtube?.subscribers ?? 85000,
         label: "YouTube",
         icon: <FiYoutube className="text-red-500" size={20} />,
         isLive: true,
@@ -101,10 +101,9 @@ function HeroStats({ stats }: { stats: LiveStats }) {
 }
 
 export default function HeroSection({ onWatchClick, onContactClick }: HeroSectionProps) {
-  // typing effect removed — static bio used instead
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [stats, setStats] = useState<LiveStats>(null);
 
@@ -125,10 +124,10 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
     };
 
     void loadStats();
-    // Attempt to autoplay the video muted (browsers allow muted autoplay).
+    // Attempt to autoplay the video unmuted
     const node = videoRef.current;
     if (node) {
-      node.muted = true;
+      node.muted = false;
       void node.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
     }
   }, []);
