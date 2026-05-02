@@ -1,6 +1,6 @@
 "use client";
 
-import { TAGLINES } from "@/lib/content";
+// (TAGLINES removed — not used in this file)
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FiYoutube, FiInstagram, FiVideo, FiEye, FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize, FiChevronDown } from "react-icons/fi";
@@ -17,42 +17,7 @@ type LiveStats = {
   instagram: { followers: number | null; media: number | null };
 } | null;
 
-function useTyping(words: string[], speed = 70, pause = 1600) {
-  const [wordIndex, setWordIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const currentWord = useMemo(() => words[wordIndex] ?? "", [wordIndex, words]);
-
-  useEffect(() => {
-    const timeout = setTimeout(
-      () => {
-        if (!isDeleting && charIndex < currentWord.length) {
-          setCharIndex((value) => value + 1);
-          return;
-        }
-
-        if (!isDeleting && charIndex === currentWord.length) {
-          setIsDeleting(true);
-          return;
-        }
-
-        if (isDeleting && charIndex > 0) {
-          setCharIndex((value) => value - 1);
-          return;
-        }
-
-        setIsDeleting(false);
-        setWordIndex((value) => (value + 1) % words.length);
-      },
-      !isDeleting && charIndex === currentWord.length ? pause : isDeleting ? speed / 2 : speed,
-    );
-
-    return () => clearTimeout(timeout);
-  }, [charIndex, currentWord.length, isDeleting, pause, speed, words.length]);
-
-  return currentWord.slice(0, charIndex);
-}
+// useTyping helper removed — not used after BIO update
 
 function StatCard({ label, value, icon, isText = false, isLive = false, numericValue = null }: { label: string; value?: React.ReactNode; icon?: React.ReactNode; isText?: boolean; isLive?: boolean; numericValue?: number | null }) {
   return (
@@ -136,14 +101,14 @@ function HeroStats({ stats }: { stats: LiveStats }) {
 }
 
 export default function HeroSection({ onWatchClick, onContactClick }: HeroSectionProps) {
-  const typingText = useTyping(TAGLINES);
+  // typing effect removed — static bio used instead
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [stats, setStats] = useState<LiveStats>(null);
 
   const heroVideoUrl =
-    "https://res.cloudinary.com/dkjyjzl8u/video/upload/v1776956034/Mantra_Surfing_club_Collab_Cinematic_-_Compressed_ffaody.mov";
+    "https://res.cloudinary.com/dkjyjzl8u/video/upload/v1777717538/SIDDHUISM_Official_2026_Showreel_Final_-_Compressed_sathux.mp4";
 
   useEffect(() => {
     const loadStats = async () => {
@@ -159,6 +124,12 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
     };
 
     void loadStats();
+    // Attempt to autoplay the video muted (browsers allow muted autoplay).
+    const node = videoRef.current;
+    if (node) {
+      node.muted = true;
+      void node.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+    }
   }, []);
 
   const togglePlayback = () => {
@@ -200,71 +171,79 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
 
 
   return (
-    <section id="top" className="relative overflow-hidden px-4 pt-3 sm:px-6 md:px-8 md:pt-2 lg:px-10">
+    <section id="top" className="relative overflow-hidden px-4 pt-6 sm:px-6 md:px-8 md:pt-6 lg:px-10">
       <div className="hero-gradient absolute inset-0 -z-20" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_30%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_30%)]" />
 
-      <div className="mx-auto flex min-h-svh w-full max-w-350 items-center py-5 sm:py-6 md:py-7 lg:max-w-400">
+      <div className="mx-auto flex w-full items-start py-5 sm:py-6 md:py-7 lg:min-h-svh">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65 }}
-          className="grid w-full items-start gap-4 md:gap-5 lg:grid-cols-[2fr_0.6fr] lg:gap-5"
+          className="flex w-full flex-col items-start gap-4 md:gap-5 lg:grid lg:grid-cols-[1.2fr_1.8fr] xl:grid-cols-[1.2fr_1.6fr] lg:gap-4 lg:items-start"
         >
-          <div className="w-full pl-1 pt-12 sm:pl-2 lg:order-2 lg:pl-4 xl:pl-6">
-            <p className="mb-3 inline-flex rounded-full border border-gray-700/60 bg-gray-900/50 px-4 py-1 text-sm font-medium uppercase tracking-[0.2em] text-gray-500 backdrop-blur-xl">
-              Creator Portfolio
-            </p>
-            <h1 className="text-balance text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-              siddhuism_official
-            </h1>
-            <p className="mt-3 max-w-2xl text-pretty text-sm font-medium leading-6 text-gray-400 sm:text-base md:text-lg md:leading-7 lg:text-lg lg:leading-8">
-              {typingText}
-              <span className="ml-1 animate-pulse text-blue-300">|</span>
-            </p>
+          <div className="order-2 w-full pl-1 pt-6 sm:pl-2 lg:order-2 lg:pl-4 lg:pr-2 xl:pl-6 lg:mt-10">
+            <div className="rounded-2xl border border-slate-600/40 bg-slate-900/55 p-8 md:p-10 lg:p-12 shadow-[0_10px_60px_rgba(2,6,23,0.6)] backdrop-blur-2xl">
+              <div className="mt-3 max-w-full text-pretty text-sm text-slate-300 sm:text-sm md:text-sm lg:text-sm">
+                <div className="mx-auto text-center max-w-2xl">
+                  <p className=" inline-flex items-center justify-center  px-4 text-sm font-medium uppercase tracking-[0.18em] text-slate-300 backdrop-blur-xl">
+                    CREATOR BIO
+                  </p>
+                  <h2 className="text-2xl mt-1 sm:text-3xl md:text-4xl font-extrabold text-slate-100 leading-tight md:whitespace-nowrap inline-block relative">
+                    <span className="absolute inset-0 -z-10 mx-auto block w-full max-w-3xl rounded-sm" />
+                    <span className="relative px-3">The face behind Siddhuism Official</span>
+                  </h2>
+                  <p className="mt-1 text-sm md:text-base text-slate-300 md:whitespace-nowrap">Social Media Influencer | Travel &amp; Hospitality | Lifestyle</p>
+                </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate-400 sm:text-sm">
-              <span className="rounded-full border border-slate-700/80 bg-slate-900/70 px-4 py-2 backdrop-blur-lg">Travel first</span>
-              <span className="rounded-full border border-slate-700/80 bg-slate-900/70 px-4 py-2 backdrop-blur-lg">Premium reels</span>
-              <span className="rounded-full border border-slate-700/80 bg-slate-900/70 px-4 py-2 backdrop-blur-lg">Lifestyle edits</span>
+                <div className="mt-6 space-y-3 text-left md:text-justify text-white text-sm leading-6">
+                  <p>Hi, I’m Siddharth Sonetta.</p>
+                  <p>Most of my life right now is a mix of long rides, last-minute plans, and reaching places slightly later than I said I would. Somewhere along the way, I started documenting it, and that turned into SIDDHUISM Official.</p>
+                  <p>What I make sits between travel, moto, and lifestyle. Not in a curated way, more in a “this is how it actually felt to be there” way: the good parts, the slow parts, the random in-between moments that usually get cut out.</p>
+                  <p>Over time, I’ve worked with brands across stays, products, and experiences. I don’t treat them like placements, I figure out how they fit into the story, so it still feels like something you’d want to watch even if you weren’t looking for the brand.</p>
+                  <p>I care a lot about how something lands, why people keep watching, what makes them pause, what makes something stick after it’s over. That part matters just as much as the shot itself.</p>
+                  <p>That’s the space I operate in, where stories feel real, and the impact outlasts the scroll.</p>
+                  <p className="font-semibold">Sharing stories that stay with you.</p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-4">
+                <button
+                  onClick={onWatchClick}
+                  className="rounded-full bg-linear-to-r from-blue-500 via-violet-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(99,102,241,0.35)] transition hover:scale-[1.02] sm:px-6"
+                >
+                  Watch Content
+                </button>
+                <button
+                  onClick={onContactClick}
+                  className="rounded-full border border-slate-700/80 bg-slate-950/55 px-5 py-3 text-sm font-semibold text-slate-100 backdrop-blur-xl transition hover:border-blue-300/55 hover:bg-slate-900/90 sm:px-6"
+                >
+                  Contact
+                </button>
+              </div>
+
+              <HeroStats stats={stats} />
             </div>
-
-            <div className="mt-6 flex flex-wrap gap-4">
-              <button
-                onClick={onWatchClick}
-                className="rounded-full bg-linear-to-r from-blue-500 via-violet-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(99,102,241,0.35)] transition hover:scale-[1.02] sm:px-6"
-              >
-                Watch Content
-              </button>
-              <button
-                onClick={onContactClick}
-                className="rounded-full border border-slate-700/80 bg-slate-950/55 px-5 py-3 text-sm font-semibold text-slate-100 backdrop-blur-xl transition hover:border-blue-300/55 hover:bg-slate-900/90 sm:px-6"
-              >
-                Contact
-              </button>
-            </div>
-
-            <HeroStats stats={stats} />
           </div>
 
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.12 }}
-            className="relative mx-auto flex w-full max-w-60 flex-col items-center sm:max-w-64 md:max-w-72 lg:order-1"
+            className="relative order-1 w-full lg:order-1 flex flex-col items-center pt-6 lg:justify-self-start lg:pt-6"
           >
             <div className="absolute inset-1 rounded-2xl bg-linear-to-br from-blue-500/30 via-transparent to-violet-500/25 blur-3xl" />
 
-            <div className="relative z-10 mb-2 flex items-center pt-15 justify-center gap-3">
+            <div className="relative z-10 my-3 flex items-center justify-center gap-3">
               <div className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
-              <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-slate-100  text-glow md:text-base">Highlight Reel</h3>
+              <h3 className="text-base font-bold uppercase tracking-[0.18em] text-slate-100 text-glow md:text-lg">Signature Cut</h3>
             </div>
 
-            <div className="relative aspect-9/16 w-full overflow-hidden rounded-2xl border border-slate-700/50 bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] group">
+            <div className="relative aspect-9/16 w-full max-w-md overflow-hidden rounded-2xl  bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] sm:max-w-116 md:max-w-120 lg:max-w-md group">
               <video
                 ref={videoRef}
                 src={heroVideoUrl}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 autoPlay
                 muted={isMuted}
                 loop
