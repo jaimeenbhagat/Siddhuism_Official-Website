@@ -207,6 +207,7 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
                 </div>
               </div>
 
+              <HeroStats stats={stats} />
               <div className="mt-6 flex flex-wrap gap-4">
                 <button
                   onClick={onWatchClick}
@@ -221,8 +222,6 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
                   Contact
                 </button>
               </div>
-
-              <HeroStats stats={stats} />
             </div>
           </div>
 
