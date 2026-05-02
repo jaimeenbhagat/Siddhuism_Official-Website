@@ -105,6 +105,7 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const [stats, setStats] = useState<LiveStats>(null);
 
   const heroVideoUrl =
@@ -168,6 +169,18 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
     }
   };
 
+  const handleVideoInteraction = () => {
+    if (!hasInteracted) {
+      // On first interaction, unmute to enable sound
+      const node = videoRef.current;
+      if (node) {
+        node.muted = false;
+        setIsMuted(false);
+        setHasInteracted(true);
+      }
+    }
+  };
+
 
 
   return (
@@ -207,7 +220,7 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
 
               <HeroStats stats={stats} />
 
-              <div className="mt-3 lg:mt-4 flex flex-wrap gap-3">
+              <div className="mt-4 lg:mt-4 flex flex-wrap gap-3">
                 <button
                   onClick={onWatchClick}
                   className="rounded-full bg-linear-to-r from-blue-500 via-violet-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(99,102,241,0.35)] transition hover:scale-[1.02] sm:px-6 lg:px-4 lg:py-2 lg:text-xs"
@@ -247,7 +260,15 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
                 loop
                 playsInline
                 preload="metadata"
+                onClick={handleVideoInteraction}
               />
+
+              {/* Mobile tap indicator for sound */}
+              {!hasInteracted && (
+                <div className="absolute top-4 left-4 right-4 flex md:hidden items-center justify-center gap-2 z-20 bg-black/40 px-3 py-2 rounded-full backdrop-blur-sm pointer-events-none">
+                  <span className="text-sm text-white font-medium">Tap for sound 🔊</span>
+                </div>
+              )}
 
               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
