@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { FiInstagram, FiYoutube, FiEye, FiHeart, FiMessageCircle, FiPlayCircle } from "react-icons/fi";
+import { FaYoutube, FaInstagram } from "react-icons/fa";
 import SectionHeading from "@/components/ui/section-heading";
 import type { InstagramSnapshot, InstagramMedia, YouTubeVideo } from "@/lib/social-types";
 import { preconnect } from "react-dom";
@@ -429,8 +430,8 @@ export default function YouTubeVideoGrid() {
           {reels.length > 0 && (
             <div>
               <div className="mb-6 flex items-center gap-2 border-b border-slate-800 pb-2">
-                <FiInstagram className="text-gray-400" size={24} />
-                <h3 className="text-lg md:text-xl font-medium text-gray-400">Trending Reels</h3>
+                <FaInstagram className="text-[#E1306C]" size={24} />
+                <h3 className="text-lg md:text-xl font-medium text-white">Trending Reels</h3>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                 {reels.map((media) => (
@@ -451,8 +452,8 @@ export default function YouTubeVideoGrid() {
           {ytShorts.length > 0 && (
             <div>
               <div className="mb-6 flex items-center gap-2 border-b border-slate-800 pb-2">
-                <FiYoutube className="text-gray-400" size={24} />
-                <h3 className="text-lg md:text-xl font-medium text-gray-400">Trending Shorts</h3>
+                <FaYoutube className="text-[#FF0000]" size={24} />
+                <h3 className="text-lg md:text-xl font-medium text-white">Trending Shorts</h3>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
                 {ytShorts.map((video) => (
@@ -474,8 +475,8 @@ export default function YouTubeVideoGrid() {
           {ytLongs.length > 0 && (
             <div>
               <div className="mb-6 flex items-center gap-2 border-b border-slate-800 pb-2">
-                <FiYoutube className="text-gray-400" size={24} />
-                <h3 className="text-lg md:text-xl font-medium text-gray-400">Top Videos</h3>
+                <FaYoutube className="text-[#FF0000]" size={24} />
+                <h3 className="text-lg md:text-xl font-medium text-white">Top Videos</h3>
               </div>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {ytLongs.map((video) => (

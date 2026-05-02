@@ -1,20 +1,148 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import SectionHeading from "@/components/ui/section-heading";
 
 const MOMENTS = [
-  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
+  "/profile/1.jpg",
+  "/profile/2.jpg",
+  "/profile/3.jpg",
+  "/profile/4.jpg",
+  "/profile/5.jpg",
+  "/profile/6.jpg",
+  "/profile/7.jpg",
+  "/profile/8.jpg",
+  "/profile/9.jpg",
+  "/profile/10.jpg",
+  "/profile/11.jpg",
+  "/profile/12.jpg",
+  "/profile/13.jpg",
+  "/profile/14.jpg",
+  "/profile/15.jpg",
+  "/profile/16.jpg",
 ];
 
 export default function ProfileGallery() {
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<string | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Extend array heavily to ensure manual scrolling never hits the end
+  const EXTENDED_MOMENTS = [...MOMENTS, ...MOMENTS, ...MOMENTS, ...MOMENTS, ...MOMENTS, ...MOMENTS, ...MOMENTS, ...MOMENTS];
+
+  // Initialize scroll position to allow infinite left scrolling
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const item = el.firstElementChild as HTMLElement;
+    if (!item) return;
+    const gap = 16;
+    const scrollStep = item.offsetWidth + gap;
+    const maxScroll = scrollStep * MOMENTS.length;
+    
+    // Start at the 3rd set so we can safely scroll left
+    el.scrollLeft = maxScroll * 2;
+    // Initial center detection
+    handleScrollUpdate();
+  }, []);
+
+  const handleScrollUpdate = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const containerRect = el.getBoundingClientRect();
+    const containerCenter = containerRect.left + containerRect.width / 2;
+
+    let closestChild: HTMLElement | null = null;
+    let minDistance = Infinity;
+
+    Array.from(el.children).forEach((child) => {
+      const childEle = child as HTMLElement;
+      const rect = childEle.getBoundingClientRect();
+      const childCenter = rect.left + rect.width / 2;
+      const distance = Math.abs(containerCenter - childCenter);
+      
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestChild = childEle;
+      }
+    });
+
+    Array.from(el.children).forEach((child) => {
+      const target = child as HTMLElement;
+      if (target === closestChild) {
+        target.style.transform = "scale(1.05)";
+        target.style.zIndex = "10";
+        target.style.boxShadow = "0 0 40px rgba(255,255,255,0.1)";
+      } else {
+        target.style.transform = "scale(0.95)";
+        target.style.zIndex = "0";
+        target.style.boxShadow = "none";
+      }
+    });
+  };
+
+  // Auto scroll logic (1 second)
+  useEffect(() => {
+    if (isHovered) return;
+
+    const interval = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+
+      const item = el.firstElementChild as HTMLElement;
+      if (!item) return;
+
+      const gap = 16;
+      const scrollStep = item.offsetWidth + gap;
+      const maxScroll = scrollStep * MOMENTS.length;
+
+      // Wrap around right boundary seamlessly
+      if (el.scrollLeft >= maxScroll * 5) {
+        el.style.scrollBehavior = 'auto';
+        el.scrollLeft -= maxScroll * 2;
+      }
+      
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.style.scrollBehavior = 'smooth';
+          el.scrollLeft += scrollStep;
+        });
+      });
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, [isHovered]);
+
+
+
+  const handleManualScroll = (direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const item = el.firstElementChild as HTMLElement;
+    const gap = 16;
+    const scrollStep = item.offsetWidth + gap;
+    const maxScroll = scrollStep * MOMENTS.length;
+
+    // Wrap boundaries for manual scroll
+    if (direction === "left" && el.scrollLeft <= maxScroll) {
+       el.style.scrollBehavior = 'auto';
+       el.scrollLeft += maxScroll * 2;
+    } else if (direction === "right" && el.scrollLeft >= maxScroll * 5) {
+       el.style.scrollBehavior = 'auto';
+       el.scrollLeft -= maxScroll * 2;
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.scrollBehavior = 'smooth';
+        el.scrollLeft += direction === "right" ? scrollStep : -scrollStep;
+      });
+    });
+  };
 
   return (
     <section id="profile" className="px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-10">
@@ -25,27 +153,60 @@ export default function ProfileGallery() {
           description="A curated gallery of moments that adds personality and story depth to the portfolio."
         />
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          {MOMENTS.map((src, index) => (
-            <motion.button
-              key={src}
-              type="button"
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.28, delay: index * 0.04 }}
-              onClick={() => setActive(src)}
-              className="group overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/70"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={src}
-                alt="Creator moment"
-                loading="lazy"
-                className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
-              />
-            </motion.button>
-          ))}
+        <div 
+          className="relative mt-8 w-full overflow-hidden rounded-2xl"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onTouchStart={() => setIsHovered(true)}
+          onTouchEnd={() => setIsHovered(false)}
+        >
+          {/* Left Arrow */}
+          <button 
+            onClick={() => handleManualScroll("left")}
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/60 text-white backdrop-blur-md border border-white/10 hover:bg-black/90 hover:scale-110 transition hidden sm:flex shadow-lg"
+            aria-label="Scroll left"
+          >
+            <FiChevronLeft size={24} />
+          </button>
+
+          {/* Right Arrow */}
+          <button 
+            onClick={() => handleManualScroll("right")}
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/60 text-white backdrop-blur-md border border-white/10 hover:bg-black/90 hover:scale-110 transition hidden sm:flex shadow-lg"
+            aria-label="Scroll right"
+          >
+            <FiChevronRight size={24} />
+          </button>
+
+          {/* Left Edge Fade */}
+          <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-12 bg-linear-to-r from-slate-950 to-transparent sm:w-24" />
+          
+          {/* Right Edge Fade */}
+          <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-12 bg-linear-to-l from-slate-950 to-transparent sm:w-24" />
+
+          {/* Carousel Track */}
+          <div
+            ref={scrollRef}
+            onScroll={handleScrollUpdate}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 pt-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          >
+            {EXTENDED_MOMENTS.map((src, index) => (
+              <button
+                key={`${src}-${index}`}
+                type="button"
+                onClick={() => setActive(src)}
+                className="group relative shrink-0 snap-center overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-950/70 w-[75vw] sm:w-[45vw] md:w-[35vw] lg:w-[28vw] 2xl:w-[22vw] transition-all duration-500"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  alt="Creator moment"
+                  loading="lazy"
+                  className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
