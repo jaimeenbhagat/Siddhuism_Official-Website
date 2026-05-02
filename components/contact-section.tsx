@@ -68,7 +68,6 @@ export default function ContactSection() {
         <SectionHeading
           eyebrow="Contact"
           title="Ready for collaborations and creative campaigns"
-          description="Send an enquiry and get a response via email workflow powered by Next.js API routes."
         />
 
         <motion.form

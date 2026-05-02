@@ -18,6 +18,15 @@ const socialIconByLabel = {
   Mail: FaEnvelope,
 } as const;
 
+const socialHoverClassByLabel = {
+  YouTube: "hover:text-[#FF0000]",
+  Instagram: "hover:text-[#E1306C]",
+  Threads: "hover:text-slate-100",
+  LinkedIn: "hover:text-[#0A66C2]",
+  Facebook: "hover:text-[#1877F2]",
+  Mail: "hover:text-amber-300",
+} as const;
+
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -98,7 +107,7 @@ export default function Navbar() {
                   key={item.label}
                   href={item.href}
                   aria-label={item.label}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-200 transition duration-200 hover:scale-105 hover:bg-white/10 hover:text-white"
+                  className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-200 transition duration-200 hover:scale-105 hover:bg-white/10 ${socialHoverClassByLabel[item.label as keyof typeof socialHoverClassByLabel]}`}
                   target={item.href.startsWith("http") ? "_blank" : undefined}
                   rel={item.href.startsWith("http") ? "noreferrer" : undefined}
                 >
@@ -108,13 +117,13 @@ export default function Navbar() {
             })}
           </div>
 
-          <Link href={pathname === "/" ? "#top" : "/"} className="flex items-center group">
+          <Link href={pathname === "/" ? "#top" : "/"} className="flex items-center">
             <Image
               src="/IMG_7397-removebg-preview.png"
               alt="siddhuism_official logo"
               width={300}
               height={300}
-              className="h-14 w-auto object-contain sm:h-16 md:h-20 filter grayscale transition duration-200 group-hover:grayscale-0"
+              className="h-14 w-auto object-contain sm:h-16 md:h-20"
               priority
             />
           </Link>
@@ -154,7 +163,7 @@ export default function Navbar() {
                       href={item.href}
                       aria-label={item.label}
                       onClick={handleLinkClick}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-slate-200 transition duration-200 hover:scale-105 hover:bg-white/10 hover:text-white"
+                      className={`inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-slate-200 transition duration-200 hover:scale-105 hover:bg-white/10 ${socialHoverClassByLabel[item.label as keyof typeof socialHoverClassByLabel]}`}
                       target={item.href.startsWith("http") ? "_blank" : undefined}
                       rel={item.href.startsWith("http") ? "noreferrer" : undefined}
                     >

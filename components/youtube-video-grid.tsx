@@ -344,7 +344,7 @@ export default function YouTubeVideoGrid() {
   const { reels, ytShorts, ytLongs } = useMemo(() => {
     const r = (igStats?.media?.filter(m => m.mediaType === "VIDEO") || [])
       .sort((a, b) => (b.likeCount + b.commentsCount) - (a.likeCount + a.commentsCount))
-      .slice(0, 10);
+      .slice(0, 5);
       
     const mapYt = (row: ApiYouTubeRow): YouTubeVideo => ({
       id: row.id,
@@ -358,7 +358,21 @@ export default function YouTubeVideoGrid() {
       comments: row.comments
     });
 
-    const ys = ytShortsRaw.map(mapYt);
+    const allShorts = ytShortsRaw.map(mapYt);
+    const topFiveShorts = allShorts.slice(0, 5);
+
+    // Force the 4th slot to the Garba short when it exists in fetched shorts.
+    const garbaShort = allShorts.find((video) =>
+      video.title.toLowerCase().includes("garba toh sab karte hai") || video.title.toLowerCase().includes("garba")
+    );
+
+    let ys = topFiveShorts;
+    if (garbaShort && topFiveShorts.length >= 4) {
+      const withoutGarba = topFiveShorts.filter((video) => video.id !== garbaShort.id);
+      const rebuilt = [...withoutGarba];
+      rebuilt.splice(3, 0, garbaShort);
+      ys = rebuilt.slice(0, 5);
+    }
     const yl = ytLongsRaw.map(mapYt);
 
     return { reels: r, ytShorts: ys, ytLongs: yl };

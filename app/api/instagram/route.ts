@@ -15,22 +15,15 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
+    console.error("/api/instagram error:", error instanceof Error ? error.message : error);
     return NextResponse.json(
       {
-        username: "siddhuism_official",
-        mediaCount: 0,
-        followersCount: 0,
-        profilePictureUrl: "",
-        media: [],
-        fetchedAt: new Date().toISOString(),
-        source: "fallback",
-        message: "Content loading...",
         error: error instanceof Error ? error.message : "Unable to load Instagram data.",
       },
       {
-        status: 200,
+        status: 500,
         headers: {
-          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+          "Cache-Control": "no-store",
         },
       },
     );

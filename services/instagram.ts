@@ -3,6 +3,7 @@ import { readCachedSnapshot, writeCachedSnapshot } from "@/services/social-cache
 import type { InstagramMedia, InstagramSnapshot } from "@/lib/social-types";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 import { getInstagramMediaRows, mapInstagramRowToMedia, upsertInstagramMediaRows, type InstagramMediaRow } from "@/lib/instagram-db";
+import { refreshInstagramToken } from "@/lib/refresh-instagram-token";
 
 type InstagramResponse = {
   media_count?: number;
@@ -39,6 +40,49 @@ async function requireConfig() {
 
   if (!accessToken || !userId) {
     throw new Error("Instagram credentials are not configured.");
+  }
+
+  // Validate token using Graph API debug_token. If invalid attempt refresh and persist.
+  const appId = process.env.META_APP_ID;
+  const appSecret = process.env.META_APP_SECRET;
+
+  if (!appId || !appSecret) {
+    // Log a warning but continue; debug_token may still work with token alone
+    console.warn("META_APP_ID or META_APP_SECRET not set; skipping token debug check.");
+    return { accessToken, userId };
+  }
+
+  try {
+    const appToken = `${appId}|${appSecret}`;
+    const debugUrl = `https://graph.facebook.com/debug_token?input_token=${accessToken}&access_token=${appToken}`;
+    const debug = await fetchJsonWithRetry<any>(debugUrl);
+
+    if (!debug?.data?.is_valid) {
+      console.warn("Instagram access token invalid according to debug_token; attempting refresh", debug?.data || debug);
+
+      // Try to refresh the token
+      try {
+        const newToken = await refreshInstagramToken(accessToken);
+        accessToken = newToken;
+
+        // Persist refreshed token to Supabase if available
+        if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+          const supabase = getSupabaseAdminClient();
+          try {
+            await supabase.from("instagram_tokens").upsert({ id: 1, access_token: newToken, updated_at: new Date().toISOString() });
+          } catch (upsertErr) {
+            console.error("Failed to persist refreshed Instagram token to Supabase:", upsertErr instanceof Error ? upsertErr.message : upsertErr);
+          }
+        }
+      } catch (refreshErr) {
+        console.error("Instagram token refresh failed:", refreshErr instanceof Error ? refreshErr.message : refreshErr);
+        throw new Error("Instagram access token invalid and refresh failed");
+      }
+    }
+  } catch (err) {
+    // Surface debug errors clearly
+    console.error("Error validating Instagram access token:", err instanceof Error ? err.message : err);
+    throw err;
   }
 
   return { accessToken, userId };
@@ -170,14 +214,6 @@ export async function getInstagramSnapshot() {
     // Fall through to live refresh below.
   }
 
-  try {
-    return await refreshInstagramSnapshot();
-  } catch (error) {
-    const staleCached = await readCachedSnapshot<InstagramSnapshot>("instagram", true);
-    if (staleCached) {
-      return { ...staleCached.data, fetchedAt: staleCached.fetchedAt, source: "cache" as const };
-    }
-
-    throw error;
-  }
+  // Do not silently fall back to stale cached data. Attempt live refresh and surface any errors.
+  return await refreshInstagramSnapshot();
 }

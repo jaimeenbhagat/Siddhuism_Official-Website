@@ -10,6 +10,15 @@ const socialIconByLabel = {
   Mail: FaEnvelope,
 } as const;
 
+const socialHoverClassByLabel = {
+  YouTube: "hover:text-[#FF0000]",
+  Instagram: "hover:text-[#E1306C]",
+  Threads: "hover:text-slate-100",
+  LinkedIn: "hover:text-[#0A66C2]",
+  Facebook: "hover:text-[#1877F2]",
+  Mail: "hover:text-amber-300",
+} as const;
+
 export default function Footer() {
   return (
     <footer className="border-t border-slate-700/70 px-4 py-8 sm:px-6 md:px-8 lg:px-10">
@@ -27,7 +36,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={social.label}
-                className="text-slate-400 transition hover:text-slate-100 hover:scale-110"
+                className={`text-slate-400 transition hover:scale-110 ${socialHoverClassByLabel[social.label as keyof typeof socialHoverClassByLabel]}`}
               >
                 <Icon size={20} />
               </a>

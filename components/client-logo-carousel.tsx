@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
+import SectionHeading from "@/components/ui/section-heading";
 
 const logos = [
   "/clientlogos/Galwan Tour Adventure.jpg",
@@ -63,7 +64,7 @@ export default function ClientLogoCarousel() {
             src={encodeURI(logo)}
             alt="Client collaboration logo"
             loading="lazy"
-            className="max-h-full max-w-full object-contain opacity-70 transition duration-300 hover:opacity-100"
+            className="max-h-full max-w-full object-contain opacity-100"
           />
         </div>
       )),
@@ -80,9 +81,11 @@ export default function ClientLogoCarousel() {
           transition={{ duration: 0.3 }}
           className="text-center"
         >
-          <p className="text-xs uppercase tracking-[0.24em] text-blue-300">Featured Collaborations</p>
-          <h2 className="mt-3 text-3xl font-semibold text-slate-100 md:text-4xl">Featured Collaborations</h2>
-          <p className="mt-3 text-sm text-slate-400 md:text-base">Collaborations across travel, lifestyle &amp; content</p>
+          <SectionHeading
+            eyebrow="Featured Collaborations"
+            title="Featured Collaborations"
+            description="Collaborations across travel, lifestyle & content"
+          />
         </motion.div>
 
         <div
