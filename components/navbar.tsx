@@ -3,10 +3,20 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV_LINKS } from "@/lib/content";
+import { NAV_LINKS, SOCIAL_LINKS } from "@/lib/content";
 import Image from "next/image";
 import { FiMenu, FiX } from "react-icons/fi";
+import { FaYoutube, FaInstagram, FaLinkedin, FaFacebook, FaThreads, FaEnvelope } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
+
+const socialIconByLabel = {
+  YouTube: FaYoutube,
+  Instagram: FaInstagram,
+  Threads: FaThreads,
+  LinkedIn: FaLinkedin,
+  Facebook: FaFacebook,
+  Mail: FaEnvelope,
+} as const;
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -44,7 +54,7 @@ export default function Navbar() {
         isScrolled ? "bg-black/25 backdrop-blur-md" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-3 2xl:max-w-[1600px]">
+      <div className="mx-auto flex w-full max-w-350 items-center justify-between gap-3 2xl:max-w-400">
         {/* Left Side: Mobile Hamburger + Desktop Navigation */}
         <div className="flex items-center gap-3">
           {/* Mobile Menu Button */}
@@ -77,17 +87,38 @@ export default function Navbar() {
           </nav>
         </div>
 
-        {/* Right Side: Logo */}
-        <Link href={pathname === "/" ? "#top" : "/"} className="flex items-center">
-          <Image
-            src="/IMG_7397-removebg-preview.png"
-            alt="siddhuism_official logo"
-            width={300}
-            height={300}
-            className="h-14 w-auto object-contain sm:h-16 md:h-20"
-            priority
-          />
-        </Link>
+        {/* Right Side: Social Icons + Logo */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="hidden lg:flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/65 px-2 py-2 shadow-[0_12px_30px_rgba(0,0,0,0.14)] backdrop-blur-md">
+            {SOCIAL_LINKS.map((item) => {
+              const Icon = socialIconByLabel[item.label as keyof typeof socialIconByLabel];
+
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  aria-label={item.label}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-200 transition duration-200 hover:scale-105 hover:bg-white/10 hover:text-white"
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                >
+                  <Icon size={16} />
+                </Link>
+              );
+            })}
+          </div>
+
+          <Link href={pathname === "/" ? "#top" : "/"} className="flex items-center group">
+            <Image
+              src="/IMG_7397-removebg-preview.png"
+              alt="siddhuism_official logo"
+              width={300}
+              height={300}
+              className="h-14 w-auto object-contain sm:h-16 md:h-20 filter grayscale transition duration-200 group-hover:grayscale-0"
+              priority
+            />
+          </Link>
+        </div>
       </div>
 
       {/* Mobile Navigation Menu */}
@@ -112,6 +143,26 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+
+              <div className="mt-3 flex items-center justify-center gap-2 border-t border-white/10 pt-3">
+                {SOCIAL_LINKS.map((item) => {
+                  const Icon = socialIconByLabel[item.label as keyof typeof socialIconByLabel];
+
+                  return (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      aria-label={item.label}
+                      onClick={handleLinkClick}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-slate-200 transition duration-200 hover:scale-105 hover:bg-white/10 hover:text-white"
+                      target={item.href.startsWith("http") ? "_blank" : undefined}
+                      rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                    >
+                      <Icon size={15} />
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           </motion.nav>
         )}

@@ -58,7 +58,7 @@ export default function PortfolioSection() {
 
   return (
     <section id="portfolio" className="px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-10">
-      <div className="mx-auto w-full max-w-[1400px] 2xl:max-w-[1600px]">
+      <div className="mx-auto w-full max-w-350 2xl:max-w-400">
         <SectionHeading
           eyebrow="Portfolio"
           title="Brand work, projects, and external content"

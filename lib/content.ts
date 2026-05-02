@@ -46,9 +46,9 @@ export const CATEGORIES: Category[] = [
 export const SOCIAL_LINKS = [
   { label: "YouTube", href: "https://www.youtube.com/@siddhuism_official" },
   { label: "Instagram", href: "https://www.instagram.com/siddhuism_official/" },
-  { label: "Threads", href: "https://www.threads.com/@siddhuism_official" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/siddhuismofficial/" },
   { label: "Facebook", href: "https://www.facebook.com/siddharth.sonetta.1/" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/siddhuismofficial/" },
+  { label: "Threads", href: "https://www.threads.com/@siddhuism_official" },
   { label: "Mail", href: "mailto:siddhuismofficial@gmail.com" },
 ] as const;
 

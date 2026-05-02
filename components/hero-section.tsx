@@ -188,18 +188,18 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
       <div className="hero-gradient absolute inset-0 -z-20" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_30%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_30%)]" />
 
-      <div className="mx-auto flex w-full items-start py-3 sm:py-4 md:py-5 lg:min-h-svh lg:items-center">
+      <div className="mx-auto w-full max-w-350 2xl:max-w-400 flex items-start py-3 sm:py-4 md:py-5 lg:min-h-svh lg:items-center">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65 }}
-          className="flex w-full flex-col items-start gap-4 md:gap-5 lg:grid lg:grid-cols-[1.2fr_1.8fr] xl:grid-cols-[1.2fr_1.6fr] lg:gap-4 lg:items-center"
+            className="flex w-full flex-col items-start gap-4 md:gap-5 lg:grid lg:grid-cols-[1fr_1.8fr] xl:grid-cols-[1fr_1.6fr] lg:gap-6 lg:gap-x-6 lg:items-center"
         >
-          <div className="order-2 w-full pl-1 pt-6 sm:pl-2 lg:order-2 lg:pl-4 lg:pr-2 xl:pl-6 lg:mt-0">
-            <div className="rounded-2xl border border-slate-600/40 bg-slate-900/55 p-8 md:p-10 lg:p-6 shadow-[0_10px_60px_rgba(2,6,23,0.6)] backdrop-blur-2xl">
+          <div className="order-2 w-full pt-6 sm:pt-6 lg:order-2 lg:mt-0">
+            <div className="rounded-2xl border border-slate-600/40 bg-slate-900/55 p-8 md:p-10 lg:p-8 shadow-[0_10px_60px_rgba(2,6,23,0.6)] backdrop-blur-2xl">
               <div className="mt-0 max-w-full text-pretty text-sm text-slate-300 sm:text-sm md:text-sm lg:text-sm">
                 <div className="mx-auto text-center max-w-2xl">
-                  <h2 className="text-xl mt-0 sm:text-2xl md:text-3xl font-extrabold text-slate-100 leading-tight md:whitespace-nowrap inline-block relative">
+                  <h2 className="text-xl mt-0 sm:text-2xl md:text-4xl font-extrabold text-slate-100 leading-tight md:whitespace-nowrap inline-block relative">
                     <span className="block text-xs font-medium uppercase tracking-[0.18em] text-slate-300 mb-1 lg:mb-0.5 lg:text-xs">CREATOR BIO</span>
                     <span className="absolute inset-0 -z-10 mx-auto block w-full max-w-3xl rounded-sm" />
                     <span className="relative px-3">The face behind Siddhuism Official</span>
@@ -241,64 +241,67 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
             initial={{ opacity: 0, scale: 0.96, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.12 }}
-            className="relative order-1 w-full lg:order-1 flex flex-col items-center pt-6 lg:pt-0 lg:justify-self-start"
+            className="relative order-1 w-full lg:order-1 flex flex-col items-start pt-6 lg:pt-0 lg:justify-self-start"
           >
             <div className="absolute inset-1 rounded-2xl bg-linear-to-br from-blue-500/30 via-transparent to-violet-500/25 blur-3xl" />
 
-              <div className="relative z-10 mb-2 lg:mb-1 flex items-center justify-center gap-2 lg:gap-2">
-              <div className="h-2 w-2 lg:h-3 lg:w-3 rounded-full mb-2 bg-red-500 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
-              <h3 className="text-base font-bold uppercase tracking-[0.18em] mb-2 text-slate-100 text-glow md:text-lg lg:text-md">Signature Cut</h3>
-            </div>
+            {/* Signature + video wrapper (fixed width = reel width) */}
+            <div className="w-full max-w-120">
+              <div className="relative z-10 mb-2 lg:mb-1 flex items-center justify-center gap-2 lg:gap-2 mx-auto">
+                <div className="h-2 w-2 lg:h-3 lg:w-3 rounded-full mb-2 bg-red-500 animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
+                <h3 className="text-base font-bold uppercase tracking-[0.18em] mb-2 text-slate-100 text-glow md:text-lg lg:text-md">Signature Cut</h3>
+              </div>
 
-            <div className="relative aspect-9/16 w-full max-w-md overflow-hidden rounded-2xl  bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] sm:max-w-116 md:max-w-120 lg:max-w-87 group">
-              <video
-                ref={videoRef}
-                src={heroVideoUrl}
-                className="w-full h-full object-contain"
-                autoPlay
-                muted={isMuted}
-                loop
-                playsInline
-                preload="metadata"
-                onClick={handleVideoInteraction}
-              />
+              <div className="relative aspect-9/16 w-full max-w-md overflow-hidden rounded-2xl  bg-black shadow-[0_0_40px_rgba(99,102,241,0.2)] sm:max-w-116 md:max-w-120 lg:max-w-87 ml-17 group">
+                <video
+                  ref={videoRef}
+                  src={heroVideoUrl}
+                  className="w-full h-full object-contain"
+                  autoPlay
+                  muted={isMuted}
+                  loop
+                  playsInline
+                  preload="metadata"
+                  onClick={handleVideoInteraction}
+                />
 
-              {/* Mobile tap indicator for sound */}
-              {!hasInteracted && (
-                <div className="absolute top-4 left-4 right-4 flex md:hidden items-center justify-center gap-2 z-20 bg-black/40 px-3 py-2 rounded-full backdrop-blur-sm pointer-events-none">
-                  <span className="text-sm text-white font-medium">Tap for sound 🔊</span>
-                </div>
-              )}
+                {/* Mobile tap indicator for sound */}
+                {!hasInteracted && (
+                  <div className="absolute top-4 left-4 right-4 flex md:hidden items-center justify-center gap-2 z-20 bg-black/40 px-3 py-2 rounded-full backdrop-blur-sm pointer-events-none">
+                    <span className="text-sm text-white font-medium">Tap for sound 🔊</span>
+                  </div>
+                )}
 
-              <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button
-                  type="button"
-                  onClick={togglePlayback}
-                  className="rounded-full bg-black/60 p-2.5 text-white backdrop-blur-md transition hover:bg-black/80 hover:text-blue-300 hover:scale-110"
-                  aria-label={isPlaying ? "Pause" : "Play"}
-                >
-                  {isPlaying ? <FiPause size={18} /> : <FiPlay size={18} className="ml-0.5" />}
-                </button>
-
-                <div className="flex items-center gap-3">
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <button
                     type="button"
-                    onClick={toggleMute}
+                    onClick={togglePlayback}
                     className="rounded-full bg-black/60 p-2.5 text-white backdrop-blur-md transition hover:bg-black/80 hover:text-blue-300 hover:scale-110"
-                    aria-label={isMuted ? "Unmute" : "Mute"}
+                    aria-label={isPlaying ? "Pause" : "Play"}
                   >
-                    {isMuted ? <FiVolumeX size={18} /> : <FiVolume2 size={18} />}
+                    {isPlaying ? <FiPause size={18} /> : <FiPlay size={18} className="ml-0.5" />}
                   </button>
-                  <button
-                    type="button"
-                    onClick={toggleFullScreen}
-                    className="rounded-full bg-black/60 p-2.5 text-white backdrop-blur-md transition hover:bg-black/80 hover:text-blue-300 hover:scale-110"
-                    aria-label="Full Screen"
-                  >
-                    <FiMaximize size={18} />
-                  </button>
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={toggleMute}
+                      className="rounded-full bg-black/60 p-2.5 text-white backdrop-blur-md transition hover:bg-black/80 hover:text-blue-300 hover:scale-110"
+                      aria-label={isMuted ? "Unmute" : "Mute"}
+                    >
+                      {isMuted ? <FiVolumeX size={18} /> : <FiVolume2 size={18} />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={toggleFullScreen}
+                      className="rounded-full bg-black/60 p-2.5 text-white backdrop-blur-md transition hover:bg-black/80 hover:text-blue-300 hover:scale-110"
+                      aria-label="Full Screen"
+                    >
+                      <FiMaximize size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
