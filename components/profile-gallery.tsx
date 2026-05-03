@@ -163,19 +163,19 @@ export default function ProfileGallery() {
           {/* Left Arrow */}
           <button 
             onClick={() => handleManualScroll("left")}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/60 text-white backdrop-blur-md border border-white/10 hover:bg-black/90 hover:scale-110 transition hidden sm:flex shadow-lg"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-black/60 text-white backdrop-blur-md border border-white/10 hover:bg-black/90 hover:scale-110 transition flex shadow-lg"
             aria-label="Scroll left"
           >
-            <FiChevronLeft size={24} />
+            <FiChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
 
           {/* Right Arrow */}
           <button 
             onClick={() => handleManualScroll("right")}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-black/60 text-white backdrop-blur-md border border-white/10 hover:bg-black/90 hover:scale-110 transition hidden sm:flex shadow-lg"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-black/60 text-white backdrop-blur-md border border-white/10 hover:bg-black/90 hover:scale-110 transition flex shadow-lg"
             aria-label="Scroll right"
           >
-            <FiChevronRight size={24} />
+            <FiChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
 
           {/* Left Edge Fade */}

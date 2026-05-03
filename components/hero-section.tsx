@@ -103,12 +103,13 @@ function HeroStats({ stats }: { stats: LiveStats }) {
 export default function HeroSection({ onWatchClick, onContactClick }: HeroSectionProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [stats, setStats] = useState<LiveStats>(null);
+  const [isMobileMode, setIsMobileMode] = useState(false);
 
   const heroVideoUrl =
-    "https://res.cloudinary.com/dkjyjzl8u/video/upload/v1777717538/SIDDHUISM_Official_2026_Showreel_Final_-_Compressed_sathux.mp4";
+    "https://res.cloudinary.com/dtknrhjnq/video/upload/v1777791553/SIDDHUISM_Official_2026_Showreel_Final_-_Compressed_ad6fkz.mp4";
 
   useEffect(() => {
     const loadStats = async () => {
@@ -124,10 +125,15 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
     };
 
     void loadStats();
-    // Attempt to autoplay the video unmuted
+    
+    // Set mobile mode based on window width
+    setIsMobileMode(window.innerWidth < 1024);
+
+    // Attempt to autoplay the video muted for better cross-browser support
     const node = videoRef.current;
     if (node) {
-      node.muted = false;
+      node.muted = true;
+      setIsMuted(true);
       void node.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
     }
   }, []);
@@ -260,20 +266,23 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
                   muted={isMuted}
                   loop
                   playsInline
+                  controls={isMobileMode}
                   preload="metadata"
                   onClick={handleVideoInteraction}
                 />
 
                 {/* Mobile tap indicator for sound */}
                 {!hasInteracted && (
-                  <div className="absolute top-4 left-4 right-4 flex md:hidden items-center justify-center gap-2 z-20 bg-black/40 px-3 py-2 rounded-full backdrop-blur-sm pointer-events-none">
+                  <div className="absolute top-4 left-4 right-4 flex lg:hidden items-center justify-center gap-2 z-20 bg-black/40 px-3 py-2 rounded-full backdrop-blur-sm pointer-events-none">
                     <span className="text-sm text-white font-medium">Tap for sound 🔊</span>
                   </div>
                 )}
 
-                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {/* Gradient overlay (Desktop only to not interfere with mobile native controls) */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 hidden lg:block" />
 
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {/* Custom Controls (Desktop only) */}
+                <div className="absolute bottom-4 left-4 right-4 items-center justify-between z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 hidden lg:flex">
                   <button
                     type="button"
                     onClick={togglePlayback}
