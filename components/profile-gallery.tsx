@@ -6,22 +6,22 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import SectionHeading from "@/components/ui/section-heading";
 
 const MOMENTS = [
-  "/profile/1.jpg",
-  "/profile/14.jpg",
-  "/profile/2.jpg",
-  "/profile/3.jpg",
-  "/profile/4.jpg",
-  "/profile/5.jpg",
-  "/profile/6.jpg",
-  "/profile/7.jpg",
-  "/profile/8.jpg",
-  "/profile/9.jpg",
-  "/profile/10.jpg",
-  "/profile/11.jpg",
-  "/profile/12.jpg",
-  "/profile/13.jpg",
-  "/profile/15.jpg",
-  "/profile/16.jpg",
+  "/profile/1.webp",
+  "/profile/14.webp",
+  "/profile/2.webp",
+  "/profile/3.webp",
+  "/profile/4.webp",
+  "/profile/5.webp",
+  "/profile/6.webp",
+  "/profile/7.webp",
+  "/profile/8.webp",
+  "/profile/9.webp",
+  "/profile/10.webp",
+  "/profile/11.webp",
+  "/profile/12.webp",
+  "/profile/13.webp",
+  "/profile/15.webp",
+  "/profile/16.webp",
 ];
 
 export default function ProfileGallery() {
