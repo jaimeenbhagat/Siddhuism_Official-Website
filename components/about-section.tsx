@@ -77,7 +77,7 @@ export default function AboutSection() {
                 },
                 { 
                   label: "STACK", 
-                  lines: ["Sony FX30 / Sony A7 IV / DJI Air 3S drone / Insta360 X4", "Adobe Premiere Pro / After Effects / CapCut"] 
+                  lines: ["Sony FX30 / Sony A7 IV / iPhone / DJI Air 3S drone / Insta360 Ace Pro 2", "Adobe Premiere Pro / After Effects / CapCut"] 
                 },
               ].map((item) => (
                 <div key={item.label} className="rounded-2xl border border-slate-700/60 bg-slate-900/65 p-4 transition duration-300 hover:border-slate-500/60 hover:bg-slate-800/80">

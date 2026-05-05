@@ -7,7 +7,9 @@ export type VideoLink = {
 export type BrandCategory = {
   name: string;
   description?: string;
+  thumbnail?: string;
   videos: VideoLink[];
+  videoGroups?: { title: string; videos: VideoLink[] }[];
 };
 
 export type PortfolioCategory = {
@@ -28,6 +30,7 @@ export type PortfolioProject = {
   description?: string;
   categoryTitle: string;
   videos: VideoLink[];
+  videoGroups?: { title: string; videos: VideoLink[] }[];
 };
 
 function parseVideo(url: string): VideoLink {
@@ -89,25 +92,62 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           {
             name: "Orange Cookware | Premium Kitchenware & Home Essentials",
             videos: [
-              "https://www.youtube.com/shorts/QPi7ygzH5uc",
-              "https://www.youtube.com/shorts/YgA41sqd9IU",
+              "https://www.youtube.com/shorts/AUggjxKTxYY",
+              "https://www.youtube.com/shorts/pWLOTPrTBhg",
+              "https://www.youtube.com/shorts/pWLOTPrTBhg",
+              "https://www.youtube.com/shorts/TKZssyrK9Lg",
+              "https://www.youtube.com/shorts/ldHRvV5Tae0",
+              "https://www.youtube.com/shorts/FIyZhiLIUIY",
+              "https://www.youtube.com/shorts/ubjOhC_SLS4",
               "https://www.youtube.com/shorts/KXKmfhPpSAM",
-              "https://www.youtube.com/shorts/A2IEH9nPtaw",
-              "https://www.youtube.com/shorts/xG35L7t9uFs",
-              "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
-              "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
-              "https://www.youtube.com/shorts/YbdD_fG4Gyg",
-              "https://www.youtube.com/shorts/pYpaqABi2_4",
+              "https://www.youtube.com/shorts/YgA41sqd9IU",
+              "https://www.youtube.com/shorts/QPi7ygzH5uc",
               "https://www.youtube.com/shorts/T54it3jNr38",
               "https://www.youtube.com/shorts/Q4v0kKO-xbw",
-              "https://www.youtube.com/shorts/ubjOhC_SLS4",
-              "https://www.youtube.com/shorts/FIyZhiLIUIY",
-              "http://youtube.com/shorts/ldHRvV5Tae0",
-              "https://www.youtube.com/shorts/TKZssyrK9Lg",
-              "https://www.youtube.com/shorts/ZQ-wiN7fNcs",
-              "https://www.youtube.com/shorts/pWLOTPrTBhg",
-              "http://youtube.com/shorts/AUggjxKTxYY"
-            ].map(parseVideo)
+              "https://www.youtube.com/shorts/A2IEH9nPtaw",
+              "https://www.youtube.com/shorts/JU_B57qj8Cg",
+              "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
+              "https://www.youtube.com/shorts/NTgS_BrZHTc",
+              "https://www.youtube.com/shorts/pYpaqABi2_4",
+              "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
+              "https://www.youtube.com/shorts/xG35L7t9uFs"
+            ].map(parseVideo),
+            videoGroups: [
+              {
+                title: "Gas Stove Series",
+                videos: [
+                  "https://www.youtube.com/shorts/AUggjxKTxYY",
+                  "https://www.youtube.com/shorts/pWLOTPrTBhg",
+                  "https://www.youtube.com/shorts/pWLOTPrTBhg",
+                  "https://www.youtube.com/shorts/TKZssyrK9Lg",
+                  "https://www.youtube.com/shorts/ldHRvV5Tae0",
+                  "https://www.youtube.com/shorts/FIyZhiLIUIY",
+                  "https://www.youtube.com/shorts/ubjOhC_SLS4"
+                ].map(parseVideo)
+              },
+              {
+                title: "Mixture Grinder Series",
+                videos: [
+                  "https://www.youtube.com/shorts/KXKmfhPpSAM",
+                  "https://www.youtube.com/shorts/YgA41sqd9IU",
+                  "https://www.youtube.com/shorts/QPi7ygzH5uc",
+                  "https://www.youtube.com/shorts/T54it3jNr38",
+                  "https://www.youtube.com/shorts/Q4v0kKO-xbw"
+                ].map(parseVideo)
+              },
+              {
+                title: "Cookware Series",
+                videos: [
+                  "https://www.youtube.com/shorts/A2IEH9nPtaw",
+                  "https://www.youtube.com/shorts/JU_B57qj8Cg",
+                  "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
+                  "https://www.youtube.com/shorts/NTgS_BrZHTc",
+                  "https://www.youtube.com/shorts/pYpaqABi2_4",
+                  "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
+                  "https://www.youtube.com/shorts/xG35L7t9uFs"
+                ].map(parseVideo)
+              }
+            ]
           },
           {
             name: "Flipkart | Fashion & E-commerce Lifestyle",
@@ -163,8 +203,8 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Bagzone | Tech Accessories & Professional Gear",
             description: "One video manual upload which has copyright",
             videos: [
-              "https://www.youtube.com/shorts/_qh2CdO3fik",
-              "https://www.youtube.com/shorts/ZF832646ugs"
+              "https://www.youtube.com/shorts/G815ZsVKa5Y",
+              "https://www.youtube.com/shorts/tWnLwFmfT_c"
             ].map(parseVideo)
           }
         ]
@@ -219,7 +259,8 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
               "https://www.youtube.com/shorts/J0TEojJ5i0c",
               "https://www.youtube.com/shorts/jhcjDGu0vQA",
               "https://www.youtube.com/shorts/rzqs4B-xQlI",
-              "https://www.youtube.com/shorts/J2k4mpHg52w"
+              "https://www.youtube.com/shorts/J2k4mpHg52w",
+              "https://www.youtube.com/watch?v=2Un0Nrx1bHI&list=PL5s_g50ftI2OIzdyiUpB9xgIFzklJ5lYM&index=6"
             ].map(parseVideo)
           },
           {
@@ -231,7 +272,13 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
               "https://www.youtube.com/shorts/bw_LxeHSZSk",
               "https://www.youtube.com/shorts/IhKZURbHKOo",
               "https://www.youtube.com/shorts/qkai5CExi_U",
-              "https://www.youtube.com/shorts/KuqlIo_2nQ8"
+              "https://www.youtube.com/shorts/KuqlIo_2nQ8",
+              "https://www.youtube.com/shorts/8Wzp-j5AXXs",
+              "https://www.youtube.com/shorts/PNeaVmNk_Hg",
+              "https://www.youtube.com/shorts/qTFMBjmGG54",
+              "https://www.youtube.com/shorts/-KXRNr9aSAw",
+              "https://www.youtube.com/shorts/xjwilDud3hk",
+              "https://www.youtube.com/shorts/CdTK0m7z7aE"
             ].map(parseVideo)
           },
           {
@@ -284,7 +331,7 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           },
           {
             name: "Vrindavan: Cultural Exploration",
-            description: "WIP",
+            description: "Coming Soon",
             videos: []
           }
         ]
@@ -302,11 +349,10 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Industry Events",
             description: "Book Launch (Featuring Pratik Gandhi & CID Cast), VCT Valorant LAN. Connected with public figures and high-profile gaming/tech communities.",
             videos: [
+              "https://www.youtube.com/shorts/BDnw_ukiilo",
               "https://www.youtube.com/shorts/0CiQBNy2IFg",
               "https://www.youtube.com/shorts/-XTHbVpsLRE",
-              "https://www.youtube.com/shorts/iwpg5OKjz8M",
-              "https://www.youtube.com/shorts/PtmoKTaCxVw",
-              "https://www.youtube.com/shorts/BDnw_ukiilo"
+              "https://www.youtube.com/shorts/iwpg5OKjz8M"
             ].map(parseVideo)
           }
         ]
@@ -318,9 +364,10 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Shot vs. Setup",
             description: "Technical breakdowns of how to achieve cinematic lighting and angles.",
             videos: [
-              "https://www.youtube.com/shorts/bkc4iJ6OA9U",
-              "https://www.youtube.com/shorts/E7BZLpr99is",
-              "https://www.youtube.com/shorts/dNHCvliQiqo"
+              "https://www.youtube.com/watch?v=E7BZLpr99is&list=PL5s_g50ftI2OUKeEXa3gRd3o20GqI1kiS&index=2",
+              "https://www.youtube.com/watch?v=bkc4iJ6OA9U&list=PL5s_g50ftI2OUKeEXa3gRd3o20GqI1kiS&index=3",
+              "https://www.youtube.com/watch?v=Pu32_burdTA&list=PL5s_g50ftI2OUKeEXa3gRd3o20GqI1kiS&index=4",
+              "https://www.youtube.com/watch?v=sYExqrsQ3bY&list=PL5s_g50ftI2OUKeEXa3gRd3o20GqI1kiS&index=5"
             ].map(parseVideo)
           }
         ]
@@ -341,6 +388,7 @@ export function getAllPortfolioProjects(): PortfolioProject[] {
         description: brand.description,
         categoryTitle: category.title,
         videos: brand.videos,
+        videoGroups: brand.videoGroups,
       })),
     ),
   );

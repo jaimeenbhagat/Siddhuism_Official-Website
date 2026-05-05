@@ -115,13 +115,12 @@ export default async function PortfolioProjectPage({ params }: Props) {
         ? HOSTELLER_FALLBACK
         : [];
 
-  if (!videos.length) {
+  if (!videos.length && !staticProject) {
     notFound();
   }
 
-  const projectTitle = videos[0].project_title;
-  const projectCategory = videos[0].categoryLabel;
-  const projectDescription = staticProject?.description;
+  const projectTitle = videos.length ? videos[0].project_title : staticProject?.displayName || "Project";
+  const projectCategory = videos.length ? videos[0].categoryLabel : staticProject?.categoryTitle || "Category";
 
   return (
     <>
@@ -144,7 +143,6 @@ export default async function PortfolioProjectPage({ params }: Props) {
               <p className="text-xs uppercase tracking-[0.22em] text-blue-300">{projectCategory}</p>
               <h1 className="mt-2 text-2xl font-semibold text-slate-100 sm:text-3xl md:text-4xl lg:text-5xl">{projectTitle}</h1>
               <p className="mt-3 text-sm text-slate-400 md:text-base">
-                {projectDescription || "Full project work with all published videos for this brand."}
               </p>
             </div>
 
@@ -156,11 +154,50 @@ export default async function PortfolioProjectPage({ params }: Props) {
             </Link>
           </div>
 
-          <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            {videos.map((item) => (
-              <VideoCard key={item.id} item={{ ...item, category: item.categoryLabel }} />
-            ))}
-          </section>
+          {staticProject?.videoGroups && staticProject.videoGroups.length > 0 ? (
+            <div className="space-y-12">
+              {staticProject.videoGroups.map((group) => {
+                const groupVideos = group.videos.map((video, index) => ({
+                  id: `${staticProject.slug}-${video.id}-${index}`,
+                  title: `${group.title} Video ${index + 1}`,
+                  project_slug: staticProject.slug,
+                  project_title: staticProject.displayName,
+                  video_url: video.url,
+                  thumbnail: `https://img.youtube.com/vi/${video.id}/${video.type === "short" ? "hqdefault" : "maxresdefault"}.jpg`,
+                  categoryLabel: staticProject.categoryTitle,
+                  is_featured: false,
+                  created_at: new Date().toISOString(),
+                }));
+
+                return (
+                  <div key={group.title}>
+                    <h2 className="mb-6 text-xl font-bold text-slate-100 border-b border-slate-800 pb-2">{group.title}</h2>
+                    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                      {groupVideos.map((item) => (
+                        <VideoCard key={item.id} item={{ ...item, category: item.categoryLabel }} />
+                      ))}
+                    </section>
+                  </div>
+                );
+              })}
+            </div>
+          ) : videos.length > 0 ? (
+            <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+              {videos.map((item) => (
+                <VideoCard key={item.id} item={{ ...item, category: item.categoryLabel }} />
+              ))}
+            </section>
+          ) : (
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-800 bg-slate-900/50 py-20 text-center">
+              <div className="mb-4 rounded-full bg-blue-500/10 p-4">
+                <svg className="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-slate-200">Coming Soon</h3>
+              <p className="mt-2 text-slate-400">The content for this project is currently being prepared.</p>
+            </div>
+          )}
           </div>
         </PageFadeIn>
       </main>

@@ -178,6 +178,7 @@ export const BASE_PORTFOLIO_PROJECTS: PortfolioProject[] = [
     tags: ["all", "travel"],
     sectionId: "narrative",
     subsectionId: "travel-vlogs",
+    comingSoon: true,
   },
   {
     id: "book-launch",

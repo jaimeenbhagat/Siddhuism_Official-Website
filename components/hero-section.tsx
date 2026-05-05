@@ -189,7 +189,7 @@ export default function HeroSection({ onWatchClick, onContactClick }: HeroSectio
 
 
   return (
-    <section id="top" className="relative overflow-hidden px-4 pt-6 sm:px-6 md:px-8 md:pt-6 lg:px-10">
+    <section id="top" className="relative overflow-hidden px-4 pt-6 sm:px-6 md:px-8 md:pt-6 lg:px-10 lg:pt-18">
       <div className="hero-gradient absolute inset-0 -z-20" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.2),transparent_30%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_30%)]" />
 

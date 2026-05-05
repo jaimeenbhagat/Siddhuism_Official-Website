@@ -21,9 +21,10 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
   const firstVideo = brand.videos[0];
   const thumbnailUrl = firstVideo 
     ? `https://i.ytimg.com/vi/${firstVideo.id}/${firstVideo.type === 'short' ? 'hqdefault' : 'maxresdefault'}.jpg`
-    : '/fallback.jpg'; // We can just use empty background if no videos
+    : brand.thumbnail;
   const projectSlug = getBrandSlug(brand.name);
   const displayName = getBrandDisplayName(brand.name);
+  const isComingSoon = brand.description === "Coming Soon" || (!firstVideo && !thumbnailUrl);
 
   return (
     <motion.div
@@ -35,8 +36,8 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
         href={`/portfolio/${projectSlug}`}
         className="block w-full overflow-hidden rounded-2xl border border-slate-700/70 text-left shadow-[0_12px_45px_rgba(2,6,23,0.45)] transition-colors duration-300 hover:border-slate-600"
       >
-        <div className="relative aspect-video overflow-hidden">
-          {firstVideo && (
+        <div className="relative aspect-video overflow-hidden bg-slate-900 flex items-center justify-center">
+          {thumbnailUrl ? (
             <Image
               src={thumbnailUrl}
               alt={displayName}
@@ -44,7 +45,13 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
               sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 25vw"
               className="h-full w-full object-cover opacity-60 transition duration-700 group-hover:scale-105"
             />
-          )}
+          ) : isComingSoon ? (
+            <div className="absolute inset-0 flex items-center justify-center opacity-80 transition duration-700 group-hover:scale-105">
+              <span className="rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2 text-sm font-semibold tracking-widest text-slate-400 uppercase backdrop-blur-md">
+                Coming Soon
+              </span>
+            </div>
+          ) : null}
           <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
           <div className="absolute inset-0 flex flex-col justify-between p-4 sm:p-5">
