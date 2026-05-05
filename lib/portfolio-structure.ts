@@ -92,37 +92,37 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           {
             name: "Orange Cookware | Premium Kitchenware & Home Essentials",
             videos: [
-              "https://www.youtube.com/shorts/AUggjxKTxYY",
-              "https://www.youtube.com/shorts/pWLOTPrTBhg",
-              "https://www.youtube.com/shorts/pWLOTPrTBhg",
-              "https://www.youtube.com/shorts/TKZssyrK9Lg",
-              "https://www.youtube.com/shorts/ldHRvV5Tae0",
-              "https://www.youtube.com/shorts/FIyZhiLIUIY",
-              "https://www.youtube.com/shorts/ubjOhC_SLS4",
-              "https://www.youtube.com/shorts/KXKmfhPpSAM",
-              "https://www.youtube.com/shorts/YgA41sqd9IU",
-              "https://www.youtube.com/shorts/QPi7ygzH5uc",
-              "https://www.youtube.com/shorts/T54it3jNr38",
-              "https://www.youtube.com/shorts/Q4v0kKO-xbw",
               "https://www.youtube.com/shorts/A2IEH9nPtaw",
               "https://www.youtube.com/shorts/JU_B57qj8Cg",
               "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
               "https://www.youtube.com/shorts/NTgS_BrZHTc",
               "https://www.youtube.com/shorts/pYpaqABi2_4",
               "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
-              "https://www.youtube.com/shorts/xG35L7t9uFs"
+              "https://www.youtube.com/shorts/xG35L7t9uFs",
+              "https://www.youtube.com/shorts/KXKmfhPpSAM",
+              "https://www.youtube.com/shorts/YgA41sqd9IU",
+              "https://www.youtube.com/shorts/QPi7ygzH5uc",
+              "https://www.youtube.com/shorts/T54it3jNr38",
+              "https://www.youtube.com/shorts/Q4v0kKO-xbw",
+              "https://www.youtube.com/shorts/AUggjxKTxYY",
+              "https://www.youtube.com/shorts/pWLOTPrTBhg",
+              "https://www.youtube.com/shorts/pWLOTPrTBhg",
+              "https://www.youtube.com/shorts/TKZssyrK9Lg",
+              "https://www.youtube.com/shorts/ldHRvV5Tae0",
+              "https://www.youtube.com/shorts/FIyZhiLIUIY",
+              "https://www.youtube.com/shorts/ubjOhC_SLS4"
             ].map(parseVideo),
             videoGroups: [
               {
-                title: "Gas Stove Series",
+                title: "Cookware Series",
                 videos: [
-                  "https://www.youtube.com/shorts/AUggjxKTxYY",
-                  "https://www.youtube.com/shorts/pWLOTPrTBhg",
-                  "https://www.youtube.com/shorts/pWLOTPrTBhg",
-                  "https://www.youtube.com/shorts/TKZssyrK9Lg",
-                  "https://www.youtube.com/shorts/ldHRvV5Tae0",
-                  "https://www.youtube.com/shorts/FIyZhiLIUIY",
-                  "https://www.youtube.com/shorts/ubjOhC_SLS4"
+                  "https://www.youtube.com/shorts/A2IEH9nPtaw",
+                  "https://www.youtube.com/shorts/JU_B57qj8Cg",
+                  "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
+                  "https://www.youtube.com/shorts/NTgS_BrZHTc",
+                  "https://www.youtube.com/shorts/pYpaqABi2_4",
+                  "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
+                  "https://www.youtube.com/shorts/xG35L7t9uFs"
                 ].map(parseVideo)
               },
               {
@@ -136,15 +136,15 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
                 ].map(parseVideo)
               },
               {
-                title: "Cookware Series",
+                title: "Gas Stove Series",
                 videos: [
-                  "https://www.youtube.com/shorts/A2IEH9nPtaw",
-                  "https://www.youtube.com/shorts/JU_B57qj8Cg",
-                  "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
-                  "https://www.youtube.com/shorts/NTgS_BrZHTc",
-                  "https://www.youtube.com/shorts/pYpaqABi2_4",
-                  "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
-                  "https://www.youtube.com/shorts/xG35L7t9uFs"
+                  "https://www.youtube.com/shorts/AUggjxKTxYY",
+                  "https://www.youtube.com/shorts/pWLOTPrTBhg",
+                  "https://www.youtube.com/shorts/pWLOTPrTBhg",
+                  "https://www.youtube.com/shorts/TKZssyrK9Lg",
+                  "https://www.youtube.com/shorts/ldHRvV5Tae0",
+                  "https://www.youtube.com/shorts/FIyZhiLIUIY",
+                  "https://www.youtube.com/shorts/ubjOhC_SLS4"
                 ].map(parseVideo)
               }
             ]
