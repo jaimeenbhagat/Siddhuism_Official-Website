@@ -8,6 +8,7 @@ import Navbar from "@/components/navbar";
 import ScrollProgress from "@/components/ui/scroll-progress";
 import BackToTop from "@/components/ui/back-to-top";
 import Footer from "@/components/footer";
+import PortfolioBadge from "@/components/ui/portfolio-badge";
 import {
   PORTFOLIO_DATA,
   getBrandDisplayName,
@@ -21,10 +22,9 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
   const firstVideo = brand.videos[0];
   const thumbnailUrl = firstVideo 
     ? `https://i.ytimg.com/vi/${firstVideo.id}/${firstVideo.type === 'short' ? 'hqdefault' : 'maxresdefault'}.jpg`
-    : brand.thumbnail;
+    : '/fallback.jpg'; // We can just use empty background if no videos
   const projectSlug = getBrandSlug(brand.name);
   const displayName = getBrandDisplayName(brand.name);
-  const isComingSoon = brand.description === "Coming Soon" || (!firstVideo && !thumbnailUrl);
 
   return (
     <motion.div
@@ -36,8 +36,8 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
         href={`/portfolio/${projectSlug}`}
         className="block w-full overflow-hidden rounded-2xl border border-slate-700/70 text-left shadow-[0_12px_45px_rgba(2,6,23,0.45)] transition-colors duration-300 hover:border-slate-600"
       >
-        <div className="relative aspect-video overflow-hidden bg-slate-900 flex items-center justify-center">
-          {thumbnailUrl ? (
+        <div className="relative aspect-video overflow-hidden">
+          {firstVideo && (
             <Image
               src={thumbnailUrl}
               alt={displayName}
@@ -45,30 +45,24 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
               sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 25vw"
               className="h-full w-full object-cover opacity-60 transition duration-700 group-hover:scale-105"
             />
-          ) : isComingSoon ? (
-            <div className="absolute inset-0 flex items-center justify-center opacity-80 transition duration-700 group-hover:scale-105">
-              <span className="rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2 text-sm font-semibold tracking-widest text-slate-400 uppercase backdrop-blur-md">
-                Coming Soon
-              </span>
-            </div>
-          ) : null}
+          )}
           <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
           <div className="absolute inset-0 flex flex-col justify-between p-4 sm:p-5">
             <div className="flex justify-between items-start">
-              <span className="rounded-full border border-slate-600/70 bg-black/50 px-3 py-1 text-xs text-slate-200 backdrop-blur-md">
+              <PortfolioBadge>
                 {categoryName}
-              </span>
-              <span className="rounded-full border border-blue-400/30 bg-blue-500/20 px-3 py-1 text-xs font-semibold text-blue-100 backdrop-blur-md">
+              </PortfolioBadge>
+              <span className="rounded-full border border-blue-400/30 bg-blue-500/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md">
                 {brand.videos.length} Videos
               </span>
             </div>
 
             <div className="mt-auto flex items-end justify-between gap-4">
-              <h3 className="max-w-[80%] text-base font-bold leading-tight text-slate-100 drop-shadow-md sm:text-lg">
+              <h3 className="max-w-[80%] text-base font-bold leading-tight text-white drop-shadow-md sm:text-lg">
                 {displayName}
               </h3>
-              <div className="rounded-full bg-slate-800 p-2 text-slate-300 transition-colors group-hover:bg-blue-500 group-hover:text-white">
+              <div className="rounded-full bg-slate-800 p-2 text-white transition-colors group-hover:bg-blue-500">
                 <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-0.5" />
               </div>
             </div>
@@ -84,8 +78,8 @@ function CategorySection({ category }: { category: PortfolioCategory }) {
   return (
     <div className="mb-16 md:mb-20">
       <div className="mb-6 flex items-center gap-3 border-b border-slate-800 pb-4">
-        <FiVideo className="text-gray-400" size={24} />
-        <h3 className="text-lg font-medium text-gray-400 md:text-xl">{category.title}</h3>
+        <FiVideo className="text-white" size={24} />
+        <PortfolioBadge>{category.title}</PortfolioBadge>
       </div>
 
       <div className="mb-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
@@ -116,11 +110,11 @@ export default function PortfolioFullPage() {
         <section className="px-4 pt-28 pb-16 sm:px-6 md:px-8 md:pt-36 md:pb-24 lg:px-10">
           <div className="mx-auto w-full max-w-350 2xl:max-w-400">
             <div className="mb-12 md:mb-16">
-              <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-gray-500 sm:text-sm">Portfolio</p>
-              <h1 className="text-balance text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl md:text-4xl lg:text-5xl">
+              <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-white sm:text-sm">Portfolio</p>
+              <h1 className="text-balance text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
                 Selected Works
               </h1>
-              <p className="mt-3 text-pretty text-sm font-medium text-gray-400 md:text-base lg:text-lg">
+              <p className="mt-3 text-pretty text-sm font-medium text-white md:text-base lg:text-lg">
                 A curated selection of commercial projects, technical cinematography, and visual storytelling. Click a project to explore the full campaign.
               </p>
             </div>
@@ -145,10 +139,10 @@ export default function PortfolioFullPage() {
               <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-violet-500/10 opacity-50" />
               <div className="relative z-10">
                 <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-4xl lg:text-5xl">Ready to tell your brand&apos;s story?</h2>
-                <p className="mt-4 text-sm text-slate-400 md:text-base lg:text-lg">Let&apos;s create something that stands out.</p>
+                <p className="mt-4 text-sm text-white md:text-base lg:text-lg">Let&apos;s create something that stands out.</p>
                 <Link
                   href="/#contact"
-                  className="mt-8 inline-flex items-center justify-center rounded-full bg-slate-100 px-6 py-3 text-sm font-semibold text-slate-900 shadow-xl shadow-slate-100/10 transition-all hover:scale-105 hover:bg-white active:scale-95 sm:px-8 sm:py-4"
+                  className="mt-8 inline-flex items-center justify-center rounded-full bg-slate-800 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-slate-100/10 transition-all hover:scale-105 hover:bg-slate-700 active:scale-95 sm:px-8 sm:py-4"
                 >
                   Work With Me
                 </Link>

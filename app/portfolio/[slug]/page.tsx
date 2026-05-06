@@ -5,6 +5,7 @@ import Footer from "@/components/footer";
 import BackToTop from "@/components/ui/back-to-top";
 import ScrollProgress from "@/components/ui/scroll-progress";
 import PageFadeIn from "@/components/ui/page-fade-in";
+import PortfolioBadge from "@/components/ui/portfolio-badge";
 import VideoCard from "@/components/video-card";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 import type { PortfolioVideo } from "@/lib/portfolio-db";
@@ -130,25 +131,25 @@ export default async function PortfolioProjectPage({ params }: Props) {
       <main className="relative overflow-hidden px-4 pt-24 pb-20 sm:px-6 md:px-8 md:pt-28 md:pb-24 lg:px-10">
         <PageFadeIn>
           <div className="mx-auto w-full max-w-350 2xl:max-w-400">
-          <nav className="mb-5 text-sm text-slate-400">
-            <Link href="/portfolio" className="hover:text-blue-300">
+          <nav className="mb-5 text-sm text-white">
+            <Link href="/portfolio" className="hover:text-white">
               Portfolio
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-slate-200">{projectTitle}</span>
+            <span className="text-white">{projectTitle}</span>
           </nav>
 
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-blue-300">{projectCategory}</p>
-              <h1 className="mt-2 text-2xl font-semibold text-slate-100 sm:text-3xl md:text-4xl lg:text-5xl">{projectTitle}</h1>
-              <p className="mt-3 text-sm text-slate-400 md:text-base">
+              <PortfolioBadge>{projectCategory}</PortfolioBadge>
+              <h1 className="mt-2 text-2xl font-semibold text-white sm:text-3xl md:text-4xl lg:text-5xl">{projectTitle}</h1>
+              <p className="mt-3 text-sm text-white md:text-base">
               </p>
             </div>
 
             <Link
               href="/portfolio"
-              className="inline-flex rounded-full border border-slate-700/70 bg-slate-900/75 px-5 py-2 text-sm font-semibold text-slate-100 hover:border-blue-300/50"
+              className="inline-flex rounded-full border border-slate-700/70 bg-slate-900/75 px-5 py-2 text-sm font-semibold text-white hover:border-blue-300/50"
             >
               Back to Portfolio
             </Link>
@@ -171,7 +172,9 @@ export default async function PortfolioProjectPage({ params }: Props) {
 
                 return (
                   <div key={group.title}>
-                    <h2 className="mb-6 text-xl font-bold text-slate-100 border-b border-slate-800 pb-2">{group.title}</h2>
+                    <div className="mb-6 border-b border-slate-800 pb-2">
+                      <PortfolioBadge>{group.title}</PortfolioBadge>
+                    </div>
                     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                       {groupVideos.map((item) => (
                         <VideoCard key={item.id} item={{ ...item, category: item.categoryLabel }} />
@@ -194,8 +197,8 @@ export default async function PortfolioProjectPage({ params }: Props) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-slate-200">Coming Soon</h3>
-              <p className="mt-2 text-slate-400">The content for this project is currently being prepared.</p>
+              <h3 className="text-xl font-semibold text-white">Coming Soon</h3>
+              <p className="mt-2 text-white">The content for this project is currently being prepared.</p>
             </div>
           )}
           </div>

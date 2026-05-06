@@ -93,44 +93,42 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Orange Cookware | Premium Kitchenware & Home Essentials",
             videos: [
               "https://www.youtube.com/shorts/A2IEH9nPtaw",
-              "https://www.youtube.com/shorts/JU_B57qj8Cg",
-              "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
-              "https://www.youtube.com/shorts/NTgS_BrZHTc",
-              "https://www.youtube.com/shorts/pYpaqABi2_4",
-              "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
               "https://www.youtube.com/shorts/xG35L7t9uFs",
-              "https://www.youtube.com/shorts/KXKmfhPpSAM",
-              "https://www.youtube.com/shorts/YgA41sqd9IU",
+              "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
+              "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
+              "https://www.youtube.com/shorts/YbdD_fG4Gyg",
+              "https://www.youtube.com/shorts/pYpaqABi2_4",
               "https://www.youtube.com/shorts/QPi7ygzH5uc",
+              "https://www.youtube.com/shorts/YgA41sqd9IU",
+              "https://www.youtube.com/shorts/KXKmfhPpSAM",
               "https://www.youtube.com/shorts/T54it3jNr38",
               "https://www.youtube.com/shorts/Q4v0kKO-xbw",
-              "https://www.youtube.com/shorts/AUggjxKTxYY",
-              "https://www.youtube.com/shorts/pWLOTPrTBhg",
-              "https://www.youtube.com/shorts/pWLOTPrTBhg",
-              "https://www.youtube.com/shorts/TKZssyrK9Lg",
-              "https://www.youtube.com/shorts/ldHRvV5Tae0",
+              "https://www.youtube.com/shorts/ubjOhC_SLS4",
               "https://www.youtube.com/shorts/FIyZhiLIUIY",
-              "https://www.youtube.com/shorts/ubjOhC_SLS4"
+              "http://youtube.com/shorts/ldHRvV5Tae0",
+              "https://www.youtube.com/shorts/TKZssyrK9Lg",
+              "https://www.youtube.com/shorts/ZQ-wiN7fNcs",
+              "https://www.youtube.com/shorts/pWLOTPrTBhg",
+              "http://youtube.com/shorts/AUggjxKTxYY"
             ].map(parseVideo),
             videoGroups: [
               {
                 title: "Cookware Series",
                 videos: [
                   "https://www.youtube.com/shorts/A2IEH9nPtaw",
-                  "https://www.youtube.com/shorts/JU_B57qj8Cg",
-                  "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
-                  "https://www.youtube.com/shorts/NTgS_BrZHTc",
-                  "https://www.youtube.com/shorts/pYpaqABi2_4",
+                  "https://www.youtube.com/shorts/xG35L7t9uFs",
                   "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
-                  "https://www.youtube.com/shorts/xG35L7t9uFs"
+                  "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
+                  "https://www.youtube.com/shorts/YbdD_fG4Gyg",
+                  "https://www.youtube.com/shorts/pYpaqABi2_4"
                 ].map(parseVideo)
               },
               {
                 title: "Mixture Grinder Series",
                 videos: [
-                  "https://www.youtube.com/shorts/KXKmfhPpSAM",
-                  "https://www.youtube.com/shorts/YgA41sqd9IU",
                   "https://www.youtube.com/shorts/QPi7ygzH5uc",
+                  "https://www.youtube.com/shorts/YgA41sqd9IU",
+                  "https://www.youtube.com/shorts/KXKmfhPpSAM",
                   "https://www.youtube.com/shorts/T54it3jNr38",
                   "https://www.youtube.com/shorts/Q4v0kKO-xbw"
                 ].map(parseVideo)
@@ -138,13 +136,13 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
               {
                 title: "Gas Stove Series",
                 videos: [
-                  "https://www.youtube.com/shorts/AUggjxKTxYY",
-                  "https://www.youtube.com/shorts/pWLOTPrTBhg",
-                  "https://www.youtube.com/shorts/pWLOTPrTBhg",
-                  "https://www.youtube.com/shorts/TKZssyrK9Lg",
-                  "https://www.youtube.com/shorts/ldHRvV5Tae0",
+                  "https://www.youtube.com/shorts/ubjOhC_SLS4",
                   "https://www.youtube.com/shorts/FIyZhiLIUIY",
-                  "https://www.youtube.com/shorts/ubjOhC_SLS4"
+                  "http://youtube.com/shorts/ldHRvV5Tae0",
+                  "https://www.youtube.com/shorts/TKZssyrK9Lg",
+                  "https://www.youtube.com/shorts/ZQ-wiN7fNcs",
+                  "https://www.youtube.com/shorts/pWLOTPrTBhg",
+                  "http://youtube.com/shorts/AUggjxKTxYY"
                 ].map(parseVideo)
               }
             ]
@@ -152,59 +150,205 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           {
             name: "Flipkart | Fashion & E-commerce Lifestyle",
             videos: [
-              "https://www.youtube.com/shorts/4TwTfhRFHK4",
-              "https://www.youtube.com/shorts/BNOjko5yq8I",
+              "https://www.youtube.com/shorts/U0u9dyCnJOI",
+              "https://www.youtube.com/shorts/-JOBR0ZMDeg",
+              "https://www.youtube.com/shorts/n-vHr-fmn4U",
               "https://www.youtube.com/shorts/hf1cfFd2Tyk",
-              "https://www.youtube.com/shorts/MUyzDpwK99c",
-              "https://www.youtube.com/shorts/LNC04KEAiXo",
-              "https://www.youtube.com/shorts/SGoFaqMnua4",
-              "https://www.youtube.com/shorts/DzAYr2XI8NI",
-              "https://www.youtube.com/shorts/0KBvSCr0oYg",
-              "https://www.youtube.com/shorts/rB6-vBKr7mM",
+              "https://www.youtube.com/shorts/vqYgLIoz3iY",
               "https://www.youtube.com/shorts/bCxnZsMBqTE",
-              "https://www.youtube.com/shorts/sn6VX3dV1Yo",
-              "https://www.youtube.com/shorts/dxyg31h2C9Q",
               "https://www.youtube.com/shorts/F9VHDUhKalQ",
+              "https://www.youtube.com/shorts/6FgugaaNKn8",
+              "https://www.youtube.com/shorts/sn6VX3dV1Yo",
               "https://www.youtube.com/shorts/nL5_RMpESmo",
-              "https://www.youtube.com/shorts/5iZ-xmgfF04",
               "https://www.youtube.com/shorts/OBz3HKX05G4",
               "https://www.youtube.com/shorts/fP5eMRwVOuM",
-              "https://www.youtube.com/shorts/XUh-XBPpKsU",
-              "https://www.youtube.com/shorts/IIMEAmnrcbM",
-              "https://www.youtube.com/shorts/6akAlEgLqbk",
-              "https://www.youtube.com/shorts/y3Rl0-y9a4I",
               "https://www.youtube.com/shorts/tuFHqrH1gEA",
-              "https://www.youtube.com/shorts/F0ds4DXDpko",
+              "https://www.youtube.com/shorts/vSkpFCDi5ag",
+              "https://www.youtube.com/shorts/MUyzDpwK99c",
+              "https://www.youtube.com/shorts/DzAYr2XI8NI",
+              "https://www.youtube.com/shorts/0KBvSCr0oYg",
+              "https://www.youtube.com/shorts/6akAlEgLqbk",
+              "https://www.youtube.com/shorts/XUh-XBPpKsU",
+              "https://www.youtube.com/shorts/-7jfYLenHKw",
+              "https://www.youtube.com/shorts/dxyg31h2C9Q",
+              "https://www.youtube.com/shorts/rB6-vBKr7mM",
+              "https://www.youtube.com/shorts/BNOjko5yq8I",
+              "https://www.youtube.com/shorts/LNC04KEAiXo",
+              "https://www.youtube.com/shorts/SGoFaqMnua4",
               "https://www.youtube.com/shorts/wpzWHJtPKfk",
-              "https://www.youtube.com/shorts/n-vHr-fmn4U",
-              "https://www.youtube.com/shorts/6FgugaaNKn8",
-              "https://www.youtube.com/shorts/4H_JGYreTso",
-              "https://www.youtube.com/shorts/8vPKC2fqlw0",
-              "https://www.youtube.com/shorts/VYMEosyk488",
-              "https://www.youtube.com/shorts/WvC8_iyptgo",
-              "https://www.youtube.com/shorts/eLWFuu4vpNI",
+              "https://www.youtube.com/shorts/yG5XWKnLtlQ",
+              "https://www.youtube.com/shorts/roAWBB0lBqo",
+              "https://www.youtube.com/shorts/hRtKLZ5ZKHA",
+              "https://www.youtube.com/shorts/Hm-PC3k-Yq4",
+              "https://www.youtube.com/shorts/AiWSAsGHHeg",
+              "https://www.youtube.com/shorts/INbOymdVF9U",
+              "https://www.youtube.com/shorts/-kCjVMwwwtQ",
+              "https://www.youtube.com/shorts/8rhb8688F-s",
+              "https://www.youtube.com/shorts/y3Rl0-y9a4I",
+              "https://www.youtube.com/shorts/yasCJnOlE7I",
+              "https://www.youtube.com/shorts/F0ds4DXDpko",
+              "https://www.youtube.com/shorts/qvHP6e-E70U",
               "https://www.youtube.com/shorts/UfurLGh78a0",
+              "https://www.youtube.com/shorts/eLWFuu4vpNI",
+              "https://www.youtube.com/shorts/58NuWdoxwmw",
+              "https://www.youtube.com/shorts/SLHyMqSeRvM",
+              "https://www.youtube.com/shorts/scjVV9IhLaw",
+              "https://www.youtube.com/shorts/VAgwWTg2u3g",
+              "https://www.youtube.com/shorts/WW3X3n2ocAU",
+              "https://www.youtube.com/shorts/4TwTfhRFHK4",
+              "https://www.youtube.com/shorts/5iZ-xmgfF04",
+              "https://www.youtube.com/shorts/xkEp2pJa7kQ",
+              "https://www.youtube.com/shorts/PZESk7ms8F4",
+              "https://www.youtube.com/shorts/3y46Un4Zw8g",
+              "https://www.youtube.com/shorts/IIMEAmnrcbM",
+              "https://www.youtube.com/shorts/ipD14IzH_dg",
+              "https://www.youtube.com/shorts/kh2hHzEv2ro",
+              "https://www.youtube.com/shorts/WvC8_iyptgo",
               "https://www.youtube.com/shorts/UlIcikIpE48",
               "https://www.youtube.com/shorts/a4sv1bdxpHk",
-              "https://www.youtube.com/shorts/ipD14IzH_dg",
-              "https://www.youtube.com/shorts/qvHP6e-E70U",
-              "https://www.youtube.com/shorts/8rhb8688F-s",
-              "https://www.youtube.com/shorts/vqYgLIoz3iY",
-              "https://www.youtube.com/shorts/AiWSAsGHHeg",
-              "https://www.youtube.com/shorts/-7jfYLenHKw",
-              "https://www.youtube.com/shorts/vSkpFCDi5ag",
-              "https://www.youtube.com/shorts/PZESk7ms8F4",
-              "https://www.youtube.com/shorts/Hm-PC3k-Yq4",
-              "https://www.youtube.com/shorts/scjVV9IhLaw",
-              "https://www.youtube.com/shorts/SLHyMqSeRvM"
-            ].map(parseVideo)
+              "https://www.youtube.com/shorts/yzcq_N8NVIQ"
+            ].map(parseVideo),
+            videoGroups: [
+              {
+                title: "Fashion - Casual Wear (Shirts)",
+                videos: [
+                  "https://www.youtube.com/shorts/U0u9dyCnJOI",
+                  "https://www.youtube.com/shorts/-JOBR0ZMDeg",
+                  "https://www.youtube.com/shorts/n-vHr-fmn4U",
+                  "https://www.youtube.com/shorts/hf1cfFd2Tyk",
+                  "https://www.youtube.com/shorts/vqYgLIoz3iY",
+                  "https://www.youtube.com/shorts/bCxnZsMBqTE",
+                  "https://www.youtube.com/shorts/F9VHDUhKalQ",
+                  "https://www.youtube.com/shorts/6FgugaaNKn8"
+                ].map(parseVideo)
+              },
+              {
+                title: "Fashion - Casual Wear (T-Shirts)",
+                videos: [
+                  "https://www.youtube.com/shorts/sn6VX3dV1Yo",
+                  "https://www.youtube.com/shorts/nL5_RMpESmo",
+                  "https://www.youtube.com/shorts/OBz3HKX05G4",
+                  "https://www.youtube.com/shorts/fP5eMRwVOuM",
+                  "https://www.youtube.com/shorts/tuFHqrH1gEA",
+                  "https://www.youtube.com/shorts/vSkpFCDi5ag",
+                  "https://www.youtube.com/shorts/MUyzDpwK99c",
+                  "https://www.youtube.com/shorts/DzAYr2XI8NI",
+                  "https://www.youtube.com/shorts/0KBvSCr0oYg"
+                ].map(parseVideo)
+              },
+              {
+                title: "Fashion - Ethnic Wear (Kurta)",
+                videos: [
+                  "https://www.youtube.com/shorts/6akAlEgLqbk",
+                  "https://www.youtube.com/shorts/XUh-XBPpKsU",
+                  "https://www.youtube.com/shorts/-7jfYLenHKw"
+                ].map(parseVideo)
+              },
+              {
+                title: "Fashion - Winter & Layering (Jackets)",
+                videos: [
+                  "https://www.youtube.com/shorts/BNOjko5yq8I",
+                  "https://www.youtube.com/shorts/LNC04KEAiXo",
+                  "https://www.youtube.com/shorts/SGoFaqMnua4",
+                  "https://www.youtube.com/shorts/wpzWHJtPKfk"
+                ].map(parseVideo)
+              },
+              {
+                title: "Fashion - Winter & Layering (Hoodies)",
+                videos: [
+                  "https://www.youtube.com/shorts/dxyg31h2C9Q",
+                  "https://www.youtube.com/shorts/rB6-vBKr7mM"
+                ].map(parseVideo)
+              },
+              {
+                title: "Fashion - Activewear (Gym Outfit)",
+                videos: [
+                  "https://www.youtube.com/shorts/yG5XWKnLtlQ",
+                  "https://www.youtube.com/shorts/roAWBB0lBqo"
+                ].map(parseVideo)
+              },
+              {
+                title: "Fashion - Footwear",
+                videos: [
+                  "https://www.youtube.com/shorts/hRtKLZ5ZKHA",
+                  "https://www.youtube.com/shorts/Hm-PC3k-Yq4"
+                ].map(parseVideo)
+              },
+              {
+                title: "Fashion - Styled Combos",
+                videos: [
+                  "https://www.youtube.com/shorts/AiWSAsGHHeg",
+                  "https://www.youtube.com/shorts/INbOymdVF9U",
+                  "https://www.youtube.com/shorts/-kCjVMwwwtQ",
+                  "https://www.youtube.com/shorts/8rhb8688F-s",
+                  "https://www.youtube.com/shorts/y3Rl0-y9a4I",
+                  "https://www.youtube.com/shorts/yasCJnOlE7I",
+                  "https://www.youtube.com/shorts/F0ds4DXDpko"
+                ].map(parseVideo)
+              },
+              {
+                title: "Grooming - Perfumes",
+                videos: [
+                  "https://www.youtube.com/shorts/qvHP6e-E70U",
+                  "https://www.youtube.com/shorts/UfurLGh78a0",
+                  "https://www.youtube.com/shorts/eLWFuu4vpNI",
+                  "https://www.youtube.com/shorts/58NuWdoxwmw"
+                ].map(parseVideo)
+              },
+              {
+                title: "Grooming - Deodorants",
+                videos: [
+                  "https://www.youtube.com/shorts/SLHyMqSeRvM",
+                  "https://www.youtube.com/shorts/scjVV9IhLaw",
+                  "https://www.youtube.com/shorts/VAgwWTg2u3g",
+                  "https://www.youtube.com/shorts/WW3X3n2ocAU"
+                ].map(parseVideo)
+              },
+              {
+                title: "Grooming - Attars",
+                videos: [
+                  "https://www.youtube.com/shorts/4TwTfhRFHK4",
+                  "https://www.youtube.com/shorts/5iZ-xmgfF04",
+                  "https://www.youtube.com/shorts/xkEp2pJa7kQ"
+                ].map(parseVideo)
+              },
+              {
+                title: "Grooming - Hair Care (Hairfixer)",
+                videos: [
+                  "https://www.youtube.com/shorts/PZESk7ms8F4"
+                ].map(parseVideo)
+              },
+              {
+                title: "Home & Lifestyle - Decor",
+                videos: [
+                  "https://www.youtube.com/shorts/3y46Un4Zw8g",
+                  "https://www.youtube.com/shorts/IIMEAmnrcbM",
+                  "https://www.youtube.com/shorts/ipD14IzH_dg"
+                ].map(parseVideo)
+              },
+              {
+                title: "Home & Lifestyle - Organization & Utility",
+                videos: [
+                  "https://www.youtube.com/shorts/kh2hHzEv2ro",
+                  "https://www.youtube.com/shorts/WvC8_iyptgo",
+                  "https://www.youtube.com/shorts/UlIcikIpE48",
+                  "https://www.youtube.com/shorts/a4sv1bdxpHk"
+                ].map(parseVideo)
+              },
+              {
+                title: "Accessories - Watches",
+                videos: [
+                  "https://www.youtube.com/shorts/yzcq_N8NVIQ"
+                ].map(parseVideo)
+              }
+            ]
           },
           {
             name: "Bagzone | Tech Accessories & Professional Gear",
             description: "One video manual upload which has copyright",
             videos: [
-              "https://www.youtube.com/shorts/G815ZsVKa5Y",
-              "https://www.youtube.com/shorts/tWnLwFmfT_c"
+              "https://www.youtube.com/shorts/_qh2CdO3fik",
+              "https://www.youtube.com/shorts/ZF832646ugs"
             ].map(parseVideo)
           }
         ]
@@ -240,9 +384,10 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "The Himalayan Series",
             description: "High-speed tracking shots, exhaust sound design, and rugged terrain cinematography. Skills: Precision tracking, mount-shots, and mechanical soundscapes.",
             videos: [
-              "https://www.youtube.com/watch?v=jOhX_Z29AOY",
-              "https://www.youtube.com/watch?v=pAc4KHX6dsU",
               "https://www.youtube.com/watch?v=2OEd5betEp8",
+              "https://www.youtube.com/watch?v=pAc4KHX6dsU",
+              "https://www.youtube.com/watch?v=2DHHWA215bk&list=PL5s_g50ftI2PDEADftSjU62lrqXpeM4jd&index=5",
+              "https://www.youtube.com/watch?v=jOhX_Z29AOY",
               "https://www.youtube.com/watch?v=HwT0tLosRZI"
             ].map(parseVideo)
           }
@@ -255,30 +400,30 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Surfing",
             description: "High-energy edits, slow-motion impact shots, and athletic storytelling.",
             videos: [
+              "https://www.youtube.com/watch?v=2Un0Nrx1bHI",
+              "https://www.youtube.com/shorts/J2k4mpHg52w",
+              "https://www.youtube.com/shorts/jhcjDGu0vQA",
               "https://www.youtube.com/shorts/aVDopci6w2w",
               "https://www.youtube.com/shorts/J0TEojJ5i0c",
-              "https://www.youtube.com/shorts/jhcjDGu0vQA",
-              "https://www.youtube.com/shorts/rzqs4B-xQlI",
-              "https://www.youtube.com/shorts/J2k4mpHg52w",
-              "https://www.youtube.com/watch?v=2Un0Nrx1bHI&list=PL5s_g50ftI2OIzdyiUpB9xgIFzklJ5lYM&index=6"
+              "https://www.youtube.com/shorts/rzqs4B-xQlI"
             ].map(parseVideo)
           },
           {
             name: "Gym & Strength Training",
             videos: [
-              "https://www.youtube.com/shorts/7ZRYlto2Fdw",
+              "https://www.youtube.com/shorts/qkai5CExi_U",
+              "https://www.youtube.com/shorts/qTFMBjmGG54",
+              "https://www.youtube.com/shorts/IhKZURbHKOo",
               "https://www.youtube.com/shorts/NT_-rbNzlhU",
               "https://www.youtube.com/shorts/RdvmXkT21QI",
               "https://www.youtube.com/shorts/bw_LxeHSZSk",
-              "https://www.youtube.com/shorts/IhKZURbHKOo",
-              "https://www.youtube.com/shorts/qkai5CExi_U",
-              "https://www.youtube.com/shorts/KuqlIo_2nQ8",
               "https://www.youtube.com/shorts/8Wzp-j5AXXs",
-              "https://www.youtube.com/shorts/PNeaVmNk_Hg",
-              "https://www.youtube.com/shorts/qTFMBjmGG54",
               "https://www.youtube.com/shorts/-KXRNr9aSAw",
               "https://www.youtube.com/shorts/xjwilDud3hk",
-              "https://www.youtube.com/shorts/CdTK0m7z7aE"
+              "https://www.youtube.com/shorts/CdTK0m7z7aE",
+              "https://www.youtube.com/shorts/5ih9vFGalTc",
+              "https://www.youtube.com/shorts/7ZRYlto2Fdw",
+              "https://www.youtube.com/shorts/KuqlIo_2nQ8"
             ].map(parseVideo)
           },
           {
@@ -308,6 +453,7 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Ladakh: The Great Himalayan Journey",
             description: "Coming Soon",
             videos: [
+              "https://www.youtube.com/watch?v=2DHHWA215bk&list=PL5s_g50ftI2PDEADftSjU62lrqXpeM4jd&index=5",
               "https://www.youtube.com/shorts/2xLNnWJrT1c",
               "https://www.youtube.com/shorts/g3Noox3VJAo",
               "http://youtube.com/shorts/rXCFB93NxSQ",
@@ -319,7 +465,6 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
               "https://www.youtube.com/shorts/eK6LWfVZfxk",
               "https://www.youtube.com/shorts/iQIvy4MT9iU",
               "https://www.youtube.com/shorts/QXIfdjdC9Uk",
-              "https://www.youtube.com/shorts/J4UsG15u1_g",
               "https://www.youtube.com/shorts/_oiDROi_4_s",
               "https://www.youtube.com/shorts/4bUIeIjYA0w",
               "https://www.youtube.com/shorts/JXCMean1N3Y",
@@ -331,7 +476,7 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           },
           {
             name: "Vrindavan: Cultural Exploration",
-            description: "Coming Soon",
+            description: "WIP",
             videos: []
           }
         ]
@@ -349,10 +494,11 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Industry Events",
             description: "Book Launch (Featuring Pratik Gandhi & CID Cast), VCT Valorant LAN. Connected with public figures and high-profile gaming/tech communities.",
             videos: [
-              "https://www.youtube.com/shorts/BDnw_ukiilo",
               "https://www.youtube.com/shorts/0CiQBNy2IFg",
               "https://www.youtube.com/shorts/-XTHbVpsLRE",
-              "https://www.youtube.com/shorts/iwpg5OKjz8M"
+              "https://www.youtube.com/shorts/iwpg5OKjz8M",
+              "https://www.youtube.com/shorts/PtmoKTaCxVw",
+              "https://www.youtube.com/shorts/BDnw_ukiilo"
             ].map(parseVideo)
           }
         ]
@@ -364,10 +510,12 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Shot vs. Setup",
             description: "Technical breakdowns of how to achieve cinematic lighting and angles.",
             videos: [
-              "https://www.youtube.com/watch?v=E7BZLpr99is&list=PL5s_g50ftI2OUKeEXa3gRd3o20GqI1kiS&index=2",
-              "https://www.youtube.com/watch?v=bkc4iJ6OA9U&list=PL5s_g50ftI2OUKeEXa3gRd3o20GqI1kiS&index=3",
-              "https://www.youtube.com/watch?v=Pu32_burdTA&list=PL5s_g50ftI2OUKeEXa3gRd3o20GqI1kiS&index=4",
-              "https://www.youtube.com/watch?v=sYExqrsQ3bY&list=PL5s_g50ftI2OUKeEXa3gRd3o20GqI1kiS&index=5"
+              "https://www.youtube.com/watch?v=Pu32_burdTA",
+              "https://www.youtube.com/shorts/zqzI-MZTAtA",
+              "https://www.youtube.com/shorts/QqU3sUm6ua8",
+              "https://www.youtube.com/watch?v=sYExqrsQ3bY",
+              "https://www.youtube.com/watch?v=bkc4iJ6OA9U",
+              "https://www.youtube.com/watch?v=E7BZLpr99is"
             ].map(parseVideo)
           }
         ]

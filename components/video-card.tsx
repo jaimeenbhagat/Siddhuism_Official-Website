@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import type { PortfolioVideo } from "@/lib/portfolio-db";
 import { FiPlayCircle } from "react-icons/fi";
+import PortfolioBadge from "@/components/ui/portfolio-badge";
 
 type VideoCardProps = {
   item: Pick<PortfolioVideo, "id" | "title" | "video_url" | "thumbnail"> & { category: string };
@@ -162,8 +163,10 @@ export default function VideoCard({ item }: VideoCardProps) {
       </div>
 
       <div className="p-4">
-        <h3 className="line-clamp-2 text-base font-semibold text-slate-100">{item.title}</h3>
-        <p className="mt-2 text-xs uppercase tracking-[0.18em] text-blue-300">{item.category}</p>
+        <h3 className="line-clamp-2 text-base font-semibold text-white">{item.title}</h3>
+        <div className="mt-3">
+          <PortfolioBadge>{item.category}</PortfolioBadge>
+        </div>
       </div>
     </motion.article>
   );
