@@ -20,11 +20,10 @@ import { FiArrowRight, FiVideo } from "react-icons/fi";
 
 function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryName: string }) {
   const firstVideo = brand.videos[0];
-  const thumbnailUrl = firstVideo 
-    ? `https://i.ytimg.com/vi/${firstVideo.id}/${firstVideo.type === 'short' ? 'hqdefault' : 'maxresdefault'}.jpg`
-    : '/fallback.jpg'; // We can just use empty background if no videos
+  const thumbnailUrl = brand.thumbnail || (firstVideo ? `https://i.ytimg.com/vi/${firstVideo.id}/hqdefault.jpg` : "");
   const projectSlug = getBrandSlug(brand.name);
   const displayName = getBrandDisplayName(brand.name);
+  const hasNoVideos = brand.videos.length === 0;
 
   return (
     <motion.div
@@ -33,11 +32,14 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
       className="group"
     >
       <Link
-        href={`/portfolio/${projectSlug}`}
+        href={hasNoVideos ? '#' : `/portfolio/${projectSlug}`}
         className="block w-full overflow-hidden rounded-2xl border border-slate-700/70 text-left shadow-[0_12px_45px_rgba(2,6,23,0.45)] transition-colors duration-300 hover:border-slate-600"
+        onClick={(e) => {
+          if (hasNoVideos) e.preventDefault();
+        }}
       >
         <div className="relative aspect-video overflow-hidden">
-          {firstVideo && (
+          {thumbnailUrl && (
             <Image
               src={thumbnailUrl}
               alt={displayName}
@@ -53,18 +55,29 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
               <PortfolioBadge>
                 {categoryName}
               </PortfolioBadge>
-              <span className="rounded-full border border-blue-400/30 bg-blue-500/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md">
-                {brand.videos.length} Videos
-              </span>
+              {!hasNoVideos && (
+                <span className="rounded-full border border-blue-400/30 bg-blue-500/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md">
+                  {brand.videos.length} Videos
+                </span>
+              )}
             </div>
 
             <div className="mt-auto flex items-end justify-between gap-4">
-              <h3 className="max-w-[80%] text-base font-bold leading-tight text-white drop-shadow-md sm:text-lg">
-                {displayName}
-              </h3>
-              <div className="rounded-full bg-slate-800 p-2 text-white transition-colors group-hover:bg-blue-500">
-                <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-0.5" />
+              <div className="min-w-0">
+                {hasNoVideos && brand.description ? (
+                  <span className="mb-3 inline-flex rounded-full border border-amber-400/30 bg-amber-500/20 px-3 py-1 text-xs font-semibold text-amber-200 backdrop-blur-md">
+                    {brand.description}
+                  </span>
+                ) : null}
+                <h3 className="max-w-[80%] text-base font-bold leading-tight text-white drop-shadow-md sm:text-lg">
+                  {displayName}
+                </h3>
               </div>
+              {!hasNoVideos && (
+                <div className="rounded-full bg-slate-800 p-2 text-white transition-colors group-hover:bg-blue-500">
+                  <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                </div>
+              )}
             </div>
           </div>
         </div>

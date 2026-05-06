@@ -119,7 +119,7 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
                   "https://www.youtube.com/shorts/xG35L7t9uFs",
                   "https://www.youtube.com/shorts/Ep0b_nzkWtQ",
                   "https://www.youtube.com/shorts/Xpn1KG3nwZ0",
-                  "https://www.youtube.com/shorts/YbdD_fG4Gyg",
+                  "https://www.youtube.com/shorts/JU_B57qj8Cg",
                   "https://www.youtube.com/shorts/pYpaqABi2_4"
                 ].map(parseVideo)
               },
@@ -347,8 +347,8 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Bagzone | Tech Accessories & Professional Gear",
             description: "One video manual upload which has copyright",
             videos: [
-              "https://www.youtube.com/shorts/_qh2CdO3fik",
-              "https://www.youtube.com/shorts/ZF832646ugs"
+              "https://www.youtube.com/shorts/G815ZsVKa5Y",
+              "https://www.youtube.com/shorts/tWnLwFmfT_c"
             ].map(parseVideo)
           }
         ]
@@ -437,6 +437,13 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
               "https://www.youtube.com/watch?v=hYgv6efzlEo",
               "https://www.youtube.com/watch?v=bw0GWMbJgHE"
             ].map(parseVideo)
+          },
+          {
+            name: "Trek",
+            videos: [
+              "https://www.youtube.com/watch?v=JC_u9e6V-Zg",
+              "https://www.youtube.com/watch?v=9bLYmAlY6Ws"
+            ].map(parseVideo)
           }
         ]
       }
@@ -451,7 +458,6 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
         brands: [
           {
             name: "Ladakh: The Great Himalayan Journey",
-            description: "Coming Soon",
             videos: [
               "https://www.youtube.com/watch?v=2DHHWA215bk&list=PL5s_g50ftI2PDEADftSjU62lrqXpeM4jd&index=5",
               "https://www.youtube.com/shorts/2xLNnWJrT1c",
@@ -476,7 +482,7 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           },
           {
             name: "Vrindavan: Cultural Exploration",
-            description: "WIP",
+            description: "Coming Soon",
             videos: []
           }
         ]
@@ -494,11 +500,10 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             name: "Industry Events",
             description: "Book Launch (Featuring Pratik Gandhi & CID Cast), VCT Valorant LAN. Connected with public figures and high-profile gaming/tech communities.",
             videos: [
-              "https://www.youtube.com/shorts/0CiQBNy2IFg",
+              "https://www.youtube.com/shorts/BDnw_ukiilo",
               "https://www.youtube.com/shorts/-XTHbVpsLRE",
+              "https://www.youtube.com/shorts/0CiQBNy2IFg",
               "https://www.youtube.com/shorts/iwpg5OKjz8M",
-              "https://www.youtube.com/shorts/PtmoKTaCxVw",
-              "https://www.youtube.com/shorts/BDnw_ukiilo"
             ].map(parseVideo)
           }
         ]
