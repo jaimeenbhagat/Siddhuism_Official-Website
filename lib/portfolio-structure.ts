@@ -409,6 +409,13 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
             ].map(parseVideo)
           },
           {
+            name: "Trek",
+            videos: [
+              "https://www.youtube.com/watch?v=JC_u9e6V-Zg",
+              "https://www.youtube.com/watch?v=9bLYmAlY6Ws"
+            ].map(parseVideo)
+          },
+          {
             name: "Gym & Strength Training",
             videos: [
               "https://www.youtube.com/shorts/qkai5CExi_U",
@@ -429,20 +436,13 @@ export const PORTFOLIO_DATA: PortfolioSection[] = [
           {
             name: "Cricket & Pickleball",
             videos: [
-              "https://www.youtube.com/watch?v=KwO0ec7Oz0c",
-              "https://www.youtube.com/watch?v=0534wxLzkjo",
-              "https://www.youtube.com/watch?v=FQs-ghqaBaA",
-              "https://www.youtube.com/watch?v=d-kVRCCemg8",
-              "https://www.youtube.com/watch?v=auh8tw80xgQ",
               "https://www.youtube.com/watch?v=hYgv6efzlEo",
-              "https://www.youtube.com/watch?v=bw0GWMbJgHE"
-            ].map(parseVideo)
-          },
-          {
-            name: "Trek",
-            videos: [
-              "https://www.youtube.com/watch?v=JC_u9e6V-Zg",
-              "https://www.youtube.com/watch?v=9bLYmAlY6Ws"
+              "https://www.youtube.com/watch?v=0534wxLzkjo",
+              "https://www.youtube.com/watch?v=auh8tw80xgQ",
+              "https://www.youtube.com/watch?v=d-kVRCCemg8",
+              "https://www.youtube.com/watch?v=bw0GWMbJgHE",
+              "https://www.youtube.com/watch?v=FQs-ghqaBaA",
+              "https://www.youtube.com/watch?v=KwO0ec7Oz0c"
             ].map(parseVideo)
           }
         ]

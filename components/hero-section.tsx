@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { FiYoutube, FiInstagram, FiVideo, FiEye, FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize, FiChevronDown } from "react-icons/fi";
 
 import { AnimatedCounter } from "@/components/ui/animated-counter";
+import { SOCIAL_LINKS } from "@/lib/content";
 
 type HeroSectionProps = {
   onWatchClick: () => void;
@@ -19,15 +20,13 @@ type LiveStats = {
 
 // useTyping helper removed — not used after BIO update
 
-function StatCard({ label, value, icon, isText = false, isLive = false, numericValue = null }: { label: string; value?: React.ReactNode; icon?: React.ReactNode; isText?: boolean; isLive?: boolean; numericValue?: number | null }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
-      className="flex min-w-35 flex-1 items-center gap-3 rounded-xl border border-slate-700/50 bg-slate-900/50 p-3 shadow-md backdrop-blur-md lg:min-w-24 lg:gap-2 lg:p-2"
-    >
+function StatCard({ label, value, icon, isText = false, isLive = false, numericValue = null, href }: { label: string; value?: React.ReactNode; icon?: React.ReactNode; isText?: boolean; isLive?: boolean; numericValue?: number | null; href?: string }) {
+  const className = `flex min-w-35 flex-1 items-center gap-3 rounded-xl border border-slate-700/50 bg-slate-900/50 p-3 shadow-md backdrop-blur-md transition lg:min-w-24 lg:gap-2 lg:p-2 ${
+    href ? "hover:-translate-y-0.5 hover:border-slate-500/70 hover:bg-slate-800/65" : ""
+  }`;
+
+  const content = (
+    <>
       <div className="shrink-0">{icon}</div>
       <div>
         <p className={`font-semibold text-slate-100 flex items-center ${isText ? 'text-xs leading-tight' : 'text-lg md:text-xl lg:text-sm tracking-tight'}`}>
@@ -42,11 +41,44 @@ function StatCard({ label, value, icon, isText = false, isLive = false, numericV
         </p>
         <p className="mt-0.5 text-[8px] lg:text-[7px] uppercase tracking-wider font-medium text-slate-400">{label}</p>
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <motion.a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`Open siddhuism_official on ${label}`}
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+        className={className}
+      >
+        {content}
+      </motion.a>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4 }}
+      className={className}
+    >
+      {content}
     </motion.div>
   );
 }
 
 function HeroStats({ stats }: { stats: LiveStats }) {
+  const youtubeHref = SOCIAL_LINKS.find((link) => link.label === "YouTube")?.href;
+  const instagramHref = SOCIAL_LINKS.find((link) => link.label === "Instagram")?.href;
+
   const primaryStats = useMemo(
     () => [
       {
@@ -60,12 +92,14 @@ function HeroStats({ stats }: { stats: LiveStats }) {
         label: "Instagram",
         icon: <FiInstagram className="text-pink-500" size={20} />,
         isLive: true,
+        href: instagramHref,
       },
       {
         numericValue: stats?.youtube?.subscribers ?? 85000,
         label: "YouTube",
         icon: <FiYoutube className="text-red-500" size={20} />,
         isLive: true,
+        href: youtubeHref,
       },
       {
         value: "Travel & Lifestyle",
@@ -74,7 +108,7 @@ function HeroStats({ stats }: { stats: LiveStats }) {
         isText: true,
       },
     ],
-    [stats],
+    [instagramHref, stats, youtubeHref],
   );
 
   const totalContent = 292;
