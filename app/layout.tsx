@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins, Space_Grotesk } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
-import { generatePageMetadata, SITE_URL, PAGE_KEYWORDS, generateGraphSchema, generatePersonSchema, generateWebsiteSchema } from "@/lib/seo";
-import { schemaToString } from "@/lib/schema";
+import { generatePageMetadata, SITE_URL, PAGE_KEYWORDS } from "@/lib/seo";
+import { generateGraphSchema, generatePersonSchema, generateWebsiteSchema, schemaToString } from "@/lib/schema";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -80,7 +79,7 @@ export default function RootLayout({
         {/* <meta name="google-site-verification" content="YOUR_VERIFICATION_TOKEN" /> */}
 
         {/* Preload critical images */}
-        <link rel="preload" as="image" href="/og-image.jpg" imagesrcset="/og-image.jpg 1200w" imageSizes="(max-width: 1200px) 100vw, 1200px" />
+        <link rel="preload" as="image" href="/og-image.jpg" imageSrcSet="/og-image.jpg 1200w" imageSizes="(max-width: 1200px) 100vw, 1200px" />
       </head>
 
       <body 
