@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import BackToTop from "@/components/ui/back-to-top";
@@ -10,9 +12,44 @@ import VideoCard from "@/components/video-card";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 import type { PortfolioVideo } from "@/lib/portfolio-db";
 import { getPortfolioProjectBySlug } from "@/lib/portfolio-structure";
+import { generatePageMetadata, PAGE_KEYWORDS, SITE_URL } from "@/lib/seo";
+import { generateCreativeWorkSchema, generateBreadcrumbSchema, schemaToString } from "@/lib/schema";
 
 export const runtime = "nodejs";
 export const revalidate = 300;
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const staticProject = getPortfolioProjectBySlug(slug);
+
+  if (!staticProject) {
+    return generatePageMetadata({
+      title: "Project Not Found",
+      description: "The portfolio project you're looking for could not be found.",
+    });
+  }
+
+  const firstVideo = staticProject.videos[0];
+  const ogImage = firstVideo ? `https://img.youtube.com/vi/${firstVideo.id}/maxresdefault.jpg` : `${SITE_URL}/og-image.jpg`;
+  const keywords = PAGE_KEYWORDS[staticProject.categoryTitle.toLowerCase() as keyof typeof PAGE_KEYWORDS] || PAGE_KEYWORDS.portfolio;
+
+  return generatePageMetadata({
+    title: staticProject.displayName,
+    description: `Explore ${staticProject.displayName} - ${staticProject.categoryTitle} project by siddhuism_official. Premium commercial content production.`,
+    ogTitle: `${staticProject.displayName} - Portfolio`,
+    ogDescription: `${staticProject.categoryTitle} content project featuring ${staticProject.videos.length} videos. Professional cinematography and content creation.`,
+    ogImage: ogImage,
+    ogType: "video.other",
+    url: `${SITE_URL}/portfolio/${slug}`,
+    canonical: `${SITE_URL}/portfolio/${slug}`,
+    keywords: [staticProject.displayName, staticProject.categoryTitle, "portfolio", ...keywords],
+  });
+}
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
 const DEFAULT_THUMBNAIL = "/profile-orb.svg";
 
 type ProjectPageVideo = Pick<PortfolioVideo, "id" | "title" | "project_slug" | "project_title" | "video_url" | "thumbnail" | "is_featured" | "created_at"> & {
@@ -123,20 +160,49 @@ export default async function PortfolioProjectPage({ params }: Props) {
   const projectTitle = videos.length ? videos[0].project_title : staticProject?.displayName || "Project";
   const projectCategory = videos.length ? videos[0].categoryLabel : staticProject?.categoryTitle || "Category";
 
+  // Generate schema markup
+  const creativeWorkSchema = generateCreativeWorkSchema({
+    name: projectTitle,
+    description: `${projectCategory} project featuring ${videos.length} videos by siddhuism_official`,
+    creator: "siddhuism_official",
+    image: videos.length ? videos[0].thumbnail : `${SITE_URL}/og-image.jpg`,
+    url: `${SITE_URL}/portfolio/${slug}`,
+    genre: projectCategory,
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: SITE_URL },
+    { name: "Portfolio", url: `${SITE_URL}/portfolio` },
+    { name: projectTitle, url: `${SITE_URL}/portfolio/${slug}` },
+  ]);
+
   return (
     <>
+      <Script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              { ...creativeWorkSchema, "@context": undefined },
+              { ...breadcrumbSchema, "@context": undefined },
+            ],
+          }),
+        }}
+        suppressHydrationWarning
+      />
       <ScrollProgress />
       <Navbar />
 
       <main className="relative overflow-hidden px-4 pt-24 pb-20 sm:px-6 md:px-8 md:pt-28 md:pb-24 lg:px-10">
         <PageFadeIn>
           <div className="mx-auto w-full max-w-350 2xl:max-w-400">
-          <nav className="mb-5 text-sm text-white">
+          <nav aria-label="Breadcrumb" className="mb-5 text-sm text-white">
             <Link href="/portfolio" className="hover:text-white">
               Portfolio
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-white">{projectTitle}</span>
+            <span className="text-white" itemProp="name">{projectTitle}</span>
           </nav>
 
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">

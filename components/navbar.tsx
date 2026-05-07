@@ -62,6 +62,7 @@ export default function Navbar() {
       className={`fixed inset-x-0 top-0 z-40 px-4 py-3 sm:px-6 md:px-8 transition-colors duration-300 ${
         isScrolled ? "bg-black/25 backdrop-blur-md" : "bg-transparent"
       }`}
+      role="banner"
     >
       <div className="mx-auto flex w-full max-w-350 items-center justify-between gap-3 2xl:max-w-400">
         {/* Left Side: Mobile Hamburger + Desktop Navigation */}
@@ -70,18 +71,20 @@ export default function Navbar() {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden flex items-center justify-center p-2 rounded-full text-slate-100 hover:bg-white/10 transition"
-            aria-label="Toggle menu"
+            aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {isMobileMenuOpen ? (
-              <FiX size={24} />
+              <FiX size={24} aria-hidden="true" />
             ) : (
-              <FiMenu size={24} />
+              <FiMenu size={24} aria-hidden="true" />
             )}
           </button>
 
           {/* Desktop Navigation */}
           <nav
-            aria-label="Primary"
+            aria-label="Primary navigation"
             className="hidden lg:flex min-w-0 flex-wrap items-center justify-center gap-1 rounded-full border border-white/10 bg-slate-950/70 px-2 py-2 shadow-[0_12px_30px_rgba(0,0,0,0.18)] backdrop-blur-md sm:gap-2 sm:px-3"
           >
             {NAV_LINKS.map((link) => (
@@ -98,7 +101,7 @@ export default function Navbar() {
 
         {/* Right Side: Social Icons + Logo */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <div className="hidden lg:flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/65 px-2 py-2 shadow-[0_12px_30px_rgba(0,0,0,0.14)] backdrop-blur-md">
+          <nav className="hidden lg:flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/65 px-2 py-2 shadow-[0_12px_30px_rgba(0,0,0,0.14)] backdrop-blur-md" aria-label="Social media links">
             {SOCIAL_LINKS.map((item) => {
               const Icon = socialIconByLabel[item.label as keyof typeof socialIconByLabel];
 
@@ -106,18 +109,18 @@ export default function Navbar() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  aria-label={item.label}
+                  aria-label={`Follow siddhuism_official on ${item.label}`}
                   className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-200 transition duration-200 hover:scale-105 hover:bg-white/10 ${socialHoverClassByLabel[item.label as keyof typeof socialHoverClassByLabel]}`}
                   target={item.href.startsWith("http") ? "_blank" : undefined}
-                  rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                  rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 >
-                  <Icon size={16} />
+                  <Icon size={16} aria-hidden="true" />
                 </Link>
               );
             })}
-          </div>
+          </nav>
 
-          <Link href={pathname === "/" ? "#top" : "/"} className="flex items-center">
+          <Link href={pathname === "/" ? "#top" : "/"} className="flex items-center" aria-label="siddhuism_official home">
             <Image
               src="/IMG_7397-removebg-preview.png"
               alt="siddhuism_official logo"
@@ -134,12 +137,13 @@ export default function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.nav
+            id="mobile-menu"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
             className="lg:hidden mt-3 rounded-lg border border-white/10 bg-slate-950/90 backdrop-blur-md p-3"
-            aria-label="Mobile"
+            aria-label="Mobile navigation"
           >
             <div className="flex flex-col gap-2">
               {NAV_LINKS.map((link) => (
@@ -153,7 +157,7 @@ export default function Navbar() {
                 </Link>
               ))}
 
-              <div className="mt-3 flex items-center justify-center gap-2 border-t border-white/10 pt-3">
+              <nav className="mt-3 flex items-center justify-center gap-2 border-t border-white/10 pt-3" aria-label="Mobile social media links">
                 {SOCIAL_LINKS.map((item) => {
                   const Icon = socialIconByLabel[item.label as keyof typeof socialIconByLabel];
 
@@ -161,17 +165,17 @@ export default function Navbar() {
                     <Link
                       key={item.label}
                       href={item.href}
-                      aria-label={item.label}
+                      aria-label={`Follow siddhuism_official on ${item.label}`}
                       onClick={handleLinkClick}
                       className={`inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-slate-200 transition duration-200 hover:scale-105 hover:bg-white/10 ${socialHoverClassByLabel[item.label as keyof typeof socialHoverClassByLabel]}`}
                       target={item.href.startsWith("http") ? "_blank" : undefined}
-                      rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                      rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                     >
-                      <Icon size={15} />
+                      <Icon size={15} aria-hidden="true" />
                     </Link>
                   );
                 })}
-              </div>
+              </nav>
             </div>
           </motion.nav>
         )}

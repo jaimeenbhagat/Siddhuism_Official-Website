@@ -1,0 +1,48 @@
+# SEO robots configuration for siddhuism_official portfolio
+# Last updated: May 2026
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+Disallow: /api/admin/
+Disallow: /admin/
+Disallow: /.next/
+Disallow: /__private/
+Disallow: /private/
+
+# Specific rules for Google
+User-agent: Googlebot
+Allow: /
+
+# Specific rules for Bing
+User-agent: Bingbot
+Allow: /
+
+# Pinterest
+User-agent: Pinterestbot
+Allow: /
+
+# Meta/Facebook
+User-agent: facebookexternalhit
+Allow: /
+
+# Twitter/X Bot
+User-agent: Twitterbot
+Allow: /
+
+# Instagram
+User-agent: Instagram
+Allow: /
+
+# LinkedIn
+User-agent: LinkedInBot
+Allow: /
+
+# Crawl delay for general bots (in seconds)
+User-agent: *
+Crawl-delay: 1
+Request-rate: 1/1s
+
+# Sitemap location
+Sitemap: https://siddhuism-official.vercel.app/sitemap.xml
+Sitemap: https://siddhuism-official.vercel.app/sitemap-portfolio.xml

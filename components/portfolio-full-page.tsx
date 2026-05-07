@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
 import { motion } from "framer-motion";
 import { preconnect } from "react-dom";
 import Navbar from "@/components/navbar";
@@ -16,6 +17,7 @@ import {
   type BrandCategory,
   type PortfolioCategory,
 } from "@/lib/portfolio-structure";
+import { SITE_URL } from "@/lib/seo";
 import { FiArrowRight, FiVideo } from "react-icons/fi";
 
 function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryName: string }) {
@@ -24,9 +26,10 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
   const projectSlug = getBrandSlug(brand.name);
   const displayName = getBrandDisplayName(brand.name);
   const hasNoVideos = brand.videos.length === 0;
+  const brandName = displayName;
 
   return (
-    <motion.div
+    <motion.article
       whileHover={{ y: -4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       className="group"
@@ -34,6 +37,7 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
       <Link
         href={hasNoVideos ? '#' : `/portfolio/${projectSlug}`}
         className="block w-full overflow-hidden rounded-2xl border border-slate-700/70 text-left shadow-[0_12px_45px_rgba(2,6,23,0.45)] transition-colors duration-300 hover:border-slate-600"
+        aria-label={`View ${brandName} - ${categoryName} project`}
         onClick={(e) => {
           if (hasNoVideos) e.preventDefault();
         }}
@@ -42,8 +46,9 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
           {thumbnailUrl && (
             <Image
               src={thumbnailUrl}
-              alt={displayName}
+              alt={`${brandName} portfolio thumbnail - ${categoryName} project with ${brand.videos.length} videos`}
               fill
+              loading="lazy"
               sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 25vw"
               className="h-full w-full object-cover opacity-60 transition duration-700 group-hover:scale-105"
             />
@@ -56,7 +61,7 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
                 {categoryName}
               </PortfolioBadge>
               {!hasNoVideos && (
-                <span className="rounded-full border border-blue-400/30 bg-blue-500/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md">
+                <span className="rounded-full border border-blue-400/30 bg-blue-500/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md" aria-label={`${brand.videos.length} videos in this project`}>
                   {brand.videos.length} Videos
                 </span>
               )}
@@ -74,7 +79,7 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
                 </h3>
               </div>
               {!hasNoVideos && (
-                <div className="rounded-full bg-slate-800 p-2 text-white transition-colors group-hover:bg-blue-500">
+                <div className="rounded-full bg-slate-800 p-2 text-white transition-colors group-hover:bg-blue-500" aria-hidden="true">
                   <FiArrowRight className="transition-transform duration-300 group-hover:translate-x-0.5" />
                 </div>
               )}
@@ -82,18 +87,17 @@ function ProjectCard({ brand, categoryName }: { brand: BrandCategory; categoryNa
           </div>
         </div>
       </Link>
-    </motion.div>
+    </motion.article>
   );
 }
 
 function CategorySection({ category }: { category: PortfolioCategory }) {
-
   return (
-    <div className="mb-16 md:mb-20">
-      <div className="mb-6 flex items-center gap-3 border-b border-slate-800 pb-4">
-        <FiVideo className="text-white" size={24} />
+    <section className="mb-16 md:mb-20" aria-label={`${category.title} portfolio projects`}>
+      <header className="mb-6 flex items-center gap-3 border-b border-slate-800 pb-4">
+        <FiVideo className="text-white" size={24} aria-hidden="true" />
         <PortfolioBadge>{category.title}</PortfolioBadge>
-      </div>
+      </header>
 
       <div className="mb-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {category.brands.map((brand, bIdx) => (
@@ -105,7 +109,7 @@ function CategorySection({ category }: { category: PortfolioCategory }) {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -114,15 +118,34 @@ export default function PortfolioFullPage() {
 
   return (
     <>
+      <Script
+        id="portfolio-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Portfolio - siddhuism_official",
+            description: "Curated selection of commercial projects and creative work",
+            url: `${SITE_URL}/portfolio`,
+            mainEntity: {
+              "@type": "Person",
+              name: "siddhuism_official",
+              url: SITE_URL,
+            },
+          }),
+        }}
+        suppressHydrationWarning
+      />
       <ScrollProgress />
       <Navbar />
       <main className="relative min-h-screen overflow-hidden">
         {/* Ambient Background */}
-        <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(30,58,138,0.12),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" />
+        <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,rgba(30,58,138,0.12),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(139,92,246,0.1),transparent_50%)]" aria-hidden="true" />
 
-        <section className="px-4 pt-28 pb-16 sm:px-6 md:px-8 md:pt-36 md:pb-24 lg:px-10">
+        <section className="px-4 pt-28 pb-16 sm:px-6 md:px-8 md:pt-36 md:pb-24 lg:px-10" aria-label="Portfolio introduction">
           <div className="mx-auto w-full max-w-350 2xl:max-w-400">
-            <div className="mb-12 md:mb-16">
+            <header className="mb-12 md:mb-16">
               <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-white sm:text-sm">Portfolio</p>
               <h1 className="text-balance text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl">
                 Selected Works
@@ -130,17 +153,19 @@ export default function PortfolioFullPage() {
               <p className="mt-3 text-pretty text-sm font-medium text-white md:text-base lg:text-lg">
                 A curated selection of commercial projects, technical cinematography, and visual storytelling. Click a project to explore the full campaign.
               </p>
-            </div>
+            </header>
 
-            <div className="space-y-6 md:space-y-8">
-              {PORTFOLIO_DATA.map((section, sIdx) => (
-                <div key={sIdx} className="mb-16">
-                  {section.categories.map((category, cIdx) => (
-                    <CategorySection key={`${sIdx}-${cIdx}`} category={category} />
-                  ))}
-                </div>
-              ))}
-            </div>
+            <section aria-label="Portfolio projects by category">
+              <div className="space-y-6 md:space-y-8">
+                {PORTFOLIO_DATA.map((section, sIdx) => (
+                  <section key={sIdx} className="mb-16" aria-label={section.title}>
+                    {section.categories.map((category, cIdx) => (
+                      <CategorySection key={`${sIdx}-${cIdx}`} category={category} />
+                    ))}
+                  </section>
+                ))}
+              </div>
+            </section>
 
             <motion.section
               initial={{ opacity: 0, y: 16 }}
@@ -148,14 +173,16 @@ export default function PortfolioFullPage() {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.4 }}
               className="relative mt-24 overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-900/50 p-8 text-center shadow-2xl backdrop-blur-sm md:mt-32 md:p-16"
+              aria-label="Call to action for collaboration"
             >
-              <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-violet-500/10 opacity-50" />
+              <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-violet-500/10 opacity-50" aria-hidden="true" />
               <div className="relative z-10">
                 <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-4xl lg:text-5xl">Ready to tell your brand&apos;s story?</h2>
                 <p className="mt-4 text-sm text-white md:text-base lg:text-lg">Let&apos;s create something that stands out.</p>
                 <Link
                   href="/#contact"
                   className="mt-8 inline-flex items-center justify-center rounded-full bg-slate-800 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-slate-100/10 transition-all hover:scale-105 hover:bg-slate-700 active:scale-95 sm:px-8 sm:py-4"
+                  aria-label="Contact for collaboration inquiries"
                 >
                   Work With Me
                 </Link>

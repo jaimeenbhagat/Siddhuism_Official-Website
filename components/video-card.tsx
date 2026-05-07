@@ -92,15 +92,16 @@ export default function VideoCard({ item }: VideoCardProps) {
           <>
             <Image
               src={thumbnail}
-              alt={item.title}
+              alt={`Video thumbnail for ${item.title} - ${item.category}`}
               fill
+              loading="lazy"
               sizes="(max-width: 1024px) 100vw, 33vw"
               className={`object-cover transition duration-700 ${isActive ? "opacity-0" : "opacity-100 group-hover:scale-105"}`}
             />
             {isActive ? (
               <iframe
                 src={embedSrc}
-                title={item.title}
+                title={`YouTube video: ${item.title}`}
                 loading="lazy"
                 allow="autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen
@@ -112,8 +113,9 @@ export default function VideoCard({ item }: VideoCardProps) {
           <>
             <Image
               src={thumbnail}
-              alt={item.title}
+              alt={`Video thumbnail for ${item.title} - ${item.category}`}
               fill
+              loading="lazy"
               sizes="(max-width: 1024px) 100vw, 33vw"
               className={`object-cover transition duration-700 ${isActive ? "opacity-0" : "opacity-100 group-hover:scale-105"}`}
             />
@@ -133,9 +135,9 @@ export default function VideoCard({ item }: VideoCardProps) {
           </>
         )}
 
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/65 via-black/10 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" />
         {!isActive ? (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden={isActive}>
             <div className="rounded-full bg-black/45 p-3 backdrop-blur-md">
               <FiPlayCircle className="text-white/90" size={32} />
             </div>
