@@ -46,10 +46,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
-
 const DEFAULT_THUMBNAIL = "/profile-orb.svg";
 
 type ProjectPageVideo = Pick<PortfolioVideo, "id" | "title" | "project_slug" | "project_title" | "video_url" | "thumbnail" | "is_featured" | "created_at"> & {
