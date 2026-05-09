@@ -64,7 +64,7 @@ function InstagramReelCard({
   const cardRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [videoFailed, setVideoFailed] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const isVideo = media.mediaType === 'VIDEO';
   const openTarget = media.permalink;
 
@@ -254,7 +254,7 @@ function YouTubeCard({
   const embedUrl = useMemo(() => {
     const params = new URLSearchParams({
       autoplay: "1",
-      mute: "0",
+      mute: "1",
       controls: "1",
       modestbranding: "1",
       rel: "0",
@@ -277,12 +277,23 @@ function YouTubeCard({
     }
 
     const command = isActive ? "playVideo" : "pauseVideo";
+    const payload = JSON.stringify({ event: "command", func: command, args: [] });
+
+    // Give the iframe a bit more time to initialize and accept postMessages.
     const timer = window.setTimeout(() => {
-      frame.contentWindow?.postMessage(JSON.stringify({ event: "command", func: command, args: "" }), "*");
-    }, 0);
+      try {
+        frame.contentWindow?.postMessage(payload, "*");
+        // Debug log to help verify initialization during dev.
+        // eslint-disable-next-line no-console
+        console.debug("youtube-embed: sent", command, "to", video.id);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn("youtube-embed: postMessage failed", err);
+      }
+    }, 500);
 
     return () => window.clearTimeout(timer);
-  }, [isActive]);
+  }, [isActive, video.id]);
 
   const handleCardClick = () => {
     if (isMobile) {
@@ -300,8 +311,16 @@ function YouTubeCard({
 
   return (
     <motion.article
-      onPointerEnter={isMobile ? undefined : onActivate}
-      onPointerLeave={isMobile ? undefined : onDeactivate}
+      onPointerEnter={isMobile ? undefined : () => {
+        // eslint-disable-next-line no-console
+        console.debug('youtube-card: pointerenter', video.id);
+        onActivate();
+      }}
+      onPointerLeave={isMobile ? undefined : () => {
+        // eslint-disable-next-line no-console
+        console.debug('youtube-card: pointerleave', video.id);
+        onDeactivate();
+      }}
       onClick={handleCardClick}
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
