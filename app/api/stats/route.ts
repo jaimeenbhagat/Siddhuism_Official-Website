@@ -16,6 +16,7 @@ export async function GET() {
 
     const ytData = youtube.status === "fulfilled" ? youtube.value : null;
     const igData = instagram.status === "fulfilled" ? instagram.value : null;
+    const igTotalViews = igData?.media?.reduce((acc, item) => acc + (item.viewCount || 0), 0) || 0;
     const fbData = facebook.status === "fulfilled" ? facebook.value : null;
 
     return NextResponse.json({
@@ -27,9 +28,12 @@ export async function GET() {
       instagram: {
         followers: igData?.followersCount ?? null,
         media: igData?.mediaCount ?? null,
+        views: igTotalViews,
       },
       facebook: {
         followers: fbData?.followersCount ?? null,
+        views: fbData?.viewsCount ?? null,
+        media: fbData?.mediaCount ?? null,
       }
     }, {
       headers: {

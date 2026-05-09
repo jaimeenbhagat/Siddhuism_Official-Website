@@ -15,8 +15,8 @@ type HeroSectionProps = {
 
 type LiveStats = {
   youtube: { subscribers: number | null; views: number | null; videos: number | null };
-  instagram: { followers: number | null; media: number | null };
-  facebook?: { followers: number | null };
+  instagram: { followers: number | null; media: number | null; views: number | null };
+  facebook?: { followers: number | null; views: number | null; media: number | null };
 } | null;
 
 // useTyping helper removed — not used after BIO update
@@ -84,7 +84,7 @@ function HeroStats({ stats }: { stats: LiveStats }) {
   const primaryStats = useMemo(
     () => [
       {
-        numericValue: stats?.youtube?.views ?? 4200000,
+        numericValue: stats ? ((stats.youtube?.views ?? 0) + (stats.instagram?.views ?? 0) + (stats.facebook?.views ?? 0)) : 4200000,
         label: "Total Views",
         icon: <FiEye className="text-blue-400" size={20} />,
         isLive: true,
@@ -114,7 +114,7 @@ function HeroStats({ stats }: { stats: LiveStats }) {
     [instagramHref, stats, youtubeHref, facebookHref],
   );
 
-  const totalContent = Math.max((stats?.instagram?.media ?? 0) + (stats?.youtube?.videos ?? 0), 250);
+  const totalContent = Math.max((stats?.instagram?.media ?? 0) + (stats?.youtube?.videos ?? 0) + (stats?.facebook?.media ?? 0), 250);
 
   return (
     <div className="mt-10 lg:mt-4">
@@ -130,7 +130,7 @@ function HeroStats({ stats }: { stats: LiveStats }) {
         </div>
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-pink-500"></span>
-          <span>YouTube | Instagram</span>
+          <span>YouTube | Instagram | Facebook</span>
         </div>
       </div>
     </div>
