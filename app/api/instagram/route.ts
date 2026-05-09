@@ -7,7 +7,12 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     const forceRefresh = new URL(request.url).searchParams.get("refresh") === "1";
-    const data = forceRefresh ? await refreshInstagramSnapshot() : await getInstagramSnapshot();
+    const data = forceRefresh
+      ? await refreshInstagramSnapshot().catch(async (error) => {
+          console.warn("/api/instagram refresh failed; falling back to cached snapshot.", error);
+          return await getInstagramSnapshot();
+        })
+      : await getInstagramSnapshot();
 
     return NextResponse.json(data, {
       headers: {

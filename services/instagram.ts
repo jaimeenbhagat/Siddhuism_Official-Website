@@ -312,7 +312,7 @@ export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
 
 export async function getInstagramSnapshot() {
   try {
-    const cached = await readCachedSnapshot<InstagramSnapshot>("instagram");
+    const cached = await readCachedSnapshot<InstagramSnapshot>("instagram", true);
     const rows = await getInstagramMediaRows(200);
 
     if (rows.length) {

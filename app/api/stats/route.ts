@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getYouTubeSnapshot } from "@/services/youtube";
-import { refreshInstagramSnapshot } from "@/services/instagram";
+import { getInstagramSnapshot } from "@/services/instagram";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,7 +9,7 @@ export async function GET() {
   try {
     const [youtube, instagram] = await Promise.allSettled([
       getYouTubeSnapshot(),
-      refreshInstagramSnapshot(),
+      getInstagramSnapshot(),
     ]);
 
     const ytData = youtube.status === "fulfilled" ? youtube.value : null;

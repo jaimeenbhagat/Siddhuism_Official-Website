@@ -371,10 +371,24 @@ export default function YouTubeVideoGrid() {
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([
-      fetch("/api/instagram?refresh=1", { cache: "no-store" }).then(res => res.json() as Promise<ApiInstagramResponse>).catch(() => null),
-      fetch("/api/youtube/videos").then(res => res.json()).catch((): ApiYouTubeResponse => ({ shorts: [], longs: [] }))
-    ]).then(([ig, yt]) => {
+    const loadInstagram = async () => {
+      try {
+        const res = await fetch("/api/instagram", { cache: "no-store" });
+        return (await res.json()) as ApiInstagramResponse;
+      } catch {
+        return null;
+      }
+    };
+
+    const loadYouTube = async () => {
+      try {
+        return (await fetch("/api/youtube/videos").then((res) => res.json())) as ApiYouTubeResponse;
+      } catch {
+        return { shorts: [], longs: [] } satisfies ApiYouTubeResponse;
+      }
+    };
+
+    Promise.all([loadInstagram(), loadYouTube()]).then(([ig, yt]) => {
       setIgStats(ig);
       setIgMessage(ig?.message || null);
       const response = yt as ApiYouTubeResponse;
@@ -382,6 +396,18 @@ export default function YouTubeVideoGrid() {
       setYtLongsRaw(response?.longs || []);
       setLoading(false);
     });
+
+    void fetch("/api/instagram?refresh=1", { cache: "no-store" })
+      .then((res) => res.json() as Promise<ApiInstagramResponse>)
+      .then((ig) => {
+        if (ig) {
+          setIgStats(ig);
+          setIgMessage(ig?.message || null);
+        }
+      })
+      .catch(() => {
+        // Keep the cached snapshot already shown on screen.
+      });
   }, []);
 
   const { reels, ytShorts, ytLongs } = useMemo(() => {
