@@ -74,26 +74,70 @@ async function fetchAllInstagramMedia(accessToken: string, userId: string, targe
 
   return collected;
 }
+
+async function loadStoredInstagramToken(): Promise<string | null> {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return null;
+  }
+
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("instagram_tokens")
+    .select("access_token")
+    .eq("id", 1)
+    .single();
+
+  if (error || !data?.access_token) {
+    return null;
+  }
+
+  return data.access_token;
+}
+
+async function persistInstagramToken(accessToken: string) {
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return;
+  }
+
+  const supabase = getSupabaseAdminClient();
+  await supabase.from("instagram_tokens").upsert({
+    id: 1,
+    access_token: accessToken,
+    updated_at: new Date().toISOString(),
+  });
+}
+
+async function refreshAndPersistInstagramToken(currentToken: string): Promise<string> {
+  const newToken = await refreshInstagramToken(currentToken);
+  await persistInstagramToken(newToken);
+  return newToken;
+}
+
+function isInstagramAuthError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  const status = typeof error === "object" && error !== null ? (error as { status?: number }).status : undefined;
+
+  return Boolean(
+    status === 401 ||
+      status === 403 ||
+      /(?:190|OAuthException|Invalid OAuth access token|Error validating access token|session has expired|permission error)/i.test(message),
+  );
+}
+
 async function requireConfig() {
   const userId = process.env.INSTAGRAM_USER_ID;
-  let accessToken: string | null = process.env.INSTAGRAM_ACCESS_TOKEN || null;
+  let accessToken: string | null = await loadStoredInstagramToken();
+
+  if (!accessToken) {
+    accessToken = process.env.INSTAGRAM_ACCESS_TOKEN || null;
+  }
 
   console.log("Checking Instagram config...");
   console.log("INSTAGRAM_USER_ID loaded:", !!userId);
   console.log("INSTAGRAM_ACCESS_TOKEN loaded from env:", !!process.env.INSTAGRAM_ACCESS_TOKEN);
 
-  if (!accessToken && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    const supabase = getSupabaseAdminClient();
-    const { data, error } = await supabase
-      .from("instagram_tokens")
-      .select("access_token")
-      .eq("id", 1)
-      .single();
-
-    if (!error && data?.access_token) {
-      accessToken = data.access_token;
-      console.log("INSTAGRAM_ACCESS_TOKEN loaded from Supabase");
-    }
+  if (accessToken) {
+    console.log("INSTAGRAM_ACCESS_TOKEN loaded from", process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY ? "Supabase/env" : "env");
   }
 
   if (!accessToken || !userId) {
@@ -139,9 +183,8 @@ async function requireConfig() {
       }
     }
   } catch (err) {
-    // Surface debug errors clearly
-    console.error("Error validating Instagram access token:", err instanceof Error ? err.message : err);
-    throw err;
+    // If debug_token is unavailable, keep going and let the live fetch decide whether a refresh is needed.
+    console.warn("Error validating Instagram access token; continuing with current token:", err instanceof Error ? err.message : err);
   }
 
   return { accessToken, userId };
@@ -180,6 +223,10 @@ async function fetchInsightMetric(mediaId: string, accessToken: string, metric: 
     const metricData = res.data?.find((entry) => entry.name === metric);
     return metricData?.values?.[0]?.value ?? null;
   } catch (error) {
+    if (isInstagramAuthError(error)) {
+      throw error;
+    }
+
     return null;
   }
 }
@@ -195,8 +242,7 @@ async function fetchMediaViews(mediaId: string, accessToken: string): Promise<nu
   return null;
 }
 
-export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
-  const { accessToken, userId } = await requireConfig();
+async function refreshInstagramSnapshotWithToken(accessToken: string, userId: string): Promise<InstagramSnapshot> {
   const profileUrl = `https://graph.facebook.com/v18.0/${userId}?fields=username,media_count,followers_count,profile_picture_url&access_token=${accessToken}`;
 
   const profileResponse = await fetchJsonWithRetry<{ username?: string; media_count?: number; followers_count?: number; profile_picture_url?: string }>(profileUrl);
@@ -246,6 +292,22 @@ export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
 
   await writeCachedSnapshot("instagram", snapshot, 10);
   return snapshot;
+}
+
+export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
+  const { accessToken, userId } = await requireConfig();
+
+  try {
+    return await refreshInstagramSnapshotWithToken(accessToken, userId);
+  } catch (error) {
+    if (!isInstagramAuthError(error)) {
+      throw error;
+    }
+
+    console.warn("Instagram token failed during live fetch; refreshing token and retrying once.");
+    const refreshedToken = await refreshAndPersistInstagramToken(accessToken);
+    return await refreshInstagramSnapshotWithToken(refreshedToken, userId);
+  }
 }
 
 export async function getInstagramSnapshot() {
