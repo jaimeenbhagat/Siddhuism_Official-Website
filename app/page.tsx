@@ -7,8 +7,8 @@ export const revalidate = 900;
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Home",
-  description: "Welcome to siddhuism_official's creator portfolio. Featuring commercial work, travel content, and professional video production across travel, e-commerce, and events.",
-  ogTitle: "siddhuism_official | Creator Portfolio",
+  description: "Welcome to Siddhuism Official's creator portfolio. Featuring commercial work, travel content, and professional video production across travel, e-commerce, and events.",
+  ogTitle: "Siddhuism Official | Creator Portfolio",
   ogDescription: "Explore cinematic travel, lifestyle, and commercial content. Professional portfolio with 500K+ followers across platforms.",
   ogImage: `${SITE_URL}/og-image.jpg`,
   ogType: "website",
