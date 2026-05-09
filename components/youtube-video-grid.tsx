@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { FiInstagram, FiYoutube, FiEye, FiHeart, FiMessageCircle, FiPlayCircle } from "react-icons/fi";
+import { FiInstagram, FiYoutube, FiEye, FiHeart, FiMessageCircle, FiPlayCircle, FiVolume2, FiVolumeX } from "react-icons/fi";
 import SectionHeading from "@/components/ui/section-heading";
 import type { InstagramSnapshot, InstagramMedia, YouTubeVideo } from "@/lib/social-types";
 import { preconnect } from "react-dom";
@@ -62,6 +62,9 @@ function InstagramReelCard({
   onToggle: () => void;
 }) {
   const cardRef = useRef<HTMLElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const isVideo = media.mediaType === 'VIDEO';
   const openTarget = media.permalink;
 
@@ -71,24 +74,26 @@ function InstagramReelCard({
     }
   }, [isVideo, media.mediaUrl]);
 
-  useEffect(() => {
-    const node = cardRef.current;
-
-    if (!node || isMobile) {
+  const playVideo = async () => {
+    if (!isVideo || videoFailed || !videoRef.current) {
       return;
     }
 
-    const handleMouseEnter = () => onActivate();
-    const handleMouseLeave = () => onDeactivate();
+    try {
+      await videoRef.current.play();
+    } catch {
+      console.log("Instagram hover autoplay blocked");
+    }
+  };
 
-    node.addEventListener("mouseenter", handleMouseEnter);
-    node.addEventListener("mouseleave", handleMouseLeave);
+  const pauseVideo = () => {
+    if (!videoRef.current) {
+      return;
+    }
 
-    return () => {
-      node.removeEventListener("mouseenter", handleMouseEnter);
-      node.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, [isMobile, onActivate, onDeactivate]);
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
+  };
 
   const handleCardClick = () => {
     if (isMobile) {
@@ -104,10 +109,31 @@ function InstagramReelCard({
     window.location.href = openTarget;
   };
 
+  const handleVideoError = () => {
+    setVideoFailed(true);
+    console.warn("Instagram video failed to load. Displaying thumbnail instead. Video will open on Instagram when clicked.");
+  };
+
   return (
     <motion.article
       ref={cardRef}
       onClick={handleCardClick}
+      onPointerEnter={() => {
+        if (isMobile) {
+          return;
+        }
+
+        onActivate();
+        void playVideo();
+      }}
+      onPointerLeave={() => {
+        if (isMobile) {
+          return;
+        }
+
+        onDeactivate();
+        pauseVideo();
+      }}
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -117,18 +143,26 @@ function InstagramReelCard({
     >
       <div className="relative h-full w-full overflow-hidden rounded-xl bg-slate-900">
         {media.mediaType === "VIDEO" ? (
-          <video
-            src={media.mediaUrl}
-            className="absolute inset-0 z-10 h-full w-full object-cover transition-opacity duration-300"
-            playsInline
-            preload="metadata"
-            poster={media.thumbnailUrl}
-            onMouseEnter={(e) => e.currentTarget.play()}
-            onMouseLeave={(e) => {
-              e.currentTarget.pause();
-              e.currentTarget.currentTime = 0;
-            }}
-          />
+          videoFailed ? (
+            <Image
+              src={media.thumbnailUrl || media.mediaUrl}
+              alt={media.caption?.slice(0, 50) || "Instagram Reel"}
+              fill
+              className="absolute inset-0 z-10 object-cover transition-opacity duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              src={media.mediaUrl}
+              className="absolute inset-0 z-10 h-full w-full object-cover transition-opacity duration-300"
+              playsInline
+              preload="metadata"
+              poster={media.thumbnailUrl}
+              muted={isMuted}
+              loop
+              onError={handleVideoError}
+            />
+          )
         ) : (
           <Image
             src={media.thumbnailUrl || media.mediaUrl}
@@ -144,7 +178,7 @@ function InstagramReelCard({
           <FiPlayCircle className="text-white/90" size={32} />
         </div>
 
-        <div className={`absolute bottom-3 left-3 right-3 flex flex-col gap-2 transition-opacity duration-300 ${isActive ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
+        <div className={`absolute bottom-3 left-3 right-3 flex flex-col gap-2 transition-opacity duration-300 ${isActive ? "opacity-100" : "opacity-100"} z-30`}>
           <div className="flex flex-wrap gap-2 text-[10px] text-pink-100 font-medium">
             <span className="flex items-center gap-1 rounded-full bg-pink-500/20 px-2 py-1 backdrop-blur-md border border-pink-500/30">
               <FiEye /> {media.viewCount && media.viewCount > 0 ? compact(media.viewCount) : compact(Math.max(15400, (media.likeCount + media.commentsCount) * 45))}
@@ -157,6 +191,24 @@ function InstagramReelCard({
             </span>
           </div>
         </div>
+
+        {isActive && isVideo && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMuted(!isMuted);
+            }}
+            className="absolute right-3 bottom-3 z-40 rounded-full bg-black/60 p-2 backdrop-blur-md transition hover:bg-black/80"
+            aria-label={isMuted ? "Unmute video" : "Mute video"}
+            title={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? (
+              <FiVolumeX className="text-white/90" size={20} />
+            ) : (
+              <FiVolume2 className="text-white/90" size={20} />
+            )}
+          </button>
+        )}
 
         {isActive && (
           <a
@@ -320,7 +372,7 @@ export default function YouTubeVideoGrid() {
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/instagram").then(res => res.json() as Promise<ApiInstagramResponse>).catch(() => null),
+      fetch("/api/instagram?refresh=1", { cache: "no-store" }).then(res => res.json() as Promise<ApiInstagramResponse>).catch(() => null),
       fetch("/api/youtube/videos").then(res => res.json()).catch((): ApiYouTubeResponse => ({ shorts: [], longs: [] }))
     ]).then(([ig, yt]) => {
       setIgStats(ig);
@@ -334,7 +386,14 @@ export default function YouTubeVideoGrid() {
 
   const { reels, ytShorts, ytLongs } = useMemo(() => {
     const r = (igStats?.media?.filter(m => m.mediaType === "VIDEO") || [])
-      .sort((a, b) => (b.likeCount + b.commentsCount) - (a.likeCount + a.commentsCount))
+      .sort((a, b) => {
+        const viewDelta = (b.viewCount ?? 0) - (a.viewCount ?? 0);
+        if (viewDelta !== 0) {
+          return viewDelta;
+        }
+
+        return (b.likeCount + b.commentsCount) - (a.likeCount + a.commentsCount);
+      })
       .slice(0, 5);
       
     const mapYt = (row: ApiYouTubeRow): YouTubeVideo => ({
@@ -363,6 +422,10 @@ export default function YouTubeVideoGrid() {
       const rebuilt = [...withoutGarba];
       rebuilt.splice(3, 0, garbaShort);
       ys = rebuilt.slice(0, 5);
+    }
+
+    if (ys.length >= 5) {
+      [ys[3], ys[4]] = [ys[4], ys[3]];
     }
 
     const allLongs = ytLongsRaw.map(mapYt);

@@ -19,8 +19,61 @@ type InstagramResponse = {
     comments_count?: number;
     timestamp: string;
   }>;
+  paging?: {
+    cursors?: {
+      before?: string;
+      after?: string;
+    };
+    next?: string;
+  };
 };
 
+
+function rankInstagramMedia(media: InstagramMedia[]) {
+  return [...media].sort((a, b) => {
+    const viewDelta = (b.viewCount ?? 0) - (a.viewCount ?? 0);
+    if (viewDelta !== 0) {
+      return viewDelta;
+    }
+
+    const engagementDelta = (b.likeCount + b.commentsCount) - (a.likeCount + a.commentsCount);
+    if (engagementDelta !== 0) {
+      return engagementDelta;
+    }
+
+    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+  });
+}
+
+async function fetchAllInstagramMedia(accessToken: string, userId: string, targetCount: number) {
+  const fields = "id,caption,media_type,media_url,thumbnail_url,permalink,like_count,comments_count,timestamp";
+  const collected: InstagramResponse["data"] = [];
+  let afterCursor: string | undefined;
+
+  while (collected.length < targetCount) {
+    const pageSize = Math.min(100, targetCount - collected.length);
+    const url = new URL(`https://graph.facebook.com/v18.0/${userId}/media`);
+    url.searchParams.set("fields", fields);
+    url.searchParams.set("access_token", accessToken);
+    url.searchParams.set("limit", String(pageSize));
+
+    if (afterCursor) {
+      url.searchParams.set("after", afterCursor);
+    }
+
+    const response = await fetchJsonWithRetry<InstagramResponse>(url.toString());
+    collected.push(...(response.data || []));
+
+    const nextCursor = response.paging?.cursors?.after;
+    if (!nextCursor || response.data.length === 0) {
+      break;
+    }
+
+    afterCursor = nextCursor;
+  }
+
+  return collected;
+}
 async function requireConfig() {
   const userId = process.env.INSTAGRAM_USER_ID;
   let accessToken: string | null = process.env.INSTAGRAM_ACCESS_TOKEN || null;
@@ -144,17 +197,14 @@ async function fetchMediaViews(mediaId: string, accessToken: string): Promise<nu
 
 export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
   const { accessToken, userId } = await requireConfig();
-  const fields = "id,caption,media_type,media_url,thumbnail_url,permalink,like_count,comments_count,timestamp";
   const profileUrl = `https://graph.facebook.com/v18.0/${userId}?fields=username,media_count,followers_count,profile_picture_url&access_token=${accessToken}`;
-  const mediaUrl = `https://graph.facebook.com/v18.0/${userId}/media?fields=${fields}&access_token=${accessToken}&limit=15`;
 
-  const [profileResponse, mediaResponse] = await Promise.all([
-    fetchJsonWithRetry<{ username?: string; media_count?: number; followers_count?: number; profile_picture_url?: string }>(profileUrl),
-    fetchJsonWithRetry<InstagramResponse>(mediaUrl),
-  ]);
+  const profileResponse = await fetchJsonWithRetry<{ username?: string; media_count?: number; followers_count?: number; profile_picture_url?: string }>(profileUrl);
+  const targetCount = Math.max(profileResponse.media_count || 0, 1);
+  const mediaResponse = await fetchAllInstagramMedia(accessToken, userId, targetCount);
 
   const mediaWithInsights = await Promise.all(
-    mediaResponse.data.map(async (item) => {
+    mediaResponse.map(async (item) => {
       const media = mapMedia(item);
       if (media.mediaType === "VIDEO") {
         const views = await fetchMediaViews(media.id, accessToken);
@@ -166,7 +216,9 @@ export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
     })
   );
 
-  const mediaRows: InstagramMediaRow[] = mediaWithInsights.map((media) => ({
+  const rankedMedia = rankInstagramMedia(mediaWithInsights);
+
+  const mediaRows: InstagramMediaRow[] = rankedMedia.map((media) => ({
     id: media.id,
     caption: media.caption || null,
     media_type: media.mediaType,
@@ -184,10 +236,10 @@ export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
 
   const snapshot: InstagramSnapshot = {
     username: profileResponse.username || "siddhuism_official",
-    mediaCount: profileResponse.media_count || mediaResponse.data.length,
+    mediaCount: profileResponse.media_count || mediaResponse.length,
     followersCount: profileResponse.followers_count || 0,
     profilePictureUrl: profileResponse.profile_picture_url || "",
-    media: mediaWithInsights,
+    media: rankedMedia,
     fetchedAt: new Date().toISOString(),
     source: "live",
   };
@@ -199,10 +251,10 @@ export async function refreshInstagramSnapshot(): Promise<InstagramSnapshot> {
 export async function getInstagramSnapshot() {
   try {
     const cached = await readCachedSnapshot<InstagramSnapshot>("instagram");
-    const rows = await getInstagramMediaRows(15);
+    const rows = await getInstagramMediaRows(200);
 
     if (rows.length) {
-      const media = rows.map(mapInstagramRowToMedia);
+      const media = rankInstagramMedia(rows.map(mapInstagramRowToMedia));
       return buildSnapshotFromMedia(media, cached?.data ? {
         username: cached.data.username,
         mediaCount: cached.data.mediaCount,

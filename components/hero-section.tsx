@@ -88,7 +88,7 @@ function HeroStats({ stats }: { stats: LiveStats }) {
         isLive: true,
       },
       {
-        numericValue: 1400,
+        numericValue: stats?.instagram?.followers ?? 1400,
         label: "Instagram",
         icon: <FiInstagram className="text-pink-500" size={20} />,
         isLive: true,
@@ -111,7 +111,7 @@ function HeroStats({ stats }: { stats: LiveStats }) {
     [instagramHref, stats, youtubeHref],
   );
 
-  const totalContent = 292;
+  const totalContent = stats?.instagram?.media ?? 292;
 
   return (
     <div className="mt-10 lg:mt-4">
