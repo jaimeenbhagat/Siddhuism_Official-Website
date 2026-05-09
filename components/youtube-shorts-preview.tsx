@@ -56,7 +56,7 @@ function ShortsCard({
   const embedUrl = useMemo(() => {
     const params = new URLSearchParams({
       autoplay: "1",
-      mute: "0",
+      mute: "1",
       controls: "1",
       modestbranding: "1",
       rel: "0",

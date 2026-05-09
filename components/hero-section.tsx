@@ -111,7 +111,7 @@ function HeroStats({ stats }: { stats: LiveStats }) {
     [instagramHref, stats, youtubeHref],
   );
 
-  const totalContent = stats?.instagram?.media ?? 292;
+  const totalContent = Math.max((stats?.instagram?.media ?? 0) + (stats?.youtube?.videos ?? 0), 250);
 
   return (
     <div className="mt-10 lg:mt-4">
