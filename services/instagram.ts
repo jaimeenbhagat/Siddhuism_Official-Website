@@ -124,7 +124,7 @@ function isInstagramAuthError(error: unknown) {
   );
 }
 
-async function requireConfig() {
+export async function requireConfig() {
   const userId = process.env.INSTAGRAM_USER_ID;
   let accessToken: string | null = await loadStoredInstagramToken();
 

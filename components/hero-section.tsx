@@ -3,7 +3,7 @@
 // (TAGLINES removed — not used in this file)
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FiYoutube, FiInstagram, FiVideo, FiEye, FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize, FiChevronDown } from "react-icons/fi";
+import { FiYoutube, FiInstagram, FiFacebook, FiEye, FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize, FiChevronDown } from "react-icons/fi";
 
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { SOCIAL_LINKS } from "@/lib/content";
@@ -16,6 +16,7 @@ type HeroSectionProps = {
 type LiveStats = {
   youtube: { subscribers: number | null; views: number | null; videos: number | null };
   instagram: { followers: number | null; media: number | null };
+  facebook?: { followers: number | null };
 } | null;
 
 // useTyping helper removed — not used after BIO update
@@ -78,6 +79,7 @@ function StatCard({ label, value, icon, isText = false, isLive = false, numericV
 function HeroStats({ stats }: { stats: LiveStats }) {
   const youtubeHref = SOCIAL_LINKS.find((link) => link.label === "YouTube")?.href;
   const instagramHref = SOCIAL_LINKS.find((link) => link.label === "Instagram")?.href;
+  const facebookHref = SOCIAL_LINKS.find((link) => link.label === "Facebook")?.href;
 
   const primaryStats = useMemo(
     () => [
@@ -102,13 +104,14 @@ function HeroStats({ stats }: { stats: LiveStats }) {
         href: youtubeHref,
       },
       {
-        value: "Travel & Lifestyle",
-        label: "Creator",
-        icon: <FiVideo className="text-purple-400" size={20} />,
-        isText: true,
+        numericValue: stats?.facebook?.followers ?? 0,
+        label: "Facebook",
+        icon: <FiFacebook className="text-blue-500" size={20} />,
+        isLive: true,
+        href: facebookHref,
       },
     ],
-    [instagramHref, stats, youtubeHref],
+    [instagramHref, stats, youtubeHref, facebookHref],
   );
 
   const totalContent = Math.max((stats?.instagram?.media ?? 0) + (stats?.youtube?.videos ?? 0), 250);

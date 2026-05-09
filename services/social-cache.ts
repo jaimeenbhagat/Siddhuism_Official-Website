@@ -1,7 +1,7 @@
 import { getSupabaseClient } from "@/lib/supabaseClient";
 
 export type CachedSnapshot<T> = {
-  platform: "youtube" | "instagram";
+  platform: "youtube" | "instagram" | "facebook";
   data: T;
   fetchedAt: string;
   expiresAt: string;
