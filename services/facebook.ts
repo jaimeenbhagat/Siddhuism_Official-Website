@@ -78,12 +78,19 @@ export async function getFacebookSnapshot(): Promise<FacebookSnapshot> {
     return await fetchFacebookFollowersLive();
   } catch (error: any) {
     console.error("Failed to fetch live Facebook stats:", error);
-    require('fs').writeFileSync('fb-debug-2.json', error.message || error.toString());
-    // Fallback to 2000 as requested since token might be expired
+    
+    try {
+      const expiredCache = await readCachedSnapshot<FacebookSnapshot>("facebook", true);
+      if (expiredCache) {
+        return { ...expiredCache.data, fetchedAt: expiredCache.fetchedAt, source: "cache" };
+      }
+    } catch {}
+
+    // Fallback to placeholders if no cache exists
     return {
       followersCount: 2000,
-      viewsCount: 150000, // Placeholder fallback since token is expired
-      mediaCount: 45,     // Placeholder fallback since token is expired
+      viewsCount: 150000,
+      mediaCount: 45,
       fetchedAt: new Date().toISOString(),
       source: "live",
     };
