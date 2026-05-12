@@ -72,6 +72,7 @@ function InstagramReelCard({
     if (isVideo) {
       console.log("VIDEO URL:", media.mediaUrl);
     }
+    setVideoFailed(false);
   }, [isVideo, media.mediaUrl]);
 
   const playVideo = async () => {
